@@ -13,8 +13,8 @@ DATA_REPO=GitHub/Repository-That-Holds-Game-Data
 
 Routes are defined in the [routes](app_routes.py) definition file. Currently hosted under [glitch.com](glitch.com) for testing. You can try it out by clicking the link below:
 
-* [Request all ships](https://lenitrous-azur-lane-api.glitch.me/api/ships)
-* [Request a specific ship](https://lenitrous-azur-lane-api.glitch.me/api/ships?name=Saratoga)
+* [Request all ships](https://azur-lane-api.glitch.me/api/ships)
+* [Request a specific ship](https://azur-lane-api.glitch.me/api/ships?name=Saratoga)
 
 Please consider donating to be able to host a dedicated server by clicking the link below:
 
