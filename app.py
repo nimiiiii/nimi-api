@@ -4,6 +4,7 @@ from github import Github
 from dotenv import load_dotenv
 from base64 import b64decode
 from app_routes import USING_FILE, USING_DIRECTORY
+from app_utils import clean_game_cfg, clean_shared_cfg, try_parse_int
 import logging
 import sqlite3
 import json
@@ -46,34 +47,26 @@ for route, path in USING_FILE:
     app.add_url_rule(f"/api/{route}", route, api_filterable)
 
 for route, path in USING_DIRECTORY:
-    def api_queryiable(path=path):
+    def api_queryable(path=path):
         key = request.args.get("id", type=str)
 
         if key is None:
             return send_as_json({ "error": "Invalid key." })
         else:
-            return send_as_json(get_file(f"{path}/{key}.lua", game_cfg_clean))
+            return send_as_json(get_file(f"{path}/{key}.lua", clean_game_cfg))
 
-    app.add_url_rule(f"/api/{route}", route, api_queryiable)
+    app.add_url_rule(f"/api/{route}", route, api_queryable)
 
-def try_parse_int(s):
-    try:
-        parsed = int(s)
-        return parsed
-    except ValueError:
-        return s
-
-def shared_cfg_clean(decoded):
-    return decoded.replace("return", "")[[i for i, l in enumerate(decoded) if l == "="][1] + 1:-1].strip()
-
-def game_cfg_clean(decoded):
-    return decoded.replace("return", "").strip()
-
-def get_file(path, clean=shared_cfg_clean):
+def get_file(path, clean=clean_shared_cfg):
     path = f"{app.config.get('LOCALE')}/{path}"
     logging.info("Requesting file '%s'", path)
     directory = os.path.dirname(path)
-    requested = [f for f in repository.get_contents(directory) if f.path == path][0]
+    requested = [f for f in repository.get_contents(directory) if f.path == path]
+
+    if len(requested) > 0:
+        requested = requested[0]
+    else:
+        return { "error": "Resource not found." }
 
     saved = get_file_reference(path)
     if saved != None and saved[1] == requested.sha:
