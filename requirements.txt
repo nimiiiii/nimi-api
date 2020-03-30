@@ -1,0 +1,4 @@
+flask
+github
+python-dotenv
+git+https://github.com/SirAnthony/slpp
