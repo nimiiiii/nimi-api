@@ -7,7 +7,6 @@ You will need a `.env` file in the root directory. For example:
 ```dotenv
 GITHUB_TOKEN=your_github_personal_token
 RELEASE_MODE=production
-DATA_LOCALE=en-US
 DATA_REPO=GitHub/Repository-That-Holds-Game-Data
 ```
 

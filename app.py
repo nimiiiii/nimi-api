@@ -3,7 +3,7 @@ from lupa import LuaRuntime
 from github import Github
 from dotenv import load_dotenv
 from base64 import b64decode
-from app_routes import USING_FILE, USING_DIRECTORY
+from app_config import ROUTES, LOCALE
 import sqlite3
 import json
 import os
@@ -11,7 +11,6 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config["LOCALE"] = os.getenv("DATA_LOCALE", "en-US")
 app.config["DEBUG"] = os.getenv("RELEASE_MODE", "production") != "production"
 
 lua = LuaRuntime(unpack_returned_tuples = True)
@@ -35,10 +34,11 @@ def not_found(e):
 def internal_error(e):
     return send_as_json({ "error": "Internal Server Error" }, 500)
 
-for route, path in USING_FILE:
+for route, path in ROUTES["USING_FILE"]:
     def api_filterable(path = path):
         filters = request.args.to_dict()
-        data = get_remote_file(path, transform_shared_cfg)
+        filters.pop('region', None)
+        data = get_remote_file(path, transform_shared_cfg, request.args.get("region", type=str, default="en"))
 
         if data is None:
             return send_as_json({ "error": "Not Found" }, 404)
@@ -51,41 +51,47 @@ for route, path in USING_FILE:
 
     app.add_url_rule(f"/api/{route}", route, api_filterable)
 
-for route, path in USING_DIRECTORY:
+for route, path in ROUTES["USING_DIRECTORY"]:
     def api_queryable(path = path):
         key = request.args.get("id", type=str)
 
-        return send_as_json(get_remote_file(os.path.join(path, key.lower() + ".lua"), transform_game_cfg)) if key != None else send_as_json({ "error": "Not Found" }, 404)
+        return send_as_json(get_remote_file(os.path.join(path, key.lower() + ".lua"), transform_game_cfg, \
+            request.args.get("region", type=str, default="en"))) \
+            if key != None else send_as_json({ "error": "Not Found" }, 404)
 
     app.add_url_rule(f"/api/{route}", route, api_queryable)
 
-def get_remote_file(loc, transformer):
-    loc = os.path.join(app.config.get("LOCALE"), loc).replace("\\", "/")
-    directory = os.path.dirname(loc).replace("\\", "/")
-    filename = os.path.basename(loc).replace("\\", "/")
+def get_remote_file(location, transformer, locale = "en"):
+    if locale not in LOCALE:
+        return None
 
-    paths = [f for f in repository.get_contents(directory) if f.path == loc]
+    location = os.path.join(LOCALE[locale], location).replace("\\", "/")
+    directory = os.path.dirname(location).replace("\\", "/")
+    filename = os.path.basename(location).replace("\\", "/")
 
-    cached = get_file_reference(loc)
+    paths = [f for f in repository.get_contents(directory) if f.path == location]
+
+    cached = get_file_reference(location)
 
     if len(paths) > 0:
         path = paths[0]
         if cached != None and cached[1] == path.sha:
-            script = get_local_file(loc, "r+", lambda data: json.loads(data.read()))
+            script = get_local_file(location, "r+", lambda data: json.loads(data.read()))
         else:
-            script = str(b64decode(repository.get_git_blob(path.sha).content), "utf-8") if path.size > 1000000 else str(path.decoded_content, "utf-8")
+            script = str(b64decode(repository.get_git_blob(path.sha).content), "utf-8") \
+                if path.size > 1000000 else str(path.decoded_content, "utf-8")
 
             script = transformer(script, key = filename.split(".")[0])
-            set_file_reference(loc, path.sha)
+            set_file_reference(location, path.sha)
 
             os.makedirs(os.path.join(".data", directory), exist_ok = True)
-            get_local_file(loc, "w+", lambda data: data.write(json.dumps(script)))
+            get_local_file(location, "w+", lambda data: data.write(json.dumps(script)))
         return script
     else:
         return None
 
-def get_local_file(loc, mode, action):
-    with open(os.path.join(".data", loc + ".json"), mode, encoding = "utf-8") as data:
+def get_local_file(location, mode, action):
+    with open(os.path.join(".data", location + ".json"), mode, encoding = "utf-8") as data:
         return action(data)
 
 def get_file_reference(path):
