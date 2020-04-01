@@ -4,7 +4,6 @@ from github import Github
 from dotenv import load_dotenv
 from base64 import b64decode
 from app_routes import USING_FILE, USING_DIRECTORY
-import logging
 import sqlite3
 import json
 import os
@@ -18,17 +17,8 @@ app.config["DEBUG"] = os.getenv("RELEASE_MODE", "production") != "production"
 lua = LuaRuntime(unpack_returned_tuples = True)
 os.makedirs(".data", exist_ok=True)
 
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-
-logging.basicConfig(filename=".data/log.txt", format="%(asctime)s [%(levelname)s] %(message)s", datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO if not app.config.get("DEBUG") else logging.WARNING)
-logging.getLogger('').addHandler(console)
-logging.info("Initializing app...")
-
 with sqlite3.connect(".data/storage.db") as db:
     db.execute("CREATE TABLE IF NOT EXISTS files (path TEXT PRIKARY KEY, sha TEXT NOT NULL)")
-
-logging.info("Established database.")
 
 github = Github(os.getenv("GITHUB_TOKEN"))
 repository = github.get_repo(os.getenv("DATA_REPO"))
