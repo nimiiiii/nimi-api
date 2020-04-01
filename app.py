@@ -37,10 +37,22 @@ repository = github.get_repo(os.getenv("DATA_REPO"))
 def favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "icon.ico", mimetype="image/x-icon")
 
+@app.errorhandler(404)
+def not_found(e):
+    return send_as_json({ "error": "Invalid endpoint." }, 404)
+
+@app.errorhandler(500)
+def internal_error(e):
+    return send_as_json({ "error": "An error has occured internally." }, 500)
+
 for route, path in USING_FILE:
     def api_filterable(path=path):
         filters = request.args.to_dict()
         data = get_file(path)
+
+        if data is None:
+            return send_as_json({ "error": "Resource not found." }, 404)
+
         if len(filters) > 0:
             entries = data.values()
             filtered = [x for x in entries if all(k in x and str(x[k]).strip() == v for k, v in filters.items())]
@@ -55,7 +67,7 @@ for route, path in USING_DIRECTORY:
         key = request.args.get("id", type=str)
 
         if key is None:
-            return send_as_json({ "error": "Invalid key." })
+            return send_as_json({ "error": "Invalid key." }, 400)
         else:
             return send_as_json(get_file(f"{path}/{key}.lua", clean_game_cfg))
 
@@ -70,7 +82,7 @@ def get_file(path, clean=clean_shared_cfg):
     if len(requested) > 0:
         requested = requested[0]
     else:
-        return { "error": "Resource not found." }
+        return None
 
     saved = get_file_reference(path)
     if saved != None and saved[1] == requested.sha:
@@ -95,10 +107,10 @@ def get_file(path, clean=clean_shared_cfg):
 
     return decoded
 
-def send_as_json(data):
+def send_as_json(data, status_code = 200):
     return app.response_class(
         response = json.dumps(data),
-        status = 200,
+        status = status_code,
         mimetype = "application/json"
     )
 
