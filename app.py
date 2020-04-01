@@ -18,7 +18,11 @@ app.config["DEBUG"] = os.getenv("RELEASE_MODE", "production") != "production"
 
 os.makedirs(".data", exist_ok=True)
 
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+
 logging.basicConfig(filename=".data/log.txt", format="%(asctime)s [%(levelname)s] %(message)s", datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO if not app.config.get("DEBUG") else logging.WARNING)
+logging.getLogger('').addHandler(console)
 logging.info("Initializing app...")
 
 with sqlite3.connect(".data/storage.db") as db:
