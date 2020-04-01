@@ -1,10 +1,9 @@
 from flask import Flask, request, send_from_directory
-from slpp import slpp as lua
+from lupa import LuaRuntime
 from github import Github
 from dotenv import load_dotenv
 from base64 import b64decode
 from app_routes import USING_FILE, USING_DIRECTORY
-from app_utils import clean_game_cfg, clean_shared_cfg, try_parse_int
 import logging
 import sqlite3
 import json
@@ -16,6 +15,7 @@ app = Flask(__name__)
 app.config["LOCALE"] = os.getenv("DATA_LOCALE", "en-US")
 app.config["DEBUG"] = os.getenv("RELEASE_MODE", "production") != "production"
 
+lua = LuaRuntime(unpack_returned_tuples = True)
 os.makedirs(".data", exist_ok=True)
 
 console = logging.StreamHandler()
@@ -28,7 +28,7 @@ logging.info("Initializing app...")
 with sqlite3.connect(".data/storage.db") as db:
     db.execute("CREATE TABLE IF NOT EXISTS files (path TEXT PRIKARY KEY, sha TEXT NOT NULL)")
 
-logging.info("Established connection to database.")
+logging.info("Established database.")
 
 github = Github(os.getenv("GITHUB_TOKEN"))
 repository = github.get_repo(os.getenv("DATA_REPO"))
@@ -39,23 +39,22 @@ def favicon():
 
 @app.errorhandler(404)
 def not_found(e):
-    return send_as_json({ "error": "Invalid endpoint." }, 404)
+    return send_as_json({ "error": "Not Found" }, 404)
 
 @app.errorhandler(500)
 def internal_error(e):
-    return send_as_json({ "error": "An error has occured internally." }, 500)
+    return send_as_json({ "error": "Internal Server Error" }, 500)
 
 for route, path in USING_FILE:
-    def api_filterable(path=path):
+    def api_filterable(path = path):
         filters = request.args.to_dict()
-        data = get_file(path)
+        data = get_remote_file(path, transform_shared_cfg)
 
         if data is None:
-            return send_as_json({ "error": "Resource not found." }, 404)
+            return send_as_json({ "error": "Not Found" }, 404)
 
         if len(filters) > 0:
-            entries = data.values()
-            filtered = [x for x in entries if all(k in x and str(x[k]).strip() == v for k, v in filters.items())]
+            filtered = [e for e in data["entries"] if all(k in e and str(e[k]).strip().lower() == v.lower() for k, v in filters.items())]
             return send_as_json({ "entries": filtered })
         else:
             return send_as_json(data)
@@ -63,56 +62,41 @@ for route, path in USING_FILE:
     app.add_url_rule(f"/api/{route}", route, api_filterable)
 
 for route, path in USING_DIRECTORY:
-    def api_queryable(path=path):
+    def api_queryable(path = path):
         key = request.args.get("id", type=str)
 
-        if key is None:
-            return send_as_json({ "error": "Invalid key." }, 400)
-        else:
-            return send_as_json(get_file(f"{path}/{key}.lua", clean_game_cfg))
+        return send_as_json(get_remote_file(os.path.join(path, key.lower() + ".lua"), transform_game_cfg)) if key != None else send_as_json({ "error": "Not Found" }, 404)
 
     app.add_url_rule(f"/api/{route}", route, api_queryable)
 
-def get_file(path, clean=clean_shared_cfg):
-    path = f"{app.config.get('LOCALE')}/{path}"
-    logging.info("Requesting file '%s'", path)
-    directory = os.path.dirname(path)
-    requested = [f for f in repository.get_contents(directory) if f.path == path]
+def get_remote_file(loc, transformer):
+    loc = os.path.join(app.config.get("LOCALE"), loc).replace("\\", "/")
+    directory = os.path.dirname(loc).replace("\\", "/")
+    filename = os.path.basename(loc).replace("\\", "/")
 
-    if len(requested) > 0:
-        requested = requested[0]
+    paths = [f for f in repository.get_contents(directory) if f.path == loc]
+
+    cached = get_file_reference(loc)
+
+    if len(paths) > 0:
+        path = paths[0]
+        if cached != None and cached[1] == path.sha:
+            script = get_local_file(loc, "r+", lambda data: json.loads(data.read()))
+        else:
+            script = str(b64decode(repository.get_git_blob(path.sha).content), "utf-8") if path.size > 1000000 else str(path.decoded_content, "utf-8")
+
+            script = transformer(script, key = filename.split(".")[0])
+            set_file_reference(loc, path.sha)
+
+            os.makedirs(os.path.join(".data", directory), exist_ok = True)
+            get_local_file(loc, "w+", lambda data: data.write(json.dumps(script)))
+        return script
     else:
         return None
 
-    saved = get_file_reference(path)
-    if saved != None and saved[1] == requested.sha:
-        logging.info("Data is found in cache. Retrieving...")
-        with open(f".data/{path}.json", "r+") as data:
-            decoded = json.loads(data.read())
-    else:
-        logging.info("Data is outdated or not found. Fetching...")
-        if requested.size > 1000000:
-            logging.warning("Data exceeds 1 MB. Requesting a blob. This might take a while.")
-            decoded = str(b64decode(repository.get_git_blob(requested.sha).content), "utf-8")
-        else:
-            decoded = str(requested.decoded_content, "utf-8")
-        decoded = lua.decode(clean(decoded))
-        
-        set_file_reference(path, requested.sha)
-        logging.info("Data has been updated. SHA: %s", requested.sha)
-
-        os.makedirs(os.path.dirname(f".data/{path}"), exist_ok=True)
-        with open(f".data/{path}.json", "w+") as data:
-            data.write(json.dumps(decoded))
-
-    return decoded
-
-def send_as_json(data, status_code = 200):
-    return app.response_class(
-        response = json.dumps(data),
-        status = status_code,
-        mimetype = "application/json"
-    )
+def get_local_file(loc, mode, action):
+    with open(os.path.join(".data", loc + ".json"), mode, encoding = "utf-8") as data:
+        return action(data)
 
 def get_file_reference(path):
     with sqlite3.connect(".data/storage.db") as db:
@@ -124,6 +108,17 @@ def set_file_reference(path, sha):
             db.execute("UPDATE files SET sha = ? WHERE path = ?", (sha, path))
         else:
             db.execute("INSERT INTO files VALUES (?, ?)", (path, sha))
+
+def send_as_json(data, status_code = 200):
+    return app.response_class(response = json.dumps(data), status = status_code, mimetype = "application/json")
+
+def transform_shared_cfg(script, **kwargs):
+    injected = lua.execute("json = require 'json'" + script + f" json.encode(pg.{kwargs['key']})")
+    return { "entries": list(json.loads(injected).values()) }
+
+def transform_game_cfg(script, **kwargs):
+    injected = lua.execute("json = require 'json' " + script.replace("return", "return json.encode(") + ")")
+    return json.loads(injected)
 
 if __name__ == "__main__":
     app.run()
