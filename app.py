@@ -17,7 +17,7 @@ lua = LuaRuntime(unpack_returned_tuples = True)
 os.makedirs(".data", exist_ok=True)
 
 with sqlite3.connect(".data/storage.db") as db:
-    db.execute("CREATE TABLE IF NOT EXISTS files (path TEXT PRIKARY KEY, sha TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS files (path TEXT PRIMARY KEY, sha TEXT NOT NULL)")
 
 github = Github(os.getenv("GITHUB_TOKEN"))
 repository = github.get_repo(os.getenv("DATA_REPO"))
