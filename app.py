@@ -44,7 +44,7 @@ for route, path in ROUTES["USING_FILE"]:
             return send_as_json({ "error": "Not Found" }, 404)
 
         if len(filters) > 0:
-            filtered = [e for e in data["entries"] if all(k in e and str(e[k]).strip().lower() == v.lower() for k, v in filters.items())]
+            filtered = [e for e in data["entries"] if all(k in e and str(e[k]).strip().lower() in v.lower().split(",") for k, v in filters.items())]
             return send_as_json({ "entries": filtered })
         else:
             return send_as_json(data)
