@@ -50,9 +50,9 @@ for route, path in ROUTES["USING_FILE"]:
             data = [e for e in data if all(k in e and str(e[k]).strip().lower() in v.lower().split(",") for k, v in filters.items())]
 
         keys = request.args.get("keys", type=str)
-        if keys != None:
+        if keys is not None:
             keys = keys.split(",")
-            if len(keys) > 1 and len(data) > 0:
+            if len(keys) > 0 and len(data) > 0:
                 to_remove = set(data[0].keys()).difference(keys)
                 for entry in data:
                     for key in to_remove:
