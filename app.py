@@ -38,16 +38,26 @@ for route, path in ROUTES["USING_FILE"]:
     def api_filterable(path = path):
         filters = request.args.to_dict()
         filters.pop('region', None)
-        data = get_remote_file(path, transform_shared_cfg, request.args.get("region", type=str, default="en"))
+        filters.pop('keys', None)
 
+        data = get_remote_file(path, transform_shared_cfg, request.args.get("region", type=str, default="en"))
         if data is None:
             return send_as_json({ "error": "Not Found" }, 404)
+        else:
+            data = data["entries"]
 
         if len(filters) > 0:
-            filtered = [e for e in data["entries"] if all(k in e and str(e[k]).strip().lower() in v.lower().split(",") for k, v in filters.items())]
-            return send_as_json({ "entries": filtered })
-        else:
-            return send_as_json(data)
+            data = [e for e in data if all(k in e and str(e[k]).strip().lower() in v.lower().split(",") for k, v in filters.items())]
+
+        keys = request.args.get("keys", type=str, default="").split(",")
+        if len(keys) > 0 and len(data) > 0:
+            to_remove = set(data[0].keys()).difference(keys)
+            for entry in data:
+                for key in to_remove:
+                    if key in entry:
+                        del entry[key]
+
+        return send_as_json({ "entries": data })
 
     app.add_url_rule(f"/api/{route}", route, api_filterable)
 
@@ -110,7 +120,7 @@ def send_as_json(data, status_code = 200):
 
 def transform_shared_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json'" + script + f" json.encode(pg.{kwargs['key']})")
-    return { "entries": list(json.loads(injected).values()) }
+    return json.loads(injected).values()
 
 def transform_game_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json' " + script.replace("return", "return json.encode(") + ")")
