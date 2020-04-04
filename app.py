@@ -43,8 +43,6 @@ for route, path in ROUTES["USING_FILE"]:
         data = get_remote_file(path, transform_shared_cfg, request.args.get("region", type=str, default="en"))
         if data is None:
             return send_as_json({ "error": "Not Found" }, 404)
-        else:
-            data = data["entries"]
 
         if len(filters) > 0:
             data = [e for e in data if all(k in e and str(e[k]).strip().lower() in v.lower().split(",") for k, v in filters.items())]
@@ -56,7 +54,8 @@ for route, path in ROUTES["USING_FILE"]:
                 to_remove = set(data[0].keys()).difference(keys)
                 for entry in data:
                     for key in to_remove:
-                        del entry[key]
+                        if key in entry:
+                            del entry[key]
 
         return send_as_json({ "entries": data })
 
@@ -121,7 +120,7 @@ def send_as_json(data, status_code = 200):
 
 def transform_shared_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json'" + script + f" json.encode(pg.{kwargs['key']})")
-    return json.loads(injected).values()
+    return list(json.loads(injected).values())
 
 def transform_game_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json' " + script.replace("return", "return json.encode(") + ")")
