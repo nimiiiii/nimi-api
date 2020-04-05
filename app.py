@@ -120,7 +120,9 @@ def send_as_json(data, status_code = 200):
 
 def transform_shared_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json'" + script + f" json.encode(pg.{kwargs['key']})")
-    return list(json.loads(injected).values())
+    transformed = json.loads(injected)
+    transformed.pop("all", None)
+    return list(transformed.values())
 
 def transform_game_cfg(script, **kwargs):
     injected = lua.execute("json = require 'json' " + script.replace("return", "return json.encode(") + ")")
