@@ -11,6 +11,7 @@ ROUTES = {
         ("ships/skill", "sharecfg/skill_data_template.lua"),
         ("ships/build", "sharecfg/ship_data_create_material.lua"),
         ("ships/group", "sharecfg/ship_data_group.lua"),
+        ("ships/research", "sharecfg/ship_data_blueprint.lua"),
         ("ships/limitbreak", "sharecfg/ship_data_breakout.lua"),
         ("items", "sharecfg/item_data_statistics.lua"),
         ("items/player", "sharecfg/player_resource.lua"),
