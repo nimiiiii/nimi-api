@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: kanadgupta/glitch-sync@v1.0
-    - name: Glitch Sync
+      name: Glitch Sync
       with:
         project-id: '${{ secrets.GLITCH_PROJECT_ID }}'
         auth-token: '${{ secrets.GLITCH_AUTH_TOKEN }}'
