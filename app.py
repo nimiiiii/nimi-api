@@ -119,7 +119,7 @@ def send_as_json(data, status_code = 200):
     return app.response_class(response = json.dumps(data), status = status_code, mimetype = "application/json")
 
 def transform_shared_cfg(script, **kwargs):
-    injected = lua.execute("json = require 'json'" + script + f" json.encode(pg.{kwargs['key']})")
+    injected = lua.execute("json = require 'json'" + script + f" return json.encode(pg.{kwargs['key']})")
     transformed = json.loads(injected)
     transformed.pop("all", None)
     return list(transformed.values())
