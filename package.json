@@ -23,7 +23,9 @@
       "semi": ["error", "always"],
       "no-var": "error",
       "indent": ["warn", 4, { "SwitchCase": 1 }],
-      "no-trailing-spaces": ["warn", { "ignoreComments": true }]
+      "quotes": ["warn", "double", { "avoidEscape": true }],
+      "no-trailing-spaces": ["warn", { "ignoreComments": true }],
+      "object-curly-spacing": ["warn", "always"]
     }
   },
   "repository": {
