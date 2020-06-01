@@ -2,9 +2,9 @@
   "name": "azur-lane-api",
   "version": "0.0.1",
   "description": "Unofficial data provider for the mobile game: Azur Lane",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "serve": "node ./src/index.js"
+    "serve": "node ./index.js"
   },
   "repository": {
     "type": "git",
