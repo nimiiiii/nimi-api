@@ -19,8 +19,8 @@ require("dotenv").config();
     }
 
     app.use("/api", router);
-
-    app.listen(3000, () => {
-        console.log("Listen Server started.");
-    });
+    app.listen((process.env.RELEASE_MODE == "development") ? 3000 : process.env.PORT,
+        () => {
+            console.log("Listen Server started.");
+        });
 })().catch(e => console.error(e));
