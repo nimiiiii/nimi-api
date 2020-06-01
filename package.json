@@ -1,0 +1,38 @@
+{
+  "name": "azur-lane-api",
+  "version": "0.0.1",
+  "description": "Unofficial data provider for the mobile game: Azur Lane",
+  "main": "src/index.js",
+  "scripts": {
+    "serve": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeNitrous/azur-lane-api.git"
+  },
+  "keywords": [
+    "azur",
+    "lane",
+    "azurlane",
+    "api"
+  ],
+  "author": "Nitrous",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LeNitrous/azur-lane-api/issues"
+  },
+  "homepage": "https://github.com/LeNitrous/azur-lane-api#readme",
+  "dependencies": {
+    "@octokit/rest": "^17.9.2",
+    "better-sqlite-pool": "^0.3.0",
+    "better-sqlite3": "^7.0.1",
+    "dotenv": "^8.2.0",
+    "enmap": "^5.2.4",
+    "express": "^4.17.1",
+    "fengari": "^0.1.4",
+    "fs-extra": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.1.0"
+  }
+}
