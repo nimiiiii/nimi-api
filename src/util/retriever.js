@@ -16,7 +16,7 @@ class Retriever {
         Object.defineProperty(this, "github", {
             value: new Octokit({ auth: options.key }),
             writeable: false
-        })
+        });
 
         Object.defineProperty(this, "files", {
             value: [],
@@ -95,13 +95,13 @@ class Retriever {
             let blob;
             if (remote.data.size > 1000000)
                 blob = await this.github.git.getBlob({ owner: this.options.github.owner, repo: this.options.github.repo, sha: remote.data.sha });
-            
+
             out = (blob)
                 ? Buffer.from(blob.data.content, blob.data.encoding).toString("utf-8")
                 : Buffer.from(remote.data.content, remote.data.encoding).toString("utf-8");
         }
 
-        return [ out, remote ]
+        return [ out, remote ];
     }
 }
 
@@ -123,9 +123,9 @@ Retriever.defaults = {
     parseFunc: function(obj) {
         if (obj.all)
             delete obj.all;
-    
+
         return Object.values(obj);
     }
-}
+};
 
 module.exports = Retriever;

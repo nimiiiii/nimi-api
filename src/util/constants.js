@@ -83,4 +83,4 @@ module.exports.REGIONS = {
     "cn": "zh-CN",
     "tw": "zh-TW",
     "ko": "ko-KR"
-}
+};

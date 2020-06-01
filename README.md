@@ -1,7 +1,7 @@
 # Azur Lane API
 Unofficial API that returns JSON data from [Azur Lane](https://azurlane.yo-star.com/). Always updated to the latest game version.
 
-You can test it out locally by cloning it or downloading it then running `npm install` then `npm run serve`.
+You can test it out locally by cloning it or downloading it then running `npm install` then `npm run start`.
 
 You will need a `.env` file in the root directory. For example:
 ```dotenv

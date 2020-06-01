@@ -1,4 +1,4 @@
-name: DEPLOY
+name: deploy
 
 on:
   push:
@@ -8,8 +8,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: kanadgupta/glitch-sync@v1.0
-      name: Glitch Sync
+    - uses: fountainhead/action-wait-for-check@v1.0.0
+      name: Wait for code inspection
       with:
-        project-id: '${{ secrets.GLITCH_PROJECT_ID }}'
-        auth-token: '${{ secrets.GLITCH_AUTH_TOKEN }}'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        checkName: lint
+      id: wait-for-inspect
+
+    - uses: kanadgupta/glitch-sync@v1.0
+      name: Sync repository to Glitch Application
+      with:
+        project-id: ${{ secrets.GLITCH_PROJECT_ID }}
+        auth-token: ${{ secrets.GLITCH_AUTH_TOKEN }}
+      if: steps.wait-for-inspect.outputs.conclusion == 'success'

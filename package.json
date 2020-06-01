@@ -9,6 +9,23 @@
   "engines": {
     "node": "12.x"
   },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "env": {
+      "node": true,
+      "commonjs": true
+    },
+    "rules": {
+      "semi": ["error", "always"],
+      "no-var": "error",
+      "indent": ["warn", 4, { "SwitchCase": 1 }],
+      "no-trailing-spaces": ["warn", { "ignoreComments": true }]
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LeNitrous/azur-lane-api.git"

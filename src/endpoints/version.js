@@ -8,7 +8,7 @@ module.exports = {
         let [ owner, repo ] = process.env.DATA_REPO.split("/");
         let commits = await github.repos.listCommits({ owner, repo });
         let region = REGIONS[req.params.region];
-        
+
         if (!region)
             return res.jsonp({ error: "Not Found" });
 
@@ -16,10 +16,10 @@ module.exports = {
         let commit = messages.find(m => m.includes(region));
         let info = [...commit.matchAll(/(\w+): (\S+)/g)]
             .reduce((acc, cur) => {
-                acc[cur[1].toLowerCase()] = cur[2]
+                acc[cur[1].toLowerCase()] = cur[2];
                 return acc;
             }, {});
 
         res.jsonp(info);
     }
-}
+};
