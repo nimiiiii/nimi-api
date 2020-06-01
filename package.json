@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node ./server.js"
   },
+  "engines": {
+    "node": "13.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LeNitrous/azur-lane-api.git"
