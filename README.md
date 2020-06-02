@@ -25,6 +25,15 @@ Please consider donating to be able to host a dedicated server by clicking the l
 All endpoints are defined in the [endpoints directory](./src/endpoints) and are prefixed by `/api/`.
 
 ## State
-This is currently being rewritten to be more robust and simplified. The main goal is to lessen the barrier of entry and the number of required requests which was the problem of the previous iteration. Documentation will be supplied at a later date.
+Currently under process of revision.
+You can try it out on [Glitch](https://azur-lane-api.glitch.me/).
 
-You can try it out by using this site that hosts the api: [azur-lane-api on Glitch](https://azur-lane-api.glitch.me/).
+## Motivation
+### General
+There aren't many data providers for this mobile game. For aspiring developers to help out the community. Opportunities like Discord bots or self-hosted websites with tools and viewers.
+### For the revision
+[The last revision](repo/blob/deprecated) had a big issue where requests can be bigger than 1 MB. This abysmally affected the response times and always had data that isn't really needed or was unreadable.
+
+This was mitigated by adding query string parameters. However this left an unsolvable issue of needing to make multiple requests to simply build usable data.
+
+This rewrite aims to solve all problems by handling lua data parsing to an interchangeable format like JSON and provide data to consumers in a readable and understandable format.
