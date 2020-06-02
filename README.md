@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" width="256" title="Azur Lane API" style="filter: invert(1);">
+  <img src="icon.png" width="256" title="Azur Lane API">
 </p>
 
 # Azur Lane API
