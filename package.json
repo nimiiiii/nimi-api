@@ -4,7 +4,8 @@
   "description": "Unofficial data provider for the mobile game: Azur Lane",
   "main": "server.js",
   "scripts": {
-    "start": "node ./server.js"
+    "start": "node server.js",
+    "serve": "node node_modules/supervisor/lib/cli-wrapper.js -w server.js,src server.js"
   },
   "engines": {
     "node": "12.x"
@@ -20,12 +21,45 @@
       "commonjs": true
     },
     "rules": {
-      "semi": ["error", "always"],
+      "semi": [
+        "error",
+        "always"
+      ],
       "no-var": "error",
-      "indent": ["warn", 4, { "SwitchCase": 1 }],
-      "quotes": ["warn", "double", { "avoidEscape": true }],
-      "no-trailing-spaces": ["warn", { "ignoreComments": true }],
-      "object-curly-spacing": ["warn", "always"]
+      "indent": [
+        "warn",
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "quotes": [
+        "warn",
+        "double",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "max-len": [
+        "warn",
+        {
+          "code": 100
+        }
+      ],
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "no-trailing-spaces": [
+        "warn",
+        {
+          "ignoreComments": true
+        }
+      ],
+      "object-curly-spacing": [
+        "warn",
+        "always"
+      ]
     }
   },
   "repository": {
@@ -55,6 +89,8 @@
     "fs-extra": "^9.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.1.0"
+    "chalk": "^4.0.0",
+    "eslint": "^7.1.0",
+    "supervisor": "^0.12.0"
   }
 }

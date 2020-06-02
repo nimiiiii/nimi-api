@@ -20,7 +20,7 @@ class Retriever {
 
         Object.defineProperty(this, "files", {
             value: [],
-            writable: false,
+            writable: false
         });
 
         Object.defineProperty(this, "references", {
@@ -39,13 +39,18 @@ class Retriever {
         this.references = new Enmap({
             name: "file_references",
             dataDir: this.options.dataDir,
-            autoFetch: false,
+            autoFetch: false
         });
 
         await this.references.defer;
     }
 
-    add(key, path, preParseFunc = Retriever.defaults.stripFunc, postParseFunc = Retriever.defaults.parseFunc) {
+    add(
+        key,
+        path,
+        preParseFunc = Retriever.defaults.stripFunc,
+        postParseFunc = Retriever.defaults.parseFunc
+    ) {
         this.files.push([key, path, preParseFunc, postParseFunc]);
     }
 
@@ -87,14 +92,21 @@ class Retriever {
     }
 
     async getRemoteFile(path) {
-        let remote = await this.github.repos.getContents({ owner: this.options.github.owner, repo: this.options.github.repo, path });
         let reference = this.references.get(path);
+        let remote = await this.github.repos.getContents({
+            owner: this.options.github.owner,
+            repo: this.options.github.repo, path
+        });
 
         let out;
         if (reference !== remote.data.sha) {
             let blob;
             if (remote.data.size > 1000000)
-                blob = await this.github.git.getBlob({ owner: this.options.github.owner, repo: this.options.github.repo, sha: remote.data.sha });
+                blob = await this.github.git.getBlob({
+                    owner: this.options.github.owner,
+                    repo: this.options.github.repo,
+                    sha: remote.data.sha
+                });
 
             out = (blob)
                 ? Buffer.from(blob.data.content, blob.data.encoding).toString("utf-8")
