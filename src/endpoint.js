@@ -1,5 +1,6 @@
 const ErrorHandler = require("./util/errorhandler");
 const { readdir, lstat } = require("fs-extra");
+const Model = require("./models/base");
 const Express = require("express");
 const path = require("path");
 
@@ -29,7 +30,15 @@ class Endpoint {
                 this.retriever.lang = req.query.region;
                 await this.retriever.init();
             }
-            res.jsonp(await this.action(req, res, next));
+
+            const output = await this.action(req, res, next);
+
+            if (typeof output == "object")
+                res.jsonp(output);
+            else if (output.prototype instanceof Model)
+                res.jsonp(output.serialize());
+            else
+                res.jsonp({ error: "Invalid Model" });
         } catch (error) {
             next(new ErrorHandler(error.status || 500, "An error has occured", error));
         }

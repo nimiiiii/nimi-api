@@ -3,8 +3,6 @@ const { tableToObject } = require("../../util/json.lua.js");
 const Enmap = require("enmap");
 const path = require("path");
 
-const resolvePath = (...p) => path.resolve(__dirname, ...p);
-
 class Retriever {
     constructor(dir, repo) {
         this.dir = dir;
@@ -16,9 +14,13 @@ class Retriever {
     }
 
     async init() {
-        await ensureDir(resolvePath("../../.data"));
+        await ensureDir(Retriever.dataPath);
 
-        this.references = new Enmap({ name: "file_references", dataDir: ".data", autoFetch: false });
+        this.references = new Enmap({
+            name: "file_references",
+            dataDir: Retriever.dataPath,
+            autoFetch: false
+        });
         this.remote = await this.repo.getDirectory(path.join(this.lang, this.dir)
             .replace(/\\/, "/"));
 
@@ -37,7 +39,7 @@ class Retriever {
         for (let [key, file] of this.requests) {
             let refLocal = this.references.get(path.join(this.lang, this.dir, file));
             let refRemote = this.remote.get(file).sha;
-            let targetDir = resolvePath("../../.data/files", file.replace("lua", "json"));
+            let targetDir = path.join(Retriever.dataPath, "/files", file.replace("lua", "json"));
 
             let obj;
             if (refLocal == refRemote)
@@ -63,5 +65,7 @@ class Retriever {
         return obj;
     }
 }
+
+Retriever.dataPath = "./.data";
 
 module.exports = Retriever;

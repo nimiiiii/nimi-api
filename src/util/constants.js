@@ -1,7 +1,7 @@
 module.exports.SHIP_ATTR_TYPE = {
     1: "health",
     2: "cannon",
-    3: "Torpedo",
+    3: "torpedo",
     4: "antiAir",
     5: "air",
     6: "reload",
