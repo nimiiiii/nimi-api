@@ -1,7 +1,10 @@
 class ErrorHandler extends Error {
-    constructor(status, message) {
+    constructor(status, message, source) {
         super(message);
         this.status = status;
+        this.source = source;
+        this.stack = this.stack.split("\n").slice(0, 2).join("\n") +
+            "\n" + source.stack;
     }
 }
 

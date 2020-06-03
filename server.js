@@ -1,8 +1,8 @@
-const { readdir, lstat } = require("fs-extra");
 const { REGIONS } = require("./src/util/constants");
+const Repository = require("./src/github/repository");
+const Endpoint = require("./src/endpoint");
 const Express = require("express");
 const chalk = require("chalk");
-const path = require("path");
 
 const app = Express();
 
@@ -31,7 +31,8 @@ require("dotenv").config();
         next();
     });
 
-    await loadEndpoints("./src/endpoints", base);
+    await Endpoint.load("./src/endpoints", base, 
+        new Repository(process.env.GITHUB_TOKEN, process.env.DATA_REPO, "master"));
 
     app.use("/api", base);
 
@@ -42,7 +43,8 @@ require("dotenv").config();
 
     // eslint-disable-next-line no-unused-vars
     app.use(function(err, req, res, next) {
-        res.status(err.status || 500).jsonp({ message: "Internal Server Error" });
+        console.error(err.stack);
+        res.status(err.status).jsonp({ message: "Internal Server Error" });
     });
 
     const port = process.env.PORT;
@@ -51,25 +53,3 @@ require("dotenv").config();
         console.log(`${chalk.bgBlueBright(" START ")} Server is now listening on port ${port}`);
     });
 })().catch(e => console.error(e));
-
-async function loadEndpoints(dir, router) {
-    let endpoints = await readdir(dir);
-
-    for (let artifact of endpoints) {
-        let stats = await lstat(`${dir}/${artifact}`);
-
-        if (stats.isFile() && artifact.endsWith(".js")) {
-            let mod = require(path.resolve(`${dir}/${artifact}`));
-
-            if (mod && mod.path && mod.func)
-                router.get(mod.path, mod.func);
-        }
-
-        if (stats.isDirectory()) {
-            let sub = Express.Router({ mergeParams: true });
-            router.use(`/${artifact}`, sub);
-
-            await loadEndpoints(`${dir}/${artifact}`, sub);
-        }
-    }
-}
