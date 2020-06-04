@@ -4,7 +4,7 @@ const {
     SHIP_ATTR_TYPE,
     SHIP_ARMOR_TYPE,
     SHIP_SKILL_TYPE,
-    SHIP_EQUIP_TYPE
+    EQUIPMENT_TYPE
 } = require("../util/constants");
 
 class Ship extends ShipListItem {
@@ -29,7 +29,7 @@ class Ship extends ShipListItem {
             .reduce((acc, cur, idx) => {
                 const slot = `slot-${idx}`;
                 acc[slot] = {};
-                acc[slot].types = SHIP_EQUIP_TYPE[data[cur]];
+                acc[slot].types = data[cur].map(type => EQUIPMENT_TYPE[type]);
 
                 if (idx < 4)
                     acc[slot].proficiency = stat.equipment_proficiency[idx];
@@ -52,7 +52,6 @@ class Ship extends ShipListItem {
 
         this.acquisition = group.description.reduce(function(output, entry) {
             let [text, data] = entry;
-            text = text.trim();
 
             if (data[0] == "SHOP") {
                 if (data[1].warp == "sham")
@@ -67,8 +66,11 @@ class Ship extends ShipListItem {
                     output.exchange = "medal";
 
                 const constructTypeRegex = /(light|heavy|special)/gi;
-                for (let type of [...text.match(constructTypeRegex)].map(s => s.toLowerCase())) {
-                    output.construction[type] = true;
+                const constructTypes = text.match(constructTypeRegex);
+                if (constructTypes !== null) {
+                    for (let type of [...constructTypes].map(s => s.toLowerCase())) {
+                        output.construction[type] = true;
+                    }
                 }
             }
 

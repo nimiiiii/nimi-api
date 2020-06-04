@@ -50,7 +50,7 @@ module.exports.SHIP_SKILL_TYPE = {
     3: "support"
 };
 
-module.exports.EQUIP_TYPE = {
+module.exports.EQUIPMENT_TYPE = {
     1: "destroyerGun",
     2: "lightCruiserGun",
     3: "heavyCruiserGun",
