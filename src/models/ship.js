@@ -1,13 +1,18 @@
 const ShipListItem = require("./shiplistitem");
 const ShipSkinItem = require("./shipskinitem");
-const { SHIP_ATTR_TYPE } = require("../util/constants");
+const {
+    SHIP_ATTR_TYPE,
+    SHIP_ARMOR_TYPE,
+    SHIP_SKILL_TYPE,
+    SHIP_EQUIP_TYPE
+} = require("../util/constants");
 
 class Ship extends ShipListItem {
     constructor(data, stat, group, skin, skill) {
         super(data, stat, group);
 
         this.ammoCount = data.ammo;
-        this.armorType = stat.armor_type;
+        this.armorType = SHIP_ARMOR_TYPE[stat.armor_type];
 
         this.attributes = Object.entries(SHIP_ATTR_TYPE)
             .reduce((acc, cur) => {
@@ -24,7 +29,7 @@ class Ship extends ShipListItem {
             .reduce((acc, cur, idx) => {
                 const slot = `slot-${idx}`;
                 acc[slot] = {};
-                acc[slot].types = data[cur];
+                acc[slot].types = SHIP_EQUIP_TYPE[data[cur]];
 
                 if (idx < 4)
                     acc[slot].proficiency = stat.equipment_proficiency[idx];
@@ -37,7 +42,7 @@ class Ship extends ShipListItem {
             return {
                 id: s.id,
                 name: s.name.trim(),
-                type: s.type,
+                type: SHIP_SKILL_TYPE[s.type],
                 description: s.desc,
                 descriptionMod: (s.desc_add[0])
                     ? s.desc_add[0].map(entry => entry[0])
@@ -46,7 +51,8 @@ class Ship extends ShipListItem {
         });
 
         this.acquisition = group.description.reduce(function(output, entry) {
-            const [text, data] = entry;
+            let [text, data] = entry;
+            text = text.trim();
 
             if (data[0] == "SHOP") {
                 if (data[1].warp == "sham")
@@ -78,7 +84,7 @@ class Ship extends ShipListItem {
                 };
             }
 
-            if (data[0] == "") {
+            if (data[0].length == 0) {
                 const eventRegex = /Event: (.+)/;
                 if (eventRegex.test(text))
                     output.event = text.match(eventRegex)[1];

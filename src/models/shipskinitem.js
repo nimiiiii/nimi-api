@@ -5,7 +5,7 @@ class ShipSkinItem extends Model {
     constructor(data) {
         super();
 
-        this.id = data.skin_id;
+        this.id = data.id;
         this.name = data.name;
         this.description = data.desc;
         this.assetName = data.painting;

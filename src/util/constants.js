@@ -1,3 +1,20 @@
+module.exports.SHIP_HULL_TYPE = {
+    1: "destroyer",
+    2: "lightCruiser",
+    3: "heavyCruiser",
+    4: "battlecruiser",
+    5: "battleship",
+    6: "lightAircraftCarrier",
+    7: "aircraftCarrier",
+    8: "submarine",
+    9: "aviationCruiser",
+    10: "aviationBattleship",
+    12: "repairShip",
+    13: "monitor",
+    17: "submarineSeaplaneCarrier",
+    18: "largeCruiser"
+};
+
 module.exports.SHIP_ATTR_TYPE = {
     0: "health",
     1: "cannon",
@@ -31,6 +48,24 @@ module.exports.SHIP_SKILL_TYPE = {
     1: "offense",
     2: "defense",
     3: "support"
+};
+
+module.exports.EQUIP_TYPE = {
+    1: "destroyerGun",
+    2: "lightCruiserGun",
+    3: "heavyCruiserGun",
+    4: "battleshipGun",
+    5: "torpedo",
+    6: "antiAircraft",
+    7: "fighter",
+    8: "torpedoBomber",
+    9: "diveBomber",
+    10: "auxiliaryEquipment",
+    11: "largeCruiserGun",
+    12: "seaplane",
+    13: "submarineTorpedo",
+    14: "antiSubmarineWarfare",
+    15: "helicopter"
 };
 
 module.exports.REGIONS = {
