@@ -19,13 +19,13 @@ module.exports.SHIP_ATTR_TYPE = {
     0: "health",
     1: "cannon",
     2: "torpedo",
-    3: "antiAircraft",
+    3: "antiAir",
     4: "aviation",
     5: "reload",
-    // 6: "unknown-id-7",
-    // 7: "unknown-id-8",
+    6: "armor",
+    7: "hit",
     8: "evasion",
-    // 9: "unknown-id-10",
+    9: "speed",
     10: "luck",
     11: "antiSub"
 };
