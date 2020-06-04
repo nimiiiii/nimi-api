@@ -7,14 +7,16 @@ class Directory {
     }
 
     get(name) {
-        return this.data.find(file => file.path == name && file.type == "blob");
+        const file = this.data.find(file => file.path == name && file.type == "blob");
+
+        if (!file)
+            throw new Error("File not found.");
+
+        return file;
     }
 
     async download(name) {
         let file = this.get(name);
-
-        if (!file)
-            throw new Error("File not found.");
 
         let blob = await this.github.git.getBlob({
             repo: this.repo.name,
