@@ -1,4 +1,4 @@
-const SharedCfgRetriever = require("../retrievers/sharecfgretriever");
+const SharedCfgRetriever = require("../../retrievers/sharecfgretriever");
 const Endpoint = require("../../endpoint");
 const Ship = require("../../models/ship");
 

@@ -1,6 +1,6 @@
 const Endpoint = require("../../endpoint");
 const ShipList = require("../../models/shiplist");
-const SharedCfgRetriever = require("../retrievers/sharecfgretriever");
+const SharedCfgRetriever = require("../../retrievers/sharecfgretriever");
 
 class ShipIndexEndpoint extends Endpoint {
     constructor(repo) {

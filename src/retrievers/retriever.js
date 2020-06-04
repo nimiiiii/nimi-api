@@ -1,5 +1,5 @@
 const { readJSON, outputJSON, ensureDir } = require("fs-extra");
-const { tableToObject } = require("../../util/json.lua.js");
+const { tableToObject } = require("../util/json.lua.js");
 const Enmap = require("enmap");
 const path = require("path");
 
