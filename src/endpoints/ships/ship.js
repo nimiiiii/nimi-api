@@ -10,16 +10,24 @@ class ShipDetailEndpoint extends Endpoint {
     async action(req) {
         this.add("ships", "ship_data_template.lua");
         this.add("stats", "ship_data_statistics.lua");
+        this.add("skins", "ship_skin_template.lua");
         this.add("groups", "ship_data_group.lua");
+        this.add("skills", "skill_data_template.lua");
 
         const { groupId } = req.params;
-        const { ships, stats, groups } = await this.get();
+        const { breakoutId } = req.query;
+        const { ships, stats, groups, skins, skills } = await this.get();
+
+        const ship = ships.filter(s => s.group_type == groupId)
+            .reverse()[(breakoutId) ? parseInt(breakoutId) - 1 : 0];
 
         const group = groups.find(g => g.group_type == groupId);
-        const ship = ships.find(s => s.group_type == groupId);
-        const stat = stats.find(s => s.id == ship.id);
+        const skill = skills.filter(s => ship.buff_list_display.includes(s.id));
 
-        return new Ship(ship, stat, group);
+        const stat = stats.find(s => s.id == ship.id);
+        const skin = skins.filter(s => s.ship_group == groupId);
+
+        return new Ship(ship, stat, group, skin, skill);
     }
 }
 
