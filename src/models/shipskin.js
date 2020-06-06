@@ -43,7 +43,10 @@ class ShipSkin extends Model {
                     if (Array.isArray(extra[key]))
                         obj[val] = extra[0][1];
                     else if (typeof extra[key] == "string" && extra[key].length > 0)
-                        obj[val] = extra[key];
+                        if (key == "main")
+                            obj[val] = extra[key].split("|");
+                        else
+                            obj[val] = extra[key];
 
                     return obj;
                 }, {});
@@ -63,7 +66,7 @@ const SHIP_DIALOGUE_MAP = {
     detail: "details",
     unlock: "acquisition",
     login: "login",
-    main: "idle1",
+    main: "idle",
     home: "return",
     mail: "mail",
     mission: "task",
