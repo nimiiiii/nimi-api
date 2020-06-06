@@ -9,7 +9,7 @@ class ShipSkin extends Model {
         this.skinId = skinId;
     }
 
-    async load(shipSkins, shipSkinsDialogue, shipSkinsDialogueExtra) {
+    async load(codes, shipSkins, shipSkinsDialogue, shipSkinsDialogueExtra) {
         const skin = shipSkins.find(s => s.id == this.skinId);
 
         if (!skin)
@@ -29,7 +29,15 @@ class ShipSkin extends Model {
                 .reduce((obj, entry) => {
                     const [key, val] = entry;
 
-                    obj[val] = dialogue[key];
+                    if (key == "main") {
+                        // Dialogue is split using a pipe character
+                        dialogue[key].split("|").forEach((text, idx) => {
+                            obj[`idle${idx + 1}`] = replaceNameCodes(text, codes);
+                        });
+                    } else
+                        obj[val] = (dialogue[key].length > 0)
+                            ? replaceNameCodes(dialogue[key], codes)
+                            : null;
 
                     return obj;
                 }, {});
@@ -40,18 +48,31 @@ class ShipSkin extends Model {
                 .reduce((obj, entry) => {
                     const [key, val] = entry;
 
-                    if (Array.isArray(extra[key]))
-                        obj[val] = extra[0][1];
-                    else if (typeof extra[key] == "string" && extra[key].length > 0)
-                        if (key == "main")
-                            obj[val] = extra[key].split("|");
-                        else
-                            obj[val] = extra[key];
+                    if (Array.isArray(extra[key])) {
+                        if (key == "main") {
+                            extra[key][0][1].split("|").forEach((text, idx) => {
+                                obj[`idle${idx + 1}`] = replaceNameCodes(text, codes);
+                            });
+                        } else
+                            obj[val] = replaceNameCodes(extra[key][0][1], codes);
+                    } else
+                        obj[val] = (typeof extra[key] == "string" && extra[key].length > 0)
+                            ? replaceNameCodes(extra[key], codes)
+                            : null;
 
                     return obj;
                 }, {});
     }
 }
+
+function replaceNameCodes(str, codes) {
+    return str.replace(NAMECODE_REGEX, function(match, p1) {
+        const { code } = codes.find(c => c.id == parseInt(p1));
+        return code;
+    });
+}
+
+const NAMECODE_REGEX = /\{namecode:(\d+)\}/g;
 
 const SHIP_DIALOGUE_MAP = {
     feeling1: "affinityDisappointed",
