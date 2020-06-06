@@ -35,6 +35,7 @@ class Ship extends Model {
 
         const ship = ships.filter(s => s.group_type == group.group_type)[this._breakoutLevel - 1];
         const stats = shipStats.find(s => s.id == ship.id);
+        const skin = shipSkins.find(s => s.id == stats.skin_id);
 
         // We can assign mixins using Object.assign for shared properties
         // Useful for applying things directly to this class
@@ -42,6 +43,7 @@ class Ship extends Model {
             ship,
             group,
             stats,
+            skin,
             retrofits: shipRetrofits,
             blueprints: shipBlueprints
         }));

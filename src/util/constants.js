@@ -68,6 +68,13 @@ module.exports.EQUIPMENT_TYPE = {
     15: "helicopter"
 };
 
+module.exports.ITEM_TYPE = {
+    1: "resource",
+    2: "item",
+    3: "unknown-type-3",
+    4: "ship"
+};
+
 module.exports.REGIONS = {
     "en": "en-US",
     "jp": "ja-JP",
@@ -75,3 +82,5 @@ module.exports.REGIONS = {
     "tw": "zh-TW",
     "ko": "ko-KR"
 };
+
+module.exports.TAG_REGEX = /<[^>]*>/g;
