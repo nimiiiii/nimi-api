@@ -17,6 +17,7 @@
       "sourceType": "module"
     },
     "env": {
+      "es6": true,
       "node": true,
       "commonjs": true
     },
@@ -86,7 +87,9 @@
     "enmap": "^5.2.4",
     "express": "^4.17.1",
     "fengari": "^0.1.4",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^9.0.0",
+    "get-function-arguments": "^1.0.0",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "chalk": "^4.0.0",

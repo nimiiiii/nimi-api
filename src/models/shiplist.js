@@ -1,16 +1,19 @@
 const Model = require("./base");
-const ShipListItem = require("./shiplistitem");
+const ShipMixin = require("./mixins/shipmixin");
 
 class ShipList extends Model {
-    constructor(ships, stats, groups) {
-        super();
+    async load(ships, shipStats, shipGroups, shipRetrofits, shipBlueprints) {
+        this.entries = shipGroups.map(group => {
+            const ship = ships.find(s => s.group_type == group.group_type);
+            const stats = shipStats.find(s => s.id == ship.id);
 
-        this.entries = groups.map(group => {
-            const ship = ships
-                .filter(s => s.group_type == group.group_type)
-                .sort((a, b) => a.star - b.star)[0];
-            const stat = stats.find(s => s.id == ship.id);
-            return new ShipListItem(ship, stat, group).serialize();
+            return new ShipMixin({
+                ship,
+                group,
+                stats,
+                retrofits: shipRetrofits,
+                blueprints: shipBlueprints
+            });
         });
     }
 }

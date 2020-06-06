@@ -1,14 +1,14 @@
 class Model {
-    serialize() {
-        return Object.getOwnPropertyNames(this).reduce((a, b) => {
-            if (this[b] === undefined)
-                throw new TypeError("Cannot serialize undefined type");
+    async load() {
+        return null;
+    }
 
-            if (typeof this[b] == "function")
-                a[b] = this[b]();
-            else
-                a[b] = this[b];
-            return a;
+    serialize() {
+        return Object.getOwnPropertyNames(this).reduce((acc, cur) => {
+            if (!cur.startsWith("_"))
+                acc[cur] = this[cur];
+
+            return acc;
         }, {});
     }
 }

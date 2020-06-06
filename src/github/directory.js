@@ -10,7 +10,7 @@ class Directory {
         const file = this.data.find(file => file.path == name && file.type == "blob");
 
         if (!file)
-            throw new Error("File not found.");
+            return;
 
         return file;
     }

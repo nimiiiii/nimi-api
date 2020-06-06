@@ -1,46 +1,42 @@
-const ErrorHandler = require("./util/errorhandler");
+const getFunctionArgs = require("get-function-arguments");
+const RequestError = require("./util/requesterror");
 const { readdir, lstat } = require("fs-extra");
 const Model = require("./models/base");
 const Express = require("express");
 const path = require("path");
 
 class Endpoint {
-    constructor(path, retriever) {
+    constructor(path, remoteType) {
         this.path = path;
-        this.retriever = retriever;
-    }
-
-    add(key, file) {
-        if (this.retriever === null)
-            throw new Error("Cannot use this method while retriever root is null");
-
-        this.retriever.add(key, file);
-    }
-
-    async get() {
-        if (this.retriever === null)
-            throw new Error("Cannot use this method while retriever root is null");
-
-        return await this.retriever.get();
+        this.remoteType = remoteType;
     }
 
     async method(req, res, next) {
         try {
-            if (this.retriever !== null)  {
-                this.retriever.lang = req.query.region;
-                await this.retriever.init();
-            }
+            const data = await this.action(req, res, next);
 
-            const output = await this.action(req, res, next);
+            if (data.constructor.prototype instanceof Model) {
+                const resolver = req.app.get("resolvers")
+                    .find(resolver => resolver.constructor == this.remoteType);
 
-            if (typeof output == "object")
-                res.jsonp(output);
-            else if (output.prototype instanceof Model)
-                res.jsonp(output.serialize());
-            else
-                res.jsonp({ error: "Invalid Model" });
+                if (!resolver)
+                    throw new Error(`Unable to find resolver ${this.remoteType.name}.`);
+
+                if (!resolver.initialized)
+                    throw new Error(`${resolver.constructor.name} has not been initialized.`);
+
+                const dependencies = getFunctionArgs(data.load);
+                const resolved = [];
+                for (let d of dependencies) {
+                    resolved.push(await resolver.resolve(d));
+                }
+                await data.load(...resolved);
+
+                res.jsonp(data.serialize());
+            } else
+                res.jsonp(data);
         } catch (error) {
-            next(new ErrorHandler(error.status || 500, "An error has occured", error));
+            next(new RequestError(error.status || 500, "An error has occured", error));
         }
     }
 
@@ -50,7 +46,7 @@ class Endpoint {
     }
 }
 
-Endpoint.load = async function(dir, router, repo) {
+Endpoint.load = async function(dir, router) {
     let endpoints = await readdir(dir);
 
     for (let artifact of endpoints) {
@@ -60,7 +56,7 @@ Endpoint.load = async function(dir, router, repo) {
             let file = require(path.resolve(`${dir}/${artifact}`));
 
             if (file && file.prototype instanceof Endpoint) {
-                let endpoint = new file(repo);
+                let endpoint = new file();
                 router.get(endpoint.path, endpoint.method.bind(endpoint));
             }
         }
@@ -69,7 +65,7 @@ Endpoint.load = async function(dir, router, repo) {
             let sub = Express.Router({ mergeParams: true });
             router.use(`/${artifact}`, sub);
 
-            await Endpoint.load(`${dir}/${artifact}`, sub, repo);
+            await Endpoint.load(`${dir}/${artifact}`, sub);
         }
     }
 };

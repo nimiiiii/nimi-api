@@ -1,10 +1,7 @@
-const Model = require("./base");
-const { SHIP_SKIN_TYPE } = require("../util/constants");
+const { SHIP_SKIN_TYPE } = require("../../util/constants");
 
-class ShipSkinItem extends Model {
+class ShipSkinMixin {
     constructor(data) {
-        super();
-
         this.id = data.id;
         this.name = data.name;
         this.description = data.desc;
@@ -13,4 +10,4 @@ class ShipSkinItem extends Model {
     }
 }
 
-module.exports = ShipSkinItem;
+module.exports = ShipSkinMixin;

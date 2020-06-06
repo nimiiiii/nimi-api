@@ -1,137 +1,99 @@
-const ShipListItem = require("./shiplistitem");
-const ShipSkinItem = require("./shipskinitem");
+const Model = require("./base");
+const RequestError = require("../util/requesterror");
+const ShipMixin = require("./mixins/shipmixin");
+const ShipSkinMixin = require("./mixins/shipskinmixin");
+const ShipSkillMixin = require("./mixins/shipskillmixin");
+const ShipAcquisitionMixin = require("./mixins/shipacquisitionmixin");
 const {
     SHIP_ATTR_TYPE,
     SHIP_ARMOR_TYPE,
-    SHIP_SKILL_TYPE,
     EQUIPMENT_TYPE
 } = require("../util/constants");
 
-class Ship extends ShipListItem {
-    constructor(data, stat, group, skin, skill) {
-        super(data, stat, group);
+// Models are used for structuring JSON outputs.
+class Ship extends Model {
+    constructor(groupId, breakoutLevel) {
+        super();
 
-        this.ammoCount = data.ammo;
-        this.armorType = SHIP_ARMOR_TYPE[stat.armor_type];
+        // Properties preceeded with an underscore and are considered
+        // as private properties thus excluded from serialization.
+        this._groupId = groupId;
+        this._breakoutLevel = (!isNaN(breakoutLevel)) ? breakoutLevel : 1;
+    }
 
-        this.attributes = Object.entries(SHIP_ATTR_TYPE)
-            .reduce((acc, cur) => {
-                const [ key, value ] = cur;
-                acc[value] = stat.attrs[parseInt(key)];
+    // Arguments must match from it's specified Remote.
+    // See SharedCfgRemote for argument name reference.
+    async load(ships, shipStats, shipGroups, shipSkins,
+        shipSkills, shipBreakouts, shipRetrofits, shipBlueprints) {
+        const group = shipGroups.find(g => g.group_type == this._groupId);
 
-                return acc;
-            }, {
-                oxy: data.oxy_max
-            }),
+        if (!group)
+            throw new RequestError(404, "Ship Group not found.");
 
-        this.equipment = Object.keys(data)
+        if (this._breakoutLevel > 4 || this._breakoutLevel < 1)
+            throw new RequestError(400, "Breakout level should only be between 1 to 4.");
+
+        const ship = ships.filter(s => s.group_type == group.group_type)[this._breakoutLevel - 1];
+        const stats = shipStats.find(s => s.id == ship.id);
+
+        // We can assign mixins using Object.assign for shared properties
+        // Useful for applying things directly to this class
+        Object.assign(this, new ShipMixin({
+            ship,
+            group,
+            stats,
+            retrofits: shipRetrofits,
+            blueprints: shipBlueprints
+        }));
+
+        // Assign a property directly to be included in serialization
+        this.ammoCount = ship.ammo;
+        this.armorType = SHIP_ARMOR_TYPE[stats.armor_type];
+
+        this.equipment = Object.keys(ship)
             .filter(key => /equip_\d/.test(key))
-            .reduce((acc, cur, idx) => {
-                const slot = `slot-${idx}`;
-                acc[slot] = {};
-                acc[slot].types = data[cur].map(type => EQUIPMENT_TYPE[type]);
+            .reduce((obj, key, idx) => {
+                const slot = idx + 1;
+                obj[slot] = {};
+                obj[slot].types = ship[key].map(type => EQUIPMENT_TYPE[type]);
 
-                if (idx < 4)
-                    acc[slot].proficiency = stat.equipment_proficiency[idx];
+                if (stats.equipment_proficiency[idx])
+                    obj[slot].proficiency = stats.equipment_proficiency[idx];
 
-                return acc;
+                return obj;
             }, {});
 
-        this.skins = skin.map(s => new ShipSkinItem(s));
-        this.skills = skill.map(s => {
-            return {
-                id: s.id,
-                name: s.name.trim(),
-                type: SHIP_SKILL_TYPE[s.type],
-                description: s.desc,
-                descriptionMod: (s.desc_add[0])
-                    ? s.desc_add[0].map(entry => entry[0])
-                    : []
-            };
-        });
+        this.attributes = Object.entries(SHIP_ATTR_TYPE)
+            .reduce((obj, entry) => {
+                const [key, val] = entry;
+                obj[val] = stats.attrs[parseInt(key)];
+                return obj;
+            }, { oxy: ship.oxy_max });
 
-        this.acquisition = group.description.reduce(function(output, entry) {
-            let [text, data] = entry;
+        this.skills = shipSkills
+            .filter(skill => ship.buff_list.includes(skill.id))
+            .map(skill => new ShipSkillMixin(skill));
 
-            if (data[0] == "SHOP") {
-                if (data[1].warp == "sham")
-                    output.exchange = "core";
-
-                if (data[1].warp == "supplies")
-                    output.exchange = "munitions";
-            }
-
-            if (data[0] == "GETBOAT") {
-                if (data[1].page == 3)
-                    output.exchange = "medal";
-
-                const constructTypeRegex = /(light|heavy|special)/gi;
-                const constructTypes = text.match(constructTypeRegex);
-                if (constructTypes !== null) {
-                    for (let type of [...constructTypes].map(s => s.toLowerCase())) {
-                        output.construction[type] = true;
+        this.breakouts = shipBreakouts
+            .filter(b => ships.filter(s => s.group_type == this._groupId)
+                .map(s => s.id).includes(b.id))
+            .map(b => {
+                return {
+                    description: (b.breakout_view != "N/A")
+                        ? b.breakout_view.replace(/\//g, " / ")
+                        : b.breakout_view,
+                    cost: {
+                        gold: b.use_gold,
+                        ship: b.use_char_num
                     }
-                }
-            }
-
-            if (data[0] == "SHIPBLUEPRINT")
-                output.construction.research = true;
-
-            if (data[0] == "LEVEL") {
-                const [, chapter, stage] = text.match(/(\d+)-(\d+)/);
-                output.map = {
-                    chapter: parseInt(chapter),
-                    stage: parseInt(stage),
-                    id: data[1].chapterid
                 };
-            }
+            });
 
-            if (data[0].length == 0) {
-                const eventRegex = /Event: (.+)/;
-                if (eventRegex.test(text))
-                    output.event = text.match(eventRegex)[1];
+        this.skins = shipSkins
+            .filter(s => s.ship_group == this._groupId)
+            .map(s => new ShipSkinMixin(s));
 
-                if (text == "Time-Limited Build" || text.includes("Limited Event"))
-                    output.construction.limited = true;
-
-                if (text == "Weekly Mission")
-                    output.task = "weeklyMission";
-
-                if (text == "Monthly Sign-in")
-                    output.task = "monthlySignIn";
-
-                // For some reason this event is inconsistent with the others.
-                // We'll just explicity check for this for now.
-                if (text == "The War God's Return")
-                    output.event = text;
-
-                // Akashi please don't make this any more difficult
-                if (text == "Hidden Mission:Im-paws-ible quest")
-                    output.task = "akashiSpecial";
-
-                // Avrora Flex
-                if (text == "CBT Reward")
-                    output.task = "closedBetaParticipant";
-            }
-
-            if (data[0] == "COLLECTSHIP")
-                output.collection = true;
-
-            return output;
-        }, {
-            map: null,
-            task: null,
-            event: null,
-            exchange: null,
-            collection: false,
-            construction: {
-                light: false,
-                heavy: false,
-                special: false,
-                limited: false,
-                research: false
-            }
-        });
+        Object.assign(this, new ShipAcquisitionMixin(group.description));
     }
 }
 
