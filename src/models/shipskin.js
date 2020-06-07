@@ -32,7 +32,10 @@ class ShipSkin extends Model {
                     if (key == "main") {
                         // Dialogue is split using a pipe character
                         dialogue[key].split("|").forEach((text, idx) => {
-                            obj[`idle${idx + 1}`] = replaceNameCodes(text, codes);
+                            // nil is null in Lua
+                            obj[`idle${idx + 1}`] = (text != "nil")
+                                ? replaceNameCodes(text, codes)
+                                : null;
                         });
                     } else
                         obj[val] = (dialogue[key].length > 0)
