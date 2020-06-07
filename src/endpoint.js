@@ -17,10 +17,12 @@ class Endpoint {
 
             if (data.constructor.prototype instanceof Model) {
                 const resolver = req.app.get("resolvers")
-                    .find(resolver => resolver.constructor == this.remoteType);
+                    .find(resolver => resolver.constructor.prototype instanceof this.remoteType &&
+                            resolver.lang == req.query.region);
 
                 if (!resolver)
-                    throw new Error(`Unable to find resolver ${this.remoteType.name}.`);
+                    throw new Error(`Unable to find resolver \
+                    ${this.remoteType.name} (${req.query.region}).`);
 
                 if (!resolver.initialized)
                     throw new Error(`${resolver.constructor.name} has not been initialized.`);

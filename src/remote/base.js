@@ -1,4 +1,4 @@
-const { readJSON, outputJSON, ensureDir } = require("fs-extra");
+const { readJSON, outputJSON, ensureDir, readdir, lstat } = require("fs-extra");
 const { tableToObject } = require("../util/json.lua.js");
 const Enmap = require("enmap");
 const path = require("path");
@@ -7,9 +7,9 @@ const util = require("util");
 const sleep = util.promisify(setTimeout);
 
 class Remote {
-    constructor(dir, repo) {
+    constructor(dir, lang, repo) {
         this.dir = dir;
-        this.lang = "en-US";
+        this.lang = lang;
         this.repo = repo;
         this.files = null;
         this.references = null;
@@ -99,5 +99,30 @@ class Remote {
 }
 
 Remote.dataPath = "./.data";
+Remote.load = async function(dir, repo, debug) {
+    let resolvers = [];
+    let resolverModules = await readdir(dir);
+
+    for (let artifact of resolverModules) {
+        let stats = await lstat(`${dir}/${artifact}`);
+
+        if (stats.isFile() && artifact.endsWith(".js")) {
+            let file = require(path.resolve(`${dir}/${artifact}`));
+
+            if (file && file.prototype instanceof Remote) {
+                // Make en-US only available during debug
+                if ((debug && !file.name.toLowerCase().startsWith("en")) &&
+                    (debug && !file.name.toLowerCase().startsWith("jp")))
+                    continue;
+
+                let resolver = new file(repo);
+                await resolver.init();
+                resolvers.push(resolver);
+            }
+        }
+    }
+
+    return resolvers;
+};
 
 module.exports = Remote;

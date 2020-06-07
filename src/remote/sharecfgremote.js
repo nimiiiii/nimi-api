@@ -1,8 +1,8 @@
-const Remote = require("./remote");
+const Remote = require("./base");
 
 class ShareCfgRemote extends Remote {
-    constructor(repo) {
-        super("/sharecfg", repo);
+    constructor(lang, repo) {
+        super("/sharecfg", lang, repo);
     }
 
     async init() {

@@ -1,7 +1,7 @@
 const { REGIONS } = require("./src/util/constants");
 const Repository = require("./src/github/repository");
-const SharedCfgRemote = require("./src/remote/sharecfgremote");
 const Endpoint = require("./src/endpoint");
+const Remote = require("./src/remote/base");
 const favicon = require("serve-favicon");
 const Express = require("express");
 const chalk = require("chalk");
@@ -34,15 +34,8 @@ console.log = function() {
     const base = Express.Router();
 
     const repo = new Repository(process.env.GITHUB_TOKEN, process.env.DATA_REPO, "master");
-    const resolvers = [
-        new SharedCfgRemote(repo)
-    ];
-
-    for (let resolver of resolvers) {
-        await resolver.init();
-    }
-
-    app.set("resolvers", resolvers);
+    const debug = process.env.ENVIRONMENT == "development";
+    app.set("resolvers", await Remote.load("./src/remote/resolvers", repo, debug));
 
     app.use(favicon(path.join(__dirname, "static", "icon.ico")));
 
