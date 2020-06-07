@@ -1,9 +1,9 @@
 const Model = require("./base");
-const PlayerResourceMixin = require("./mixins/shipmixin");
+const PlayerResourceMixin = require("./mixins/playerresourcemixin");
 
 class ResourceList extends Model {
-    async load(itemPlayerResources) {
-        this.entries = itemPlayerResources.map(res => new PlayerResourceMixin(res));
+    async load(items, itemPlayerResources) {
+        this.entries = itemPlayerResources.map(res => new PlayerResourceMixin(res, items));
     }
 }
 

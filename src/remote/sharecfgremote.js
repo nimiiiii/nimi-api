@@ -26,10 +26,11 @@ class ShareCfgRemote extends Remote {
 
         this.add("items", "item_data_statistics.lua");
         this.add("itemPlayerResources", "player_resource.lua");
+        this.add("furniture", "furniture_data_template.lua");
 
         this.add("tasks", "task_data_template.lua");
-
         this.add("codes", "name_code.lua");
+        this.add("monthlySignIn", "activity_month_sign.lua");
 
         await super.init();
     }

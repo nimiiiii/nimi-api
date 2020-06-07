@@ -5,7 +5,7 @@ class PlayerResourceMixin {
         this.id = data.id;
         this.name = data.name;
 
-        const item = items.find(i => i.id == data.itemId);
+        const item = items.find(i => i.id == data.itemid);
         this.item = (item) ? new ItemMixin(item) : null;
     }
 }

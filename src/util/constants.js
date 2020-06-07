@@ -73,7 +73,17 @@ module.exports.ITEM_TYPE = {
     1: "resource",
     2: "item",
     3: "equip",
-    4: "ship"
+    4: "ship",
+    5: "furniture",
+    6: "strategy",
+    7: "skin",
+    8: "vitem",
+    9: "equipSkin",
+    10: "npcShip",
+    11: "worldItem",
+    12: "iconFrame",
+    13: "chatFrame",
+    14: "emoji"
 };
 
 module.exports.REGIONS = {

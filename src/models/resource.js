@@ -9,13 +9,13 @@ class Resource extends Model {
         this._resId = resId;
     }
 
-    async load(itemPlayerResources) {
+    async load(items, itemPlayerResources) {
         const res = itemPlayerResources.find(i => i.id == this._resId);
 
         if (!res)
             throw new RequestError(404, "Resource not found.");
 
-        Object.assign(this, new PlayerResourceMixin(res));
+        Object.assign(this, new PlayerResourceMixin(res, items));
     }
 }
 
