@@ -4,7 +4,7 @@ const ShipBlueprint = require("../../models/shipblueprint");
 
 class ShipBlueprintEndpoint extends Endpoint {
     constructor() {
-        super("/:groupId/blueprint", SharedCfgRemote);
+        super("/:groupId(\\d+)/blueprint", SharedCfgRemote);
     }
 
     async action(req) {

@@ -4,7 +4,7 @@ const ShipRetrofit = require("../../models/shipretrofit");
 
 class ShipRetrofitEndpoint extends Endpoint {
     constructor() {
-        super("/:groupId/retrofit", SharedCfgRemote);
+        super("/:groupId(\\d+)/retrofit", SharedCfgRemote);
     }
 
     async action(req) {

@@ -45,6 +45,7 @@ module.exports.SHIP_ARMOR_TYPE = {
 };
 
 module.exports.SHIP_SKILL_TYPE = {
+    0: "none",
     1: "offense",
     2: "defense",
     3: "support"
@@ -60,7 +61,7 @@ module.exports.EQUIPMENT_TYPE = {
     7: "fighter",
     8: "torpedoBomber",
     9: "diveBomber",
-    10: "auxiliaryEquipment",
+    10: "auxiliary",
     11: "largeCruiserGun",
     12: "seaplane",
     13: "submarineTorpedo",

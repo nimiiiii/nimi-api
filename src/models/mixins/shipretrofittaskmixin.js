@@ -1,5 +1,5 @@
 const ItemMixin = require("./itemmixin");
-const ShipSkillMixin = require("./shipskillmixin");
+const SkillMixin = require("./skillmixin");
 
 class ShipRetrofitTaskMixin {
     constructor(data, items, skills) {
@@ -10,7 +10,7 @@ class ShipRetrofitTaskMixin {
         this.assetName = data.icon;
 
         const skill = skills.find(skill => skill.id == data.skill_id);
-        this.skill = (skill) ? new ShipSkillMixin(skill) : null;
+        this.skill = (skill) ? new SkillMixin(skill) : null;
 
         this.prerequisites = data.condition_id;
         this.cost = {

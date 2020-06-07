@@ -9,7 +9,7 @@ class ShipRetrofit extends Model {
         this.groupId = groupId;
     }
 
-    async load(items, shipSkills, shipRetrofits, shipRetrofitTasks) {
+    async load(items, skills, shipRetrofits, shipRetrofitTasks) {
         const retrofit = shipRetrofits.find(r => r.group_id == this.groupId);
 
         if (!retrofit)
@@ -23,7 +23,7 @@ class ShipRetrofit extends Model {
                     task: new ShipRetrofitTaskMixin(
                         shipRetrofitTasks.find(t => t.id == id),
                         items,
-                        shipSkills
+                        skills
                     )
                 };
             });

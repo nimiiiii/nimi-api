@@ -12,7 +12,6 @@ class ShareCfgRemote extends Remote {
         this.add("shipSkinsDialogue", "ship_skin_words.lua");
         this.add("shipSkinsDialogueExtra", "ship_skin_words_extra.lua");
         this.add("shipGroups", "ship_data_group.lua");
-        this.add("shipSkills", "skill_data_template.lua");
         this.add("shipBreakouts", "ship_data_breakout.lua");
         this.add("shipRetrofits", "ship_data_trans.lua");
         this.add("shipRetrofitTasks", "transform_data_template.lua");
@@ -21,6 +20,9 @@ class ShareCfgRemote extends Remote {
         this.add("equip", "equip_data_template.lua");
         this.add("equipStats", "equip_data_statistics.lua");
         this.add("equipSkins", "equip_skin_template.lua");
+        this.add("equipSkinThemes", "equip_skin_theme_template.lua");
+
+        this.add("skills", "skill_data_template.lua");
 
         this.add("items", "item_data_statistics.lua");
         this.add("itemPlayerResources", "player_resource.lua");

@@ -4,7 +4,7 @@ const ShipSkin = require("../../models/shipskin");
 
 class ShipSkinDetailEndpoint extends Endpoint {
     constructor() {
-        super("/ship/:skinId", SharedCfgRemote);
+        super("/skins/:skinId(\\d+)", SharedCfgRemote);
     }
 
     async action(req) {

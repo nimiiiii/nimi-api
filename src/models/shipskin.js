@@ -6,11 +6,11 @@ class ShipSkin extends Model {
     constructor(skinId) {
         super();
 
-        this.skinId = skinId;
+        this._skinId = skinId;
     }
 
     async load(codes, shipSkins, shipSkinsDialogue, shipSkinsDialogueExtra) {
-        const skin = shipSkins.find(s => s.id == this.skinId);
+        const skin = shipSkins.find(s => s.id == this._skinId);
 
         if (!skin)
             throw new RequestError(404, "Ship skin not found.");
