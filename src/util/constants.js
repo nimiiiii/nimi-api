@@ -72,7 +72,7 @@ module.exports.EQUIPMENT_TYPE = {
 module.exports.ITEM_TYPE = {
     1: "resource",
     2: "item",
-    3: "unknown-type-3",
+    3: "equip",
     4: "ship"
 };
 

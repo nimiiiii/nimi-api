@@ -1,6 +1,6 @@
-const AnyItemMixin = require("./anyitemmixin");
+const DropItemMixin = require("./dropitemmixin");
 const ItemMixin = require("./itemmixin");
-const { ITEM_TYPE, TAG_REGEX } = require("../../util/constants");
+const { TAG_REGEX } = require("../../util/constants");
 
 class TaskMixin {
     constructor(data, { ships, groups, stats, skins, items, resources }) {
@@ -27,7 +27,7 @@ class TaskMixin {
 
             return {
                 count,
-                data: new AnyItemMixin(ITEM_TYPE[type], id, {
+                data: new DropItemMixin(type, id, {
                     ships,
                     stats,
                     skins,
