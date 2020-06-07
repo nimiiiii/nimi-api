@@ -1,4 +1,5 @@
 const { REGIONS } = require("./src/util/constants");
+const RequestError = require("./src/util/requesterror");
 const Repository = require("./src/github/repository");
 const Endpoint = require("./src/endpoint");
 const Remote = require("./src/remote/base");
@@ -87,8 +88,13 @@ console.log = function() {
     app.use(function(err, req, res, next) {
         if (err.status === 500)
             console.error(err.stack);
-        const message = (err.source) ? err.source.message : "Internal Server Error";
-        res.status(err.status).jsonp({ message });
+        const message = (err.source instanceof RequestError)
+            ? err.source.message
+            : "Internal Server Error";
+        res.status(err.status).jsonp({
+            error: err.source.constructor.name,
+            message
+        });
     });
 
     const port = process.env.PORT;

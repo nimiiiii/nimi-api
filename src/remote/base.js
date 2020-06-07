@@ -111,7 +111,7 @@ Remote.load = async function(dir, repo, debug) {
 
             if (file && file.prototype instanceof Remote) {
                 // Make en-US only available during debug
-                if ((debug && !file.name.toLowerCase().startsWith("en")))
+                if (debug && !file.name.toLowerCase().startsWith("en"))
                     continue;
 
                 let resolver = new file(repo);
