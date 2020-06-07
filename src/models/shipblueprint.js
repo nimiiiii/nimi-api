@@ -2,7 +2,7 @@ const Model = require("./base");
 const RequestError = require("../util/requesterror");
 const TaskMixin = require("./mixins/taskmixin");
 const ItemMixin = require("./mixins/itemmixin");
-const ShipSkillMixin = require("./mixins/shipskillmixin");
+const SkillMixin = require("./mixins/skillmixin");
 const { TAG_REGEX } = require("../util/constants");
 
 class ShipBlueprint extends Model {
@@ -13,7 +13,7 @@ class ShipBlueprint extends Model {
     }
 
     async load(shipBlueprints, ships, shipStats, shipGroups,
-        shipSkins, shipSkills, tasks, items, itemPlayerResources) {
+        shipSkins, skills, tasks, items, itemPlayerResources) {
         const blueprint = shipBlueprints.find(b => b.id == this.groupId);
 
         if (!blueprint)
@@ -31,14 +31,14 @@ class ShipBlueprint extends Model {
         this.skills = blueprint.change_skill.map((entry) => {
             const [fromId, toId] = entry;
 
-            const from = shipSkills.find(s => s.id == fromId);
-            const to = shipSkills.find(s => s.id == toId);
+            const from = skills.find(s => s.id == fromId);
+            const to = skills.find(s => s.id == toId);
             return {
                 from: (from)
-                    ? new ShipSkillMixin(from)
+                    ? new SkillMixin(from)
                     : null,
                 to: (to)
-                    ? new ShipSkillMixin(to)
+                    ? new SkillMixin(to)
                     : null
             };
         });

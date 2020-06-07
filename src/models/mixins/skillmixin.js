@@ -1,6 +1,6 @@
 const { SHIP_SKILL_TYPE } = require("../../util/constants");
 
-class ShipSkillMixin {
+class SkillMixin {
     constructor(data) {
         this.id = data.id;
         this.name = data.name.trim();
@@ -12,4 +12,4 @@ class ShipSkillMixin {
     }
 }
 
-module.exports = ShipSkillMixin;
+module.exports = SkillMixin;

@@ -2,7 +2,7 @@ const Model = require("./base");
 const RequestError = require("../util/requesterror");
 const ShipMixin = require("./mixins/shipmixin");
 const ShipSkinMixin = require("./mixins/shipskinmixin");
-const ShipSkillMixin = require("./mixins/shipskillmixin");
+const SkillMixin = require("./mixins/skillmixin");
 const ShipAcquisitionMixin = require("./mixins/shipacquisitionmixin");
 const {
     SHIP_ATTR_TYPE,
@@ -24,7 +24,7 @@ class Ship extends Model {
     // Arguments must match from it's specified Remote.
     // See SharedCfgRemote for argument name reference.
     async load(ships, shipStats, shipGroups, shipSkins,
-        shipSkills, shipBreakouts, shipRetrofits, shipBlueprints) {
+        skills, shipBreakouts, shipRetrofits, shipBlueprints) {
         const group = shipGroups.find(g => g.group_type == this._groupId);
 
         if (!group)
@@ -72,9 +72,9 @@ class Ship extends Model {
                 return obj;
             }, { oxy: ship.oxy_max });
 
-        this.skills = shipSkills
+        this.skills = skills
             .filter(skill => ship.buff_list.includes(skill.id))
-            .map(skill => new ShipSkillMixin(skill));
+            .map(skill => new SkillMixin(skill));
 
         this.breakouts = shipBreakouts
             .filter(b => ships.filter(s => s.group_type == this._groupId)
