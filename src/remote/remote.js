@@ -2,6 +2,9 @@ const { readJSON, outputJSON, ensureDir } = require("fs-extra");
 const { tableToObject } = require("../util/json.lua.js");
 const Enmap = require("enmap");
 const path = require("path");
+const util = require("util");
+
+const sleep = util.promisify(setTimeout);
 
 class Remote {
     constructor(dir, repo) {
@@ -66,7 +69,14 @@ class Remote {
             obj = await readJSON(targetDir);
         else {
             const script = await this.files.download(file);
+
+            // tableToObject is very expensive to run concurrently
+            // so we add a delay to let garbage collection do its thing
+            const mem = process.memoryUsage().heapUsed / 1024 / 1024;
+            if (mem > 512 * 0.75) await sleep(1000);
+
             obj = tableToObject(this.getLuaTable(script));
+
             await outputJSON(targetDir, obj);
             this.references.set(remotePath, refRemote);
             console.log(`Received update for ${remotePath}`);
