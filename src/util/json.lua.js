@@ -14,6 +14,7 @@ const tableToJSON = function(table) {
 
     const jsonstring = lua.lua_tostring(L, -1);
     lua.lua_pop(L, 1);
+    lua.lua_close(L);
 
     return new TextDecoder("utf-8").decode(jsonstring);
 };
