@@ -1,20 +1,3 @@
-module.exports.SHIP_HULL_TYPE = {
-    1: "destroyer",
-    2: "lightCruiser",
-    3: "heavyCruiser",
-    4: "battlecruiser",
-    5: "battleship",
-    6: "lightAircraftCarrier",
-    7: "aircraftCarrier",
-    8: "submarine",
-    9: "aviationCruiser",
-    10: "aviationBattleship",
-    12: "repairShip",
-    13: "monitor",
-    17: "submarineSeaplaneCarrier",
-    18: "largeCruiser"
-};
-
 module.exports.SHIP_ATTR_TYPE = {
     0: "health",
     1: "cannon",
@@ -28,62 +11,6 @@ module.exports.SHIP_ATTR_TYPE = {
     9: "speed",
     10: "luck",
     11: "antiSub"
-};
-
-module.exports.SHIP_SKIN_TYPE = {
-    "-1": "default",
-    0: "normal",
-    1: "oath",
-    2: "retrofit",
-    4: "limited"
-};
-
-module.exports.SHIP_ARMOR_TYPE = {
-    1: "light",
-    2: "normal",
-    3: "heavy"
-};
-
-module.exports.SHIP_SKILL_TYPE = {
-    0: "none",
-    1: "offense",
-    2: "defense",
-    3: "support"
-};
-
-module.exports.EQUIPMENT_TYPE = {
-    1: "destroyerGun",
-    2: "lightCruiserGun",
-    3: "heavyCruiserGun",
-    4: "battleshipGun",
-    5: "torpedo",
-    6: "antiAircraft",
-    7: "fighter",
-    8: "torpedoBomber",
-    9: "diveBomber",
-    10: "auxiliary",
-    11: "largeCruiserGun",
-    12: "seaplane",
-    13: "submarineTorpedo",
-    14: "antiSubmarineWarfare",
-    15: "helicopter"
-};
-
-module.exports.ITEM_TYPE = {
-    1: "resource",
-    2: "item",
-    3: "equip",
-    4: "ship",
-    5: "furniture",
-    6: "strategy",
-    7: "skin",
-    8: "vitem",
-    9: "equipSkin",
-    10: "npcShip",
-    11: "worldItem",
-    12: "iconFrame",
-    13: "chatFrame",
-    14: "emoji"
 };
 
 module.exports.REGIONS = {

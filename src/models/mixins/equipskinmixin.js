@@ -1,17 +1,12 @@
-const { EQUIPMENT_TYPE } = require("../../util/constants");
+const ItemMixin = require("./itemmixin");
 
-class EquipSkinMixin {
+class EquipSkinMixin extends ItemMixin {
     constructor(data) {
-        this.id = data.id;
+        super(data);
         this.themeId = data.themeid;
-        this.name = data.name;
-        this.rarity = data.rarity;
-        this.assetName = data.icon;
-
-        // TODO: Disambiguate equip skin types
         this.type = data.type;
         this.description = data.desc;
-        this.equipTypes = data.equip_type.map(id => EQUIPMENT_TYPE[id]);
+        this.equipTypes = data.equip_type;
     }
 }
 

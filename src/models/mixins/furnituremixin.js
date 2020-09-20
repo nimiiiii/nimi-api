@@ -1,13 +1,10 @@
-class FurnitureMixin {
-    constructor(data) {
-        this.id = data.id;
-        this.name = data.name;
-        this.description = data.describe;
+const ItemMixin = require("./itemmixin");
 
-        // TODO: Disambiguate furniture types
+class FurnitureMixin extends ItemMixin {
+    constructor(data) {
+        super(data);
+        this.description = data.describe;
         this.type = data.type;
-        this.rarity = data.rarity;
-        this.assetName = data.icon;
     }
 }
 

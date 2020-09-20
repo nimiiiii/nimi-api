@@ -6,7 +6,6 @@ class TaskMixin {
     constructor(data, { ships, groups, stats, skins, items, resources }) {
         this.id = data.id;
 
-        // TODO: Discern Task Types
         this.type = data.type;
         this.name = data.name;
         this.description = data.desc.replace(TAG_REGEX, "");

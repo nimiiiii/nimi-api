@@ -4,11 +4,7 @@ const ShipMixin = require("./mixins/shipmixin");
 const ShipSkinMixin = require("./mixins/shipskinmixin");
 const SkillMixin = require("./mixins/skillmixin");
 const ShipAcquisitionMixin = require("./mixins/shipacquisitionmixin");
-const {
-    SHIP_ATTR_TYPE,
-    SHIP_ARMOR_TYPE,
-    EQUIPMENT_TYPE
-} = require("../util/constants");
+const { SHIP_ATTR_TYPE } = require("../util/constants");
 
 // Models are used for structuring JSON outputs.
 class Ship extends Model {
@@ -50,14 +46,14 @@ class Ship extends Model {
 
         // Assign a property directly to be included in serialization
         this.ammoCount = ship.ammo;
-        this.armorType = SHIP_ARMOR_TYPE[stats.armor_type];
+        this.armorType = stats.armor_type;
 
         this.equipment = Object.keys(ship)
             .filter(key => /equip_\d/.test(key))
             .reduce((obj, key, idx) => {
                 const slot = idx + 1;
                 obj[slot] = {};
-                obj[slot].types = ship[key].map(type => EQUIPMENT_TYPE[type]);
+                obj[slot].types = ship[key];
 
                 if (stats.equipment_proficiency[idx])
                     obj[slot].proficiency = stats.equipment_proficiency[idx];
