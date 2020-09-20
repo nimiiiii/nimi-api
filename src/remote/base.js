@@ -26,27 +26,27 @@ class Remote {
         this.files = await this.repo.getDirectory(path.join(this.lang, this.dir)
             .replace(/\\/g, "/"));
 
-        for (let file of Object.values(this.dependencies)) {
-            await this.get(file);
+        for (let { file, transform } of Object.values(this.dependencies)) {
+            await this.get(file, transform);
         }
 
         await this.references.defer;
     }
 
-    add(key, file) {
-        this.dependencies[key] = file;
+    add(key, file, transform = (obj) => Object.values(obj)) {
+        this.dependencies[key] = { file, transform };
     }
 
     async resolve(key) {
-        const file = this.dependencies[key];
+        const { file, transform } = this.dependencies[key];
 
         if (file === undefined)
             throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${key}`);
 
-        return await this.get(file);
+        return await this.get(file, transform);
     }
 
-    async get(file) {
+    async get(file, transform) {
         if (!this.initialized)
             throw new Error("Remote has not been initialized.");
 
@@ -64,20 +64,12 @@ class Remote {
         if (refLocal == refRemote)
             obj = await readJSON(targetDir);
         else {
-            obj = JSON.parse(await this.files.download(file));
+            obj = transform(JSON.parse(await this.files.download(file)));
             await outputJSON(targetDir, obj);
             this.references.set(remotePath, refRemote);
             console.log(`Received update for ${remotePath}`);
         }
 
-        return this.getMappedObject(obj);
-    }
-
-    getLuaTable(script) {
-        return script;
-    }
-
-    getMappedObject(obj) {
         return obj;
     }
 

@@ -28,25 +28,16 @@ class ShareCfgRemote extends Remote {
         this.add("itemPlayerResources", "player_resource.json");
         this.add("furniture", "furniture_data_template.json");
 
+        this.add("lang", "gameset_language_client.json", (o) => o);
         this.add("tasks", "task_data_template.json");
         this.add("codes", "name_code.json");
         this.add("monthlySignIn", "activity_month_sign.json");
 
+        this.add("social", "activity_ins_template.json");
+        this.add("socialNpc", "activity_ins_npc_template.json");
+        this.add("socialNpcGroup", "activity_ins_ship_group_template.json");
+
         await super.init();
-    }
-
-    getLuaTable(script) {
-        return script.substr(
-            script.indexOf("= {") + 2,
-            script.lastIndexOf("}")
-        );
-    }
-
-    getMappedObject(obj) {
-        if (obj.all)
-            delete obj.all;
-
-        return Object.values(obj);
     }
 }
 
