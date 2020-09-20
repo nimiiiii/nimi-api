@@ -14,11 +14,7 @@ class VersionEndpoint extends Endpoint {
 
         let messages = commits.data.map(c => c.commit.message);
         let commit = messages.find(m => m.includes(region));
-        return [...commit.matchAll(/(\w+): (\S+)/g)]
-            .reduce((acc, cur) => {
-                acc[cur[1].toLowerCase()] = cur[2];
-                return acc;
-            }, { region });
+        return { region, version: commit.split(" ").pop() };
     }
 }
 
