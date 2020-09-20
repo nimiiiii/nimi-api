@@ -6,31 +6,31 @@ class ShareCfgRemote extends Remote {
     }
 
     async init() {
-        this.add("ships", "ship_data_template.lua");
-        this.add("shipStats", "ship_data_statistics.lua");
-        this.add("shipSkins", "ship_skin_template.lua");
-        this.add("shipSkinsDialogue", "ship_skin_words.lua");
-        this.add("shipSkinsDialogueExtra", "ship_skin_words_extra.lua");
-        this.add("shipGroups", "ship_data_group.lua");
-        this.add("shipBreakouts", "ship_data_breakout.lua");
-        this.add("shipRetrofits", "ship_data_trans.lua");
-        this.add("shipRetrofitTasks", "transform_data_template.lua");
-        this.add("shipBlueprints", "ship_data_blueprint.lua");
+        this.add("ships", "ship_data_template.json");
+        this.add("shipStats", "ship_data_statistics.json");
+        this.add("shipSkins", "ship_skin_template.json");
+        this.add("shipSkinsDialogue", "ship_skin_words.json");
+        this.add("shipSkinsDialogueExtra", "ship_skin_words_extra.json");
+        this.add("shipGroups", "ship_data_group.json");
+        this.add("shipBreakouts", "ship_data_breakout.json");
+        this.add("shipRetrofits", "ship_data_trans.json");
+        this.add("shipRetrofitTasks", "transform_data_template.json");
+        this.add("shipBlueprints", "ship_data_blueprint.json");
 
-        this.add("equip", "equip_data_template.lua");
-        this.add("equipStats", "equip_data_statistics.lua");
-        this.add("equipSkins", "equip_skin_template.lua");
-        this.add("equipSkinThemes", "equip_skin_theme_template.lua");
+        this.add("equip", "equip_data_template.json");
+        this.add("equipStats", "equip_data_statistics.json");
+        this.add("equipSkins", "equip_skin_template.json");
+        this.add("equipSkinThemes", "equip_skin_theme_template.json");
 
-        this.add("skills", "skill_data_template.lua");
+        this.add("skills", "skill_data_template.json");
 
-        this.add("items", "item_data_statistics.lua");
-        this.add("itemPlayerResources", "player_resource.lua");
-        this.add("furniture", "furniture_data_template.lua");
+        this.add("items", "item_data_statistics.json");
+        this.add("itemPlayerResources", "player_resource.json");
+        this.add("furniture", "furniture_data_template.json");
 
-        this.add("tasks", "task_data_template.lua");
-        this.add("codes", "name_code.lua");
-        this.add("monthlySignIn", "activity_month_sign.lua");
+        this.add("tasks", "task_data_template.json");
+        this.add("codes", "name_code.json");
+        this.add("monthlySignIn", "activity_month_sign.json");
 
         await super.init();
     }

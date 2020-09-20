@@ -1,10 +1,6 @@
 const { readJSON, outputJSON, ensureDir, readdir, lstat } = require("fs-extra");
-const { tableToObject } = require("../util/json.lua.js");
 const Enmap = require("enmap");
 const path = require("path");
-const util = require("util");
-
-const sleep = util.promisify(setTimeout);
 
 class Remote {
     constructor(dir, lang, repo) {
@@ -68,15 +64,7 @@ class Remote {
         if (refLocal == refRemote)
             obj = await readJSON(targetDir);
         else {
-            const script = await this.files.download(file);
-
-            // tableToObject is very expensive to run concurrently
-            // so we add a delay to let garbage collection do its thing
-            const mem = process.memoryUsage().heapUsed / 1024 / 1024;
-            if (mem > 512 * 0.75) await sleep(1000);
-
-            obj = tableToObject(this.getLuaTable(script));
-
+            obj = JSON.parse(await this.files.download(file));
             await outputJSON(targetDir, obj);
             this.references.set(remotePath, refRemote);
             console.log(`Received update for ${remotePath}`);
@@ -99,7 +87,7 @@ class Remote {
 }
 
 Remote.dataPath = "./.data";
-Remote.load = async function(dir, repo, debug) {
+Remote.load = async function(dir, repo, lang) {
     let resolvers = [];
     let resolverModules = await readdir(dir);
 
@@ -110,13 +98,12 @@ Remote.load = async function(dir, repo, debug) {
             let file = require(path.resolve(`${dir}/${artifact}`));
 
             if (file && file.prototype instanceof Remote) {
-                // Make en-US only available during debug
-                if (debug && !file.name.toLowerCase().startsWith("en"))
-                    continue;
-
                 let resolver = new file(repo);
-                await resolver.init();
-                resolvers.push(resolver);
+
+                if (lang.includes(resolver.lang)) {
+                    await resolver.init();
+                    resolvers.push(resolver);
+                }
             }
         }
     }

@@ -34,14 +34,16 @@ console.log = function() {
 
     const base = Express.Router();
 
-    const repo = new Repository(process.env.GITHUB_TOKEN, process.env.DATA_REPO, "master");
-    const debug = process.env.ENVIRONMENT == "development";
-    app.set("resolvers", await Remote.load("./src/remote/resolvers", repo, debug));
+    app.set("resolvers", await Remote.load(
+        "./src/remote/resolvers",
+        new Repository(process.env.GITHUB_TOKEN, process.env.DATA_REPO, "master"),
+        process.env.REGIONS.split(","))
+    );
 
     app.use(favicon(path.join(__dirname, "static", "icon.ico")));
 
     app.use(function(req, _, next) {
-        req.query.region = REGIONS[req.query.region] || "en-US";
+        req.query.region = REGIONS[req.query.region] || "EN";
         next();
     });
 

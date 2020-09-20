@@ -87,11 +87,11 @@ module.exports.ITEM_TYPE = {
 };
 
 module.exports.REGIONS = {
-    "en": "en-US",
-    "jp": "ja-JP",
-    "cn": "zh-CN",
-    "tw": "zh-TW",
-    "ko": "ko-KR"
+    "en": "EN",
+    "jp": "JP",
+    "cn": "CN",
+    "tw": "TW",
+    "ko": "KR"
 };
 
 module.exports.TAG_REGEX = /<[^>]*>/g;

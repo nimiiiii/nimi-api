@@ -2,7 +2,7 @@ const ShareCfgRemote = require("../sharecfgremote");
 
 class TwShareCfgRemote extends ShareCfgRemote {
     constructor(repo) {
-        super("zh-TW", repo);
+        super("TW", repo);
     }
 }
 

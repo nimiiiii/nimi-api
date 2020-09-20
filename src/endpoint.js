@@ -21,8 +21,8 @@ class Endpoint {
                             resolver.lang == req.query.region);
 
                 if (!resolver)
-                    throw new Error(`Unable to find resolver \
-                    ${this.remoteType.name} (${req.query.region}).`);
+                    // eslint-disable-next-line max-len
+                    throw new Error(`Unable to find resolver ${this.remoteType.name} (${req.query.region}).`);
 
                 if (!resolver.initialized)
                     throw new Error(`${resolver.constructor.name} has not been initialized.`);
