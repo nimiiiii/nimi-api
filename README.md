@@ -25,8 +25,17 @@ Please consider donating to be able to host a dedicated server by clicking the l
 All endpoints are defined in the [endpoints directory](./src/endpoints) and are prefixed by `/api/`.
 
 ## State
-Currently under process of revision.
-You can try it out on [Glitch](https://azur-lane-api.glitch.me/).
+Ready! You can try it out on [Glitch](https://azur-lane-api.glitch.me/).
+
+Some links you can try:
+* [Ship Listing](https://azur-lane-api.glitch.me/api/ships)
+* [Saratoga](https://azur-lane-api.glitch.me/api/ships/10703)
+* [Saratoga (Max Limit Break)](https://azur-lane-api.glitch.me/api/ships/10703?breakout=3)
+* [Saratoga's Retrofit Map](https://azur-lane-api.glitch.me/api/ships/10703/retrofit)
+* [Saratoga's Default Skin](https://azur-lane-api.glitch.me/api/ships/skins/107030)
+* [Monthly Login Rewards](https://azur-lane-api.glitch.me/api/monthly)
+* [Juustagram](https://azur-lane-api.glitch.me/api/social)
+* [Looking Glass of Fact and Fiction (Story #1)](https://azur-lane-api.glitch.me/api/story/hologuanqia1)
 
 ## Motivation
 ### General
