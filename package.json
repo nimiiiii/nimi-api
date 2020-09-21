@@ -7,9 +7,6 @@
     "start": "node server.js",
     "serve": "node node_modules/supervisor/lib/cli-wrapper.js -w server.js,src server.js"
   },
-  "engines": {
-    "node": "12.x"
-  },
   "eslintConfig": {
     "extends": "eslint:recommended",
     "parserOptions": {
