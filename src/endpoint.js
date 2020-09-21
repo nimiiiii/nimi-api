@@ -29,6 +29,28 @@ class Endpoint {
                 await data.load(...(await resolver.resolve(data.load)));
 
                 data = data.serialize();
+
+                // Allow filtering on "listing" endpoints
+                // Syntax example: "?filters=name:Saratoga,rarity:4"
+                if (data.entries && req.query.filters) {
+                    const filters = req.query.filters.split(",").reduce((acc, cur) => {
+                        const [ key, val ] = cur.split(":");
+                        acc[key] = val;
+                        return acc;
+                    }, {});
+
+                    data.entries = data.entries.filter(entry => {
+                        return Object.keys(filters).some(key => {
+                            switch (typeof entry[key]) {
+                                case "string":
+                                case "number":
+                                    return filters[key] == entry[key];
+                                case "boolean":
+                                    return (filters[key] === "true") === entry[key];
+                            }
+                        });
+                    });
+                }
             }
 
             res.jsonp(data);
