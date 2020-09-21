@@ -47,7 +47,7 @@ class ShareCfgRemote extends Remote {
             await this.get(key);
     }
 
-    add(key, file, transform = (obj) => Object.values(obj)) {
+    add(key, file, transform = ShareCfgRemote.DEFAULT_TRANSFORMER) {
         this.dependencies[key] = { file, transform };
     }
 
@@ -64,5 +64,12 @@ class ShareCfgRemote extends Remote {
         return transform(await super.get(file));
     }
 }
+
+ShareCfgRemote.DEFAULT_TRANSFORMER = (obj) => {
+    if (obj.all)
+        delete obj.all;
+
+    return Object.values(obj);
+};
 
 module.exports = ShareCfgRemote;

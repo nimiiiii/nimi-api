@@ -9,11 +9,11 @@ class TaskMixin {
         this.type = data.type;
         this.subType = data.sub_type;
         this.name = data.name;
-        this.description = data.desc ? data.desc.replace(TAG_REGEX, "") : null;
+        this.description = data.desc.replace(TAG_REGEX, "");
         this.minLevel = data.level;
-        this.nextTask = (data.next_task != 0) ? data.next_task : null;
+        this.nextTask = data.next_task;
 
-        this.storyId = data.storyId ? data.storyId : null;
+        this.storyId = data.storyId ;
 
         const consumeItem = data.target_id_for_client
             ? items.find(i => i.id == data.target_id_for_client)
