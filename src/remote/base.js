@@ -1,4 +1,5 @@
 const { readJSON, outputJSON, ensureDir, readdir, lstat } = require("fs-extra");
+const FileNotFoundError = require("../util/filenotfounderror");
 const Enmap = require("enmap");
 const path = require("path");
 
@@ -39,7 +40,7 @@ class Remote {
         let remotePath = path.join(this.lang, this.dir, file).replace(/\\/g, "/");
 
         if (this.files.get(file) === undefined)
-            throw new Error(`${remotePath} is not a file or is not found.`);
+            throw new FileNotFoundError(`${remotePath} is not a file or is not found.`);
 
         let refLocal = this.references.get(remotePath);
         let refRemote = this.files.get(file).sha;
