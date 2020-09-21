@@ -11,7 +11,7 @@ class Social extends Model {
     async load(social, socialNpc, socialNpcGroup, lang) {
         const post = social.find(s => s.id == this._postId);
 
-        Object.apply(this, new SocialMixin(post, socialNpc, socialNpcGroup, lang));
+        Object.assign(this, new SocialMixin(post, socialNpc, socialNpcGroup, lang));
     }
 }
 
