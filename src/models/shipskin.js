@@ -17,11 +17,11 @@ class ShipSkin extends Model {
 
         Object.assign(this, new ShipSkinMixin(skin));
 
-        this.background = skin.bg;
-        this.backgroundMusic = skin.bgm;
+        this.background = skin.bg.length > 0 ? skin.big : null;
+        this.backgroundMusic = skin.bgm.length > 0 ? skin.bgm : null;
 
-        const dialogue = shipSkinsDialogue.find(d => d.id == this.skinId);
-        const extra = shipSkinsDialogueExtra.find(d => d.id == this.skinId);
+        const dialogue = shipSkinsDialogue.find(d => d.id == this._skinId);
+        const extra = shipSkinsDialogueExtra.find(d => d.id == this._skinId);
 
         this.dialogue = (!dialogue)
             ? null
