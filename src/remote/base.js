@@ -9,8 +9,6 @@ class Remote {
         this.repo = repo;
         this.files = null;
         this.references = null;
-
-        this.dependencies = {};
     }
 
     async init() {
@@ -18,35 +16,23 @@ class Remote {
 
         await ensureDir(Remote.dataPath);
 
+        this.files = await this.repo.getDirectory(path.join(this.lang, this.dir)
+            .replace(/\\/g, "/"));
+
         this.references = new Enmap({
             name: "file_references",
             dataDir: Remote.dataPath,
             autoFetch: false
         });
-        this.files = await this.repo.getDirectory(path.join(this.lang, this.dir)
-            .replace(/\\/g, "/"));
-
-        for (let { file, transform } of Object.values(this.dependencies)) {
-            await this.get(file, transform);
-        }
 
         await this.references.defer;
     }
 
-    add(key, file, transform = (obj) => Object.values(obj)) {
-        this.dependencies[key] = { file, transform };
+    async resolve() {
+        return null;
     }
 
-    async resolve(key) {
-        const { file, transform } = this.dependencies[key];
-
-        if (file === undefined)
-            throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${key}`);
-
-        return await this.get(file, transform);
-    }
-
-    async get(file, transform) {
+    async get(file) {
         if (!this.initialized)
             throw new Error("Remote has not been initialized.");
 
@@ -64,7 +50,7 @@ class Remote {
         if (refLocal == refRemote)
             obj = await readJSON(targetDir);
         else {
-            obj = transform(JSON.parse(await this.files.download(file)));
+            obj = JSON.parse(await this.files.download(file));
             await outputJSON(targetDir, obj);
             this.references.set(remotePath, refRemote);
             console.log(`Received update for ${remotePath}`);
@@ -79,7 +65,9 @@ class Remote {
 }
 
 Remote.dataPath = "./.data";
-Remote.load = async function(dir, repo, lang) {
+Remote.basePath = path.resolve(__dirname, "resolvers");
+
+Remote.load = async function(repo, lang, dir = Remote.basePath) {
     let resolvers = [];
     let resolverModules = await readdir(dir);
 

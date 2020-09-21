@@ -1,4 +1,3 @@
-const getFunctionArgs = require("get-function-arguments");
 const RequestError = require("./util/requesterror");
 const { readdir, lstat } = require("fs-extra");
 const Model = require("./models/base");
@@ -13,7 +12,7 @@ class Endpoint {
 
     async method(req, res, next) {
         try {
-            const data = await this.action(req, res, next);
+            let data = await this.action(req, res, next);
 
             if (data.constructor.prototype instanceof Model) {
                 const resolver = req.app.get("resolvers")
@@ -27,16 +26,18 @@ class Endpoint {
                 if (!resolver.initialized)
                     throw new Error(`${resolver.constructor.name} has not been initialized.`);
 
-                const dependencies = getFunctionArgs(data.load);
-                const resolved = [];
-                for (let d of dependencies) {
-                    resolved.push(await resolver.resolve(d));
-                }
-                await data.load(...resolved);
+                // await data.load(
+                //     ...(await Promise.all(
+                //         getFunctionArgs(data.load).map(async (d) => await resolver.get(d))
+                //     ))
+                // );
 
-                res.jsonp(data.serialize());
-            } else
-                res.jsonp(data);
+                await data.load(...(await resolver.resolve(data.load)));
+
+                data = data.serialize();
+            }
+
+            res.jsonp(data);
         } catch (error) {
             next(new RequestError(error.status || 500, "An error has occured", error));
         }

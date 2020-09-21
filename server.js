@@ -35,7 +35,6 @@ console.log = function() {
     const base = Express.Router();
 
     app.set("resolvers", await Remote.load(
-        "./src/remote/resolvers",
         new Repository(process.env.GITHUB_TOKEN, process.env.DATA_REPO, "master"),
         process.env.REGIONS.split(","))
     );

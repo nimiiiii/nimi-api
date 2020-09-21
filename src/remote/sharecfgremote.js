@@ -1,8 +1,11 @@
 const Remote = require("./base");
+const getFunctionArgs = require("get-function-arguments");
 
 class ShareCfgRemote extends Remote {
     constructor(lang, repo) {
         super("/sharecfg", lang, repo);
+
+        this.dependencies = {};
     }
 
     async init() {
@@ -38,6 +41,27 @@ class ShareCfgRemote extends Remote {
         this.add("socialNpcGroup", "activity_ins_ship_group_template.json");
 
         await super.init();
+
+        // Fetch any updates as needed
+        for (let key of Object.keys(this.dependencies))
+            await this.get(key);
+    }
+
+    add(key, file, transform = (obj) => Object.values(obj)) {
+        this.dependencies[key] = { file, transform };
+    }
+
+    async resolve(method) {
+        return await Promise.all(getFunctionArgs(method).map(async (d) => await this.get(d)));
+    }
+
+    async get(key) {
+        const { file, transform } = this.dependencies[key];
+
+        if (file === undefined)
+            throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${key}`);
+
+        return transform(await super.get(file));
     }
 }
 
