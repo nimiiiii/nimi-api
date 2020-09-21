@@ -26,12 +26,6 @@ class Endpoint {
                 if (!resolver.initialized)
                     throw new Error(`${resolver.constructor.name} has not been initialized.`);
 
-                // await data.load(
-                //     ...(await Promise.all(
-                //         getFunctionArgs(data.load).map(async (d) => await resolver.get(d))
-                //     ))
-                // );
-
                 await data.load(...(await resolver.resolve(data.load)));
 
                 data = data.serialize();
