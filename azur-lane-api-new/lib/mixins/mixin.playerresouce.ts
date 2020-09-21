@@ -9,7 +9,7 @@ export default class PlayerResourceMixin {
         this.id = data.id;
         this.name = data.name;
 
-        let item = items.find(i => i.id == data.itemid);
+        let item = items.find((i: any) => i.id == data.itemid);
         this.item = (item) ? new ItemMixin(item) : null;
     }
 
