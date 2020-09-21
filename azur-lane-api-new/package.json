@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "@octokit/rest": "^18.0.6",
-    "@octokit/types": "^5.5.0",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.49",
+    "@octokit/types": "^5.5.0",
+    "typescript": "^4.0.3"
   }
 }
