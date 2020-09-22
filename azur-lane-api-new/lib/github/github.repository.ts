@@ -18,8 +18,7 @@ export default class Repository {
      * @param repoString the string used for the repository formatted as owner/name
      * @param branch the branch to pull data from
      */
-    constructor (token: string, repoString: string, branch: string) {
-        let [owner, name] = repoString.split("/");
+    constructor (token: string, owner: string, name: string, branch: string) {
         this.owner = owner;
         this.name = name;
         this.branch = branch;
