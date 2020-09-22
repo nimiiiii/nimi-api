@@ -6,6 +6,7 @@
  */
 export default abstract class Model {
 
+    entries: any;
     /**
      * Loads any required properties for the deriverative model.
      * Anything loaded by this method will be accessible later on during instantiation.
