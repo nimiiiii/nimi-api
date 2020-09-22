@@ -27,9 +27,10 @@ import handleError from "./handleError";
 
 // TODO: probably add CORS stuff as well
 const methods = (methodHandlers: {
+  // we can add method properties here later, for now we only have one method property which is run
   [key: string]:
     | NextApiHandler
-    | { run: NextApiHandler; authorizationRequired?: boolean };
+    | { run: NextApiHandler; };
 }): NextApiHandler => (req, res) => {
   const method = req.method.toLowerCase();
   const handler = methodHandlers[method];
