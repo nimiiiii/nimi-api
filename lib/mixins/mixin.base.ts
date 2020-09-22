@@ -1,3 +1,3 @@
-import Model from "lib/models/model.base";
+import Model from "../models/model.base";
 
 export default abstract class Mixin extends Model {}

@@ -1,9 +1,9 @@
 import fs from "fs";
 import Path from "path";
 import Enmap from "enmap";
-import Directory from "lib/github/github.directory";
-import Repository from "lib/github/github.repository";
-import FileNotFoundError from "lib/fileNotFoundError";
+import FileNotFoundError from "../fileNotFoundError";
+import Repository from "../github/github.repository";
+import Directory from "../github/github.directory";
 
 export default abstract class Resolver {
     path: string;
