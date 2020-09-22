@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "@octokit/rest": "^18.0.6",
+    "fs-extra": "^9.0.1",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
   "devDependencies": {
-    "@types/react": "^16.9.49",
     "@octokit/types": "^5.5.0",
+    "@types/fs-extra": "^9.0.1",
+    "@types/react": "^16.9.49",
     "typescript": "^4.0.3"
   }
 }
