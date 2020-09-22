@@ -1,4 +1,5 @@
 import Resolver from "../resolvers/resolver.base";
+import "reflect-metadata";
 
 /**
  * The Model class is the base class where all deriverative model classes should
@@ -7,15 +8,6 @@ import Resolver from "../resolvers/resolver.base";
  * All Model-derived classes are required to implement a load method to load its properties to properly inject itself on the endpoints.
  */
 export default abstract class Model {
-    /**
-     * Retrieved values after resolving
-     */
-    __saved: any[];
-
-    constructor() {
-        this.__saved = [];
-    }
-
     /**
      * Loads any required properties for the deriverative model.
      * Anything loaded by this method will be accessible later on during instantiation.
@@ -28,15 +20,13 @@ export default abstract class Model {
      * @param resolver The resolver used.
      */
     async resolve(resolver: Resolver) {
-        let resolvedValues = [];
-
         for (let prop in Object.getOwnPropertyNames(this)) {
             if (this[prop] instanceof Model) {
                 let model = this[prop] as Model;
-                model.load(...(await resolver.resolve(model.load)));
                 model.resolve(resolver);
+                model.load(...(await resolver.resolve(model.load)));
+                model.loadComplete();
                 this[prop] = model.serialize();
-                resolvedValues.push(model.__saved);
             }
 
             if (Array.isArray(this[prop])) {
@@ -44,10 +34,10 @@ export default abstract class Model {
                 for (let nested of this[prop]) {
                     if (nested instanceof Model) {
                         let model = nested as Model;
-                        model.load(...(await resolver.resolve(model.load)));
                         model.resolve(resolver);
+                        model.load(...(await resolver.resolve(model.load)));
+                        model.loadComplete();
                         resolved.push(model.serialize());
-                        resolvedValues.push(model.__saved);
                     }
                 }
                 this[prop] = resolved;
@@ -57,45 +47,41 @@ export default abstract class Model {
                 for (let nested in Object.getOwnPropertyNames(this[prop])) {
                     if (this[prop][nested] instanceof Model) {
                         let model = this[prop][nested] as Model;
-                        model.load(...(await resolver.resolve(model.load)));
                         model.resolve(resolver);
+                        model.load(...(await resolver.resolve(model.load)));
+                        model.loadComplete();
                         this[prop][nested] = model.serialize();
-                        resolvedValues.push(model.__saved);
                     }
                 }
             }
         }
-
-        this.loadComplete(...resolvedValues);
     }
 
     /**
      * Called after all nested Models' dependencies are resolved.
      * Useful if you require certain properties only available after it being resolved.
-     * @param args Restored values saved during resolving
      */
-    loadComplete(...args: any) {}
+    loadComplete() {}
 
     /**
-     * Stores a value and restores it in the parent's `loadComplete` call
-     * @param arg The value to be stored
+     * Serializes properties into an Object.
+     * @param excludePrivate Filters out private properties from serialization
      */
-    save(arg: any) {
-        this.__saved.push(arg);
-    }
-
-    /**
-     * Serializes properties into an Object. Keep in mind private fields are omitted on the serialized object.
-     */
-    async serialize() {
+    async serialize(exclude: boolean = false) {
         let output = {};
 
         for (let prop in Object.getOwnPropertyNames(this)) {
-            if (!prop.startsWith("_")) {
-                    output[prop] = this[prop];
-            }
+            if (exclude && !Reflect.getMetadata("exclude", this, prop))
+                output[prop] = this[prop];
         }
     
         return output;
+    }
+
+    /**
+     * Marks a property as private to be excluded from serialization
+     */
+    protected static exclude() {
+        return Reflect.metadata("exclude", true)
     }
 }

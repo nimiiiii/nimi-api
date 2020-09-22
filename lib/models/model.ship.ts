@@ -3,9 +3,12 @@ import Skill from "./model.skill";
 import ShipListItem from "./model.ship.list.item";
 
 export default class Ship extends Model {
-    _groupId: number;
-    _shipBase: ShipListItem;
-    _breakoutLevel: number;
+    @Model.exclude()
+    breakoutLevel: number;
+
+    @Model.exclude()
+    base: ShipListItem;
+
     ammoCount: number;
     armorType: number;
     equipment: any;
@@ -18,20 +21,21 @@ export default class Ship extends Model {
     constructor(groupId: number, breakoutLevel: number) {
         super();
 
-        this._groupId = groupId;
-        this._breakoutLevel = breakoutLevel;
+        this.base = new ShipListItem(groupId, breakoutLevel);
     }
 
     async load(ships: any[], shipBreakouts: any[]): Promise<void> {
-        this._shipBase = new ShipListItem(this._groupId, this._breakoutLevel);
+        Object.apply(this, this.base);
 
-        const ship = ships.find(s => s.group_type == this._groupId);
+        const ship = this.base.ship;
+        const stats = this.base.stats;
+        const group = this.base.group;
 
         this.ammoCount = ship.ammo;
         this.skills = ship.buff_list.map((id: number) => new Skill(id));
 
         this.breakouts = shipBreakouts
-            .filter(b => ships.filter(s => s.group_type == this._groupId)
+            .filter(b => ships.filter(s => s.group_type == this.base.groupId)
                 .map(s => s.id).includes(b.id))
             .map(b => {
                 return {
@@ -44,11 +48,7 @@ export default class Ship extends Model {
                     }
                 };
             });
-    }
 
-    loadComplete({ship, group, stats}) {
-        Object.apply(this, this._shipBase);
-        
         this.armorType = stats.armor_type;
         this.equipment = Object.keys(ship)
             .filter(key => /equip_\d/.test(key))
