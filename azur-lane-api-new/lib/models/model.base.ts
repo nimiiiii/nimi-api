@@ -15,8 +15,9 @@ export default abstract class Model {
 
     /**
      * Serializes properties into a Object. Keep in mind private fields are omitted on the serialized object.
+     * Additionally, all mixins being serialized will have their dependencies resolved.
      */
-    serialize() {
+    async serialize() {
         return Object.getOwnPropertyNames(this).reduce((a, c) => {
             if (!c.startsWith("_"))
                a[c] = this[c];
