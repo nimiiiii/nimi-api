@@ -1,0 +1,95 @@
+{
+  "name": "azur-lane-api",
+  "version": "0.0.1",
+  "description": "Unofficial data provider for the mobile game: Azur Lane",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node node_modules/supervisor/lib/cli-wrapper.js -w server.js,src server.js"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "env": {
+      "es6": true,
+      "node": true,
+      "commonjs": true
+    },
+    "rules": {
+      "semi": [
+        "error",
+        "always"
+      ],
+      "no-var": "error",
+      "indent": [
+        "warn",
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "quotes": [
+        "warn",
+        "double",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "max-len": [
+        "warn",
+        {
+          "code": 100
+        }
+      ],
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "no-trailing-spaces": [
+        "warn",
+        {
+          "ignoreComments": true
+        }
+      ],
+      "object-curly-spacing": [
+        "warn",
+        "always"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeNitrous/azur-lane-api.git"
+  },
+  "keywords": [
+    "azur",
+    "lane",
+    "azurlane",
+    "api"
+  ],
+  "author": "Nitrous",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LeNitrous/azur-lane-api/issues"
+  },
+  "homepage": "https://github.com/LeNitrous/azur-lane-api#readme",
+  "dependencies": {
+    "@octokit/rest": "^17.9.2",
+    "better-sqlite-pool": "^0.3.0",
+    "better-sqlite3": "^7.0.1",
+    "dotenv": "^8.2.0",
+    "enmap": "^5.2.4",
+    "express": "^4.17.1",
+    "fs-extra": "^9.0.0",
+    "get-function-arguments": "^1.0.0",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "chalk": "^4.0.0",
+    "eslint": "^7.1.0",
+    "supervisor": "^0.12.0"
+  }
+}

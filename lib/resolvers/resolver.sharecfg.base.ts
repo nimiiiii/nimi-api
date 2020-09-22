@@ -1,4 +1,4 @@
-import Repository from "lib/github/github.repository";
+import Repository from "../github/github.repository";
 import Resolver from "./resolver.base";
 
 export default abstract class ShareCfgResolver extends Resolver {
