@@ -1,26 +1,29 @@
-import Repository from "../github/github.repository";
-import Resolver from "./resolver.base";
 import * as parseFunction from "parse-function";
+import Repository from "../github/github.repository";
+import Resolver, { Loader } from "./resolver.base";
 
-export default abstract class ShareCfgResolver extends Resolver {
-    dependencies: Map<string, [string, Function]>;
-    parse: Function;
+type Transformer = (o: unknown) => unknown;
+type Parser = (o: Loader) => { args: string[] };
+
+export default class ShareCfgResolver extends Resolver {
+    dependencies: Map<string, [string, Transformer]>;
+    parse: Parser;
 
     constructor(lang: string, repo: Repository) {
         super("/sharecfg", lang, repo);
 
-        this.dependencies = new Map<string, [string, Function]>();
+        this.dependencies = new Map<string, [string, Transformer]>();
         this.parse = parseFunction().parser;
     }
 
-    static DEFAULT_TRANSFORMER(obj: any) : any {
+    static DEFAULT_TRANSFORMER(obj: { all: number[] }) : unknown {
         if (obj.all)
             delete obj.all;
 
         return Object.values(obj);
     }
 
-    async init() {
+    async init() : Promise<void> {
         this.add("ships", "ship_data_template.json");
         this.add("shipStats", "ship_data_statistics.json");
         this.add("shipSkins", "ship_skin_template.json");
@@ -43,7 +46,7 @@ export default abstract class ShareCfgResolver extends Resolver {
         this.add("itemPlayerResources", "player_resource.json");
         this.add("furniture", "furniture_data_template.json");
 
-        this.add("lang", "gameset_language_client.json", (o: object) => o);
+        this.add("lang", "gameset_language_client.json", (o: unknown) => o);
         this.add("tasks", "task_data_template.json");
         this.add("codes", "name_code.json");
         this.add("monthlySignIn", "activity_month_sign.json");
@@ -53,9 +56,6 @@ export default abstract class ShareCfgResolver extends Resolver {
         this.add("socialNpcGroup", "activity_ins_ship_group_template.json");
 
         await super.init();
-
-        for (let key of Array.from(this.dependencies.keys()))
-            await this.get(key);
     }
 
     /**
@@ -64,15 +64,15 @@ export default abstract class ShareCfgResolver extends Resolver {
      * @param file The file to be resolved
      * @param transform A function called to modify the resolved object before being passed
      */
-    add(type: string, file: string, transform = ShareCfgResolver.DEFAULT_TRANSFORMER) {
+    add(type: string, file: string, transform = ShareCfgResolver.DEFAULT_TRANSFORMER) : void {
         this.dependencies.set(type, [file, transform]);
     }
 
-    async resolve(loader: Function) : Promise<any[]> {
+    async resolve(loader: Loader) : Promise<unknown[]> {
         return await Promise.all(this.parse(loader).args.map(async (k: string) => await this.get(k)));
     }
 
-    async get(type: string) {
+    async get(type: string) : Promise<unknown> {
         const [ file, transform ] = this.dependencies.get(type);
 
         if (file === undefined)

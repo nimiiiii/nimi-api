@@ -1,36 +1,42 @@
-import {Octokit} from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
+import Repository from "./github.repository";
+
+type TreeItem = {
+    path: string;
+    mode: string;
+    type: string;
+    size: number;
+    sha: string;
+    url: string;
+}
 
 export default class Directory {
     github: Octokit;
-    repo: any;
+    repo: Repository;
     path: string;
-    data: any;
+    tree: TreeItem[];
 
-    constructor(github, repo, path, data) {
+    constructor(github: Octokit, repo: Repository, path: string, tree: TreeItem[]) {
         this.github = github;
         this.repo = repo;
         this.path = path;
-        this.data = data;
+        this.tree = tree;
     }
 
-    get(name: string) {
-        let file = this.data.find(
-            file => file.path == name &&
-            file.type == "blob"
-            )
-        
-        return file ? null : file
+    get(name: string) : TreeItem {
+        const file = this.tree.find(file => file.path == name && file.type == "blob");
+        return file ? null : file;
     }
 
-    async download(name:string) {
-        let file = this.get(name)
+    async download(name:string) : Promise<string> {
+        const file = this.get(name);
 
-        let blob = await this.github.git.getBlob({
+        const blob = await this.github.git.getBlob({
             repo: this.repo.name,
             owner: this.repo.owner,
             file_sha: file.sha
         });
 
-        return blob.data.content , blob.data.encoding;
+        return blob.data.content, blob.data.encoding;
     }
 }

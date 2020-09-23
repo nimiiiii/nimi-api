@@ -1,7 +1,8 @@
+import Model from "../model.base";
 import RequestError from "lib/requestError";
-import Model from "./model.base";
+import ShareCfgModel from "../model.sharecfg.base";
 
-export default class ShipListItem extends Model {
+export default class ShipListItem extends ShareCfgModel {
     @Model.exclude()
     breakoutLevel: number;
 
@@ -28,7 +29,7 @@ export default class ShipListItem extends Model {
     isResearch: boolean;
     hasRetrofit: boolean;
 
-    constructor(groupId: number, breakoutLevel: number = 1) {
+    constructor(groupId: number, breakoutLevel = 1) {
         super();
 
         if (breakoutLevel > 4 || breakoutLevel < 1)
@@ -38,7 +39,14 @@ export default class ShipListItem extends Model {
         this.breakoutLevel = breakoutLevel;
     }
 
-    async load(ships : any[], shipGroups : any[], shipStats : any[], shipSkins : any[], shipRetrofits : any[], shipBlueprints : any[]): Promise<void> {
+    async load(
+        ships : any[],
+        shipGroups : any[],
+        shipStats : any[],
+        shipSkins : any[],
+        shipRetrofits : any[],
+        shipBlueprints : any[]
+    ): Promise<void> {
         this.group = shipGroups.find(g => g.group_type == this.group);
 
         if (!this.group)
