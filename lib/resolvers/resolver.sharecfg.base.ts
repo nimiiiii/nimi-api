@@ -1,13 +1,16 @@
 import Repository from "../github/github.repository";
 import Resolver from "./resolver.base";
+import * as parseFunction from "parse-function";
 
 export default abstract class ShareCfgResolver extends Resolver {
-    dependencies: DependencyDictionary;
+    dependencies: Map<string, [string, Function]>;
+    parse: Function;
 
     constructor(lang: string, repo: Repository) {
         super("/sharecfg", lang, repo);
 
-        this.dependencies = {};
+        this.dependencies = new Map<string, [string, Function]>();
+        this.parse = parseFunction().parser;
     }
 
     static DEFAULT_TRANSFORMER(obj: any) : any {
@@ -40,7 +43,7 @@ export default abstract class ShareCfgResolver extends Resolver {
         this.add("itemPlayerResources", "player_resource.json");
         this.add("furniture", "furniture_data_template.json");
 
-        this.add("lang", "gameset_language_client.json", (o: any) => o);
+        this.add("lang", "gameset_language_client.json", (o: object) => o);
         this.add("tasks", "task_data_template.json");
         this.add("codes", "name_code.json");
         this.add("monthlySignIn", "activity_month_sign.json");
@@ -51,35 +54,30 @@ export default abstract class ShareCfgResolver extends Resolver {
 
         await super.init();
 
-        for (let key of Object.keys(this.dependencies))
+        for (let key of Array.from(this.dependencies.keys()))
             await this.get(key);
     }
 
     /**
-     * Map an argument name to a file for dependency resolving
-     * @param key The argument name
+     * Map an argument type to a file for dependency resolving
+     * @param type The argument type
      * @param file The file to be resolved
      * @param transform A function called to modify the resolved object before being passed
      */
-    add(key: string, file: string, transform: Function = ShareCfgResolver.DEFAULT_TRANSFORMER) : void {
-        this.dependencies[key] = { file, transform };
+    add(type: string, file: string, transform = ShareCfgResolver.DEFAULT_TRANSFORMER) {
+        this.dependencies.set(type, [file, transform]);
     }
 
     async resolve(loader: Function) : Promise<any[]> {
-        // TODO: change array to a list of loader arguments
-        return await Promise.all([].map(async (k: string) => await this.get(k)));
+        return await Promise.all(this.parse(loader).args.map(async (k: string) => await this.get(k)));
     }
 
-    async get(key: string) {
-        const { file, transform } = this.dependencies[key];
+    async get(type: string) {
+        const [ file, transform ] = this.dependencies.get(type);
 
         if (file === undefined)
-            throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${key}`);
+            throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${type}`);
 
         return transform(await super.get(file));
     }
-}
-
-interface DependencyDictionary {
-    [key: string] : { file: string, transform: Function }
 }

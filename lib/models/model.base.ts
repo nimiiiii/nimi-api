@@ -13,7 +13,7 @@ export default abstract class Model {
      * Anything loaded by this method will be accessible later on during instantiation.
      * @param args the arguments required for the specific classes.
      */
-    async abstract load(...args: any): Promise<void>;
+    async load(...args: any) {};
 
     /**
      * Resolves nested Models that was instanced inside the parent.
@@ -24,7 +24,8 @@ export default abstract class Model {
             if (this[prop] instanceof Model) {
                 let model = this[prop] as Model;
                 model.resolve(resolver);
-                model.load(...(await resolver.resolve(model.load)));
+                model.load(...(await resolver.resolve(model.load)));model.resolve(resolver);
+                model.resolve(resolver);
                 model.loadComplete();
                 this[prop] = model.serialize();
             }
@@ -35,7 +36,8 @@ export default abstract class Model {
                     if (nested instanceof Model) {
                         let model = nested as Model;
                         model.resolve(resolver);
-                        model.load(...(await resolver.resolve(model.load)));
+                        model.load(...(await resolver.resolve(model.load)));model.resolve(resolver);
+                        model.resolve(resolver);
                         model.loadComplete();
                         resolved.push(model.serialize());
                     }
@@ -48,7 +50,8 @@ export default abstract class Model {
                     if (this[prop][nested] instanceof Model) {
                         let model = this[prop][nested] as Model;
                         model.resolve(resolver);
-                        model.load(...(await resolver.resolve(model.load)));
+                        model.load(...(await resolver.resolve(model.load)));model.resolve(resolver);
+                        model.resolve(resolver);
                         model.loadComplete();
                         this[prop][nested] = model.serialize();
                     }
@@ -79,9 +82,9 @@ export default abstract class Model {
     }
 
     /**
-     * Marks a property as private to be excluded from serialization
+     * Marks a property as private to be excluded from serialization.
      */
     protected static exclude() {
-        return Reflect.metadata("exclude", true)
+        return Reflect.metadata("exclude", true);
     }
 }
