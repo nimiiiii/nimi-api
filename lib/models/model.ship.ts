@@ -27,9 +27,7 @@ export default class Ship extends Model {
     async load(ships: any[], shipBreakouts: any[]): Promise<void> {
         Object.apply(this, this.base);
 
-        const ship = this.base.ship;
-        const stats = this.base.stats;
-        const group = this.base.group;
+        const { ship, stats, group } = this.base;
 
         this.ammoCount = ship.ammo;
         this.skills = ship.buff_list.map((id: number) => new Skill(id));
