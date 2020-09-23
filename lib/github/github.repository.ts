@@ -1,5 +1,5 @@
-import {Octokit} from "@octokit/rest";
 import Directory from "./github.directory";
+import { Octokit } from "@octokit/rest";
 
 /**
  *  Represents a Repository on GitHub to pull data from
@@ -22,15 +22,15 @@ export default class Repository {
         this.owner = owner;
         this.name = name;
         this.branch = branch;
-        this.github = new Octokit({auth: token});
+        this.github = new Octokit({ auth: token });
     }
 
     /**
      * Gets the directory tree for the specific git repository in GitHub
      * @param path the path of where the data is
      */
-    async getDirectory(path: string) {
-        let { data: { tree } } = (await this.github.git.getTree({
+    async getDirectory(path: string) : Promise<Directory> {
+        const { data: { tree } } = (await this.github.git.getTree({
             repo: this.name,
             owner: this.owner,
             tree_sha: `${this.branch}:${path}`

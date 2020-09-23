@@ -6,7 +6,7 @@ export default class GameCfgResolver extends Resolver {
         super(path, lang, repo);
     }
 
-    async resolve() : Promise<any[]> {
+    async resolve() {
         return [this];
     }
 }

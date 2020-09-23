@@ -32,16 +32,16 @@ const methods = (methodHandlers: {
     | NextApiHandler
     | { run: NextApiHandler; };
 }): NextApiHandler => (req, res) => {
-  const method = req.method.toLowerCase();
-  const handler = methodHandlers[method];
+    const method = req.method.toLowerCase();
+    const handler = methodHandlers[method];
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (methodHandlers[method])
-    if (typeof handler === "function") return handleError(handler)(req, res);
-  else
-    res
-      .status(405)
-      .json({ code: 405, message: "Method not available on this endpoint" });
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (methodHandlers[method] && typeof handler === "function")
+        return handleError(handler)(req, res);
+    else
+        res
+            .status(405)
+            .json({ code: 405, message: "Method not available on this endpoint" });
 };
 
 export default methods;

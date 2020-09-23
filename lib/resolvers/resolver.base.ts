@@ -1,9 +1,20 @@
-import fs from "fs";
-import Path from "path";
+import Directory from "../github/github.directory";
 import Enmap from "enmap";
 import FileNotFoundError from "../fileNotFoundError";
+import Path from "path";
 import Repository from "../github/github.repository";
-import Directory from "../github/github.directory";
+import fs from "fs-extra";
+
+interface ResolverLoadOptions {
+    lang: string[],
+    path?: string,
+    token: string,
+    owner: string,
+    branch: string,
+    repository: string
+}
+
+export type Loader = (...any: unknown[]) => Promise<void>;
 
 export default abstract class Resolver {
     path: string;
@@ -12,8 +23,8 @@ export default abstract class Resolver {
     files: Directory;
     references: Enmap;
 
-    static DATA_PATH: string = "./.data";
-    static MODULE_PATH: string = Path.resolve(__dirname, "modules");
+    static DATA_PATH = "./.data";
+    static MODULE_PATH = Path.resolve(__dirname, "modules");
 
     constructor(path: string, lang: string, repo: Repository) {
         this.path = path;
@@ -30,18 +41,18 @@ export default abstract class Resolver {
     static async Load(options: ResolverLoadOptions) : Promise<Resolver[]> {
         const path = options?.path ?? Resolver.MODULE_PATH;
         const repo = new Repository(options.token, options.owner, options.repository, options.branch);
-    
-        let resolvers = [];
-        let modules = fs.readdirSync(path);
 
-        for (let artifact of modules) {
-            let stats = fs.lstatSync(Path.join(path, artifact));
+        const resolvers = [];
+        const modules = fs.readdirSync(path);
+
+        for (const artifact of modules) {
+            const stats = fs.lstatSync(Path.join(path, artifact));
 
             if (stats.isFile() && artifact.endsWith(".js")) {
-                let Module = await import(Path.resolve(Path.join(path, artifact)));
+                const Module = await import(Path.resolve(Path.join(path, artifact)));
 
                 if (Module && Module.prototype instanceof Resolver) {
-                    let resolver : Resolver = new Module(repo);
+                    const resolver : Resolver = new Module(repo);
 
                     if (options.lang.includes(resolver.lang)) {
                         await resolver.init();
@@ -75,7 +86,7 @@ export default abstract class Resolver {
      * Resolves a model's loader method and passes back resolved values to its arguments
      * @param loader A model's loader method
      */
-    abstract async resolve(loader: Function) : Promise<any[]>
+    abstract async resolve(loader: Loader) : Promise<any[]>
 
     /**
      * Retrieves a file from cache or downloads the file from the repository if it doesn't exist.
@@ -85,18 +96,18 @@ export default abstract class Resolver {
         if (!this.initialized)
             throw new Error("Remote has not been initialized");
 
-        let remotePath = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
+        const remotePath = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
 
         if (this.files.get(file) === undefined)
             throw new FileNotFoundError(`${remotePath} is not a file or is not found.`);
 
-        let refLocal = this.references.get(remotePath);
-        let refRemote = this.files.get(file).sha;
-        let targetDir = Path.join(Resolver.DATA_PATH, "/files", this.lang, "json");
+        const refLocal = this.references.get(remotePath);
+        const refRemote = this.files.get(file).sha;
+        const targetDir = Path.join(Resolver.DATA_PATH, "/files", this.lang, "json");
 
         let obj: any;
         if (refLocal == refRemote) {
-
+            obj = await fs.readJSON(targetDir);
         }
         else {
             obj = JSON.parse(await this.files.download(file));
@@ -105,13 +116,4 @@ export default abstract class Resolver {
 
         return obj;
     }
-}
-
-interface ResolverLoadOptions {
-    lang: string[],
-    path?: string,
-    token: string,
-    owner: string,
-    branch: string,
-    repository: string
 }

@@ -1,7 +1,7 @@
 import RequestError from "lib/requestError";
-import Model from "./model.base";
+import ShareCfgModel from "../model.sharecfg.base";
 
-export default class Skill extends Model {
+export default class Skill extends ShareCfgModel {
     id: number;
     name: string;
     type: number;
@@ -10,7 +10,6 @@ export default class Skill extends Model {
 
     constructor(id: number) {
         super();
-
         this.id = id;
     }
 

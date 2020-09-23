@@ -1,8 +1,42 @@
-import Model from "./model.base";
-import Skill from "./model.skill";
+import Model from "../model.base";
+import ShareCfgModel from "../model.sharecfg.base";
 import ShipListItem from "./model.ship.list.item";
+import Skill from "../shared/model.skill";
 
-export default class Ship extends Model {
+type ShipGroupDescriptionItem = [string, [ShipDescriptionAction, any]]
+
+enum ShipExchangeLocation {
+    Core = "core",
+    Medal = "medal",
+    Munitions = "munitions",
+}
+
+enum ShipDescriptionAction {
+    None,
+    Shop = "SHOP",
+    Research = "SHIPBLUEPRINT",
+    Collection = "COLLECTSHIP",
+    Checkpoint = "LEVEL",
+    Construction = "GETBOAT",
+}
+
+interface ShipAcquisitionDetails {
+    task: string,
+    chapter: number,
+    stage: number,
+    event: string,
+    exchange: ShipExchangeLocation,
+    collection: boolean,
+    construction: {
+        light: boolean,
+        heavy: boolean,
+        special: boolean,
+        limited: boolean,
+        research: boolean
+    }
+}
+
+export default class Ship extends ShareCfgModel {
     @Model.exclude()
     breakoutLevel: number;
 
@@ -61,12 +95,15 @@ export default class Ship extends Model {
                 return obj;
             }, {});
 
-        this.acquisition = group.description.reduce((output : ShipAcquisitionDetails, [text, [action, args]] : ShipGroupDescriptionItem) => {
+        this.acquisition = group.description.reduce((
+            output : ShipAcquisitionDetails,
+            [text, [action, args]] : ShipGroupDescriptionItem
+        ) => {
             text = text.trim();
 
             switch (action) {
                 case ShipDescriptionAction.Shop && args.warp:
-                    output.exchange = args.warp;
+                    output.exchange = ACQUISITION_WARP[args.warp];
                     break;
 
                 case ShipDescriptionAction.Collection:
@@ -83,9 +120,9 @@ export default class Ship extends Model {
 
                     const types = text.match(REGEX_CONSTRUCT);
                     if (types !== null) {
-                        for (let type of [...types])
+                        for (const type of [...types])
                             output.construction[type.toLowerCase()] = true;
-                    }                            
+                    }
                     break;
 
                 case ShipDescriptionAction.Checkpoint:
@@ -103,48 +140,13 @@ export default class Ship extends Model {
                         output.event = text;
 
                     output.construction.limited = text.includes("Limited");
-                    output.task = ACQUISITION_TASK[text]
+                    output.task = ACQUISITION_TASK[text];
                     break;
-                }
+            }
 
-                return output;
-            },
-            ACQUISITION_DEFAULTS
-        );
+            return output;
+        }, ACQUISITION_DEFAULTS);
     }
-}
-
-interface ShipAcquisitionDetails {
-    task: string,
-    chapter: number,
-    stage: number,
-    event: string,
-    exchange: ShipExchangeLocation,
-    collection: boolean,
-    construction: {
-        light: boolean,
-        heavy: boolean,
-        special: boolean,
-        limited: boolean,
-        research: boolean
-    }
-}
-
-type ShipGroupDescriptionItem = [string, [ShipDescriptionAction, any?]]
-
-enum ShipExchangeLocation {
-    Core = "core",
-    Medal = "medal",
-    Munitions = "munitions",
-}
-
-enum ShipDescriptionAction {
-    None,
-    Shop = "SHOP",
-    Research = "SHIPBLUEPRINT",
-    Collection = "COLLECTSHIP",
-    Checkpoint = "LEVEL",
-    Construction = "GETBOAT",
 }
 
 const REGEX_CONSTRUCT = /(light|heavy|special)/gi;
@@ -172,9 +174,9 @@ const ACQUISITION_TASK = {
     "Weekly Mission": "weeklyMission",
     "Monthly Sign-in": "monthlySignIn",
     "Hidden Mission:Im-paws-ible quest": "akashiMissions"
-}
+};
 
 const ACQUISITION_WARP = {
     "sham": ShipExchangeLocation.Core,
     "supplies": ShipExchangeLocation.Munitions
-}
+};
