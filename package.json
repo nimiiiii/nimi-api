@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start"
   },
@@ -19,12 +19,15 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
     "@octokit/types": "^5.5.0",
     "@types/fs-extra": "^9.0.1",
     "@types/hapi__joi": "^17.1.5",
     "@types/react": "^16.9.49",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.9.0",
     "typescript": "^4.0.3"
   }
