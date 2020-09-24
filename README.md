@@ -30,6 +30,9 @@ This API is Copyright &copy; Nathan Alo and Ayane Satomi. Licensed under GNU Aff
 Contains code from [Aya](https://github.com/ClarityCafe/Aya). Aya's components are Copyright &copy; Ayane Satomi, Michael Mitchell, et al. Licensed under MIT.
 
 
+Azur Lane, the game, and all its assets are Copyright &copy; Yostar. The developers and contributors are no way affiliated with the game, the company, nor its partners.
+
+
 Consider donating to ko-fi as well so we can keep maintaining this project! A coffee a day gives us a happy day.
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W71CF9V)
