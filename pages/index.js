@@ -33,7 +33,7 @@ export default function Home() {
 
             <footer className={styles.footer}>
                 <a
-                    href="https://vercel.com"
+                    href="https://vercel.com?utm_source=azur-lane-api&utm_campaign=oss"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
