@@ -53,12 +53,15 @@ export default class Ship extends ShareCfgModel {
     acquisition: ShipAcquisitionDetails;
 
     constructor(groupId: number, breakoutLevel: number) {
-        super();
+        super([
+            "ships",
+            "shipBreakouts"
+        ]);
 
         this.base = new ShipListItem(groupId, breakoutLevel);
     }
 
-    async load(ships: any[], shipBreakouts: any[]): Promise<void> {
+    async load(ships: any[], breakouts: any[]): Promise<void> {
         Object.apply(this, this.base);
 
         const { ship, stats, group } = this.base;
@@ -66,7 +69,7 @@ export default class Ship extends ShareCfgModel {
         this.ammoCount = ship.ammo;
         this.skills = ship.buff_list.map((id: number) => new Skill(id));
 
-        this.breakouts = shipBreakouts
+        this.breakouts = breakouts
             .filter(b => ships.filter(s => s.group_type == this.base.groupId)
                 .map(s => s.id).includes(b.id))
             .map(b => {

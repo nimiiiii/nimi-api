@@ -1,10 +1,5 @@
-import Repository from "lib/github/github.repository";
-import Resolver from "../resolvers/resolver.base";
+import Resolver, { ResolverConstructor } from "../resolvers/resolver.base";
 import "reflect-metadata";
-
-export interface IResolvable {
-    new (lang: string, repo: Repository) : Resolver;
-}
 
 /**
  * The Model class is the base class where all deriverative model classes should
@@ -14,9 +9,9 @@ export interface IResolvable {
  * properties to properly inject itself on the endpoints.
  */
 export default abstract class Model {
-    resolver: IResolvable;
+    resolver: ResolverConstructor;
 
-    constructor(resolver: IResolvable) {
+    constructor(resolver: ResolverConstructor) {
         this.resolver = resolver;
     }
 
@@ -43,7 +38,7 @@ export default abstract class Model {
         // The first resolve resolves models instanced in the constructor
         // making the properties ready for use in the load method
         await this.resolve(resolver);
-        await this.load(...(await resolver.resolve(this.load)));
+        await this.load(...(await resolver.resolve(this)));
         // The second resolve resolves models instanced in the load method
         await this.resolve(resolver);
         this.loadComplete();
@@ -57,7 +52,7 @@ export default abstract class Model {
     protected async serialize(exclude : boolean) : Promise<any> {
         const output = {};
 
-        for (const prop in Object.getOwnPropertyNames(this)) {
+        for (const prop of Object.getOwnPropertyNames(this)) {
             if (exclude && !Reflect.getMetadata("exclude", this, prop))
                 output[prop] = this[prop];
         }
@@ -70,7 +65,7 @@ export default abstract class Model {
      * @param resolver The resolver to use.
      */
     protected async resolve(resolver: Resolver) : Promise<void> {
-        for (const prop in Object.getOwnPropertyNames(this)) {
+        for (const prop of Object.getOwnPropertyNames(this)) {
             if (this[prop] instanceof Model)
                 this[prop] = await (this[prop] as Model)?.run(resolver);
 
@@ -86,7 +81,7 @@ export default abstract class Model {
             }
 
             if (!Array.isArray(this[prop]) && typeof this[prop] === "object") {
-                for (const nested in Object.getOwnPropertyNames(this[prop])) {
+                for (const nested of Object.getOwnPropertyNames(this[prop])) {
                     if (this[prop][nested] instanceof Model)
                         this[prop][nested] = await (this[prop][nested] as Model).run(resolver);
                 }
@@ -97,9 +92,12 @@ export default abstract class Model {
     /**
      * Marks a property as private to be excluded from serialization.
      */
-    protected static exclude() : ({
-        (target: unknown, propertyKey: string | symbol): void;
-    }) {
-        return Reflect.metadata("exclude", true);
+    protected static exclude() {
+        return function (target: any, propertyKey: string) : void {
+            if (typeof target === "function")
+                throw new TypeError(`${propertyKey} of type ${typeof target} should not be a function`);
+
+            Reflect.defineMetadata("exclude", true, target);
+        };
     }
 }

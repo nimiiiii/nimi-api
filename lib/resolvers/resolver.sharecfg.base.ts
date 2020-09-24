@@ -1,19 +1,17 @@
-import * as parseFunction from "parse-function";
+import Model from "lib/models/model.base";
 import Repository from "../github/github.repository";
-import Resolver, { Loader } from "./resolver.base";
+import Resolver from "./resolver.base";
+import ShareCfgModel from "lib/models/model.sharecfg.base";
 
 type Transformer = (o: unknown) => unknown;
-type Parser = (o: Loader) => { args: string[] };
 
 export default class ShareCfgResolver extends Resolver {
     dependencies: Map<string, [string, Transformer]>;
-    parse: Parser;
 
     constructor(lang: string, repo: Repository) {
         super("/sharecfg", lang, repo);
 
         this.dependencies = new Map<string, [string, Transformer]>();
-        this.parse = parseFunction().parser;
     }
 
     static DEFAULT_TRANSFORMER(obj: { all: number[] }) : unknown {
@@ -68,11 +66,17 @@ export default class ShareCfgResolver extends Resolver {
         this.dependencies.set(type, [file, transform]);
     }
 
-    async resolve(loader: Loader) : Promise<unknown[]> {
-        return await Promise.all(this.parse(loader).args.map(async (k: string) => await this.get(k)));
+    async resolve(model: Model) : Promise<any[]> {
+        const constructor = (<Object>model).constructor;
+        if (!(constructor.prototype instanceof ShareCfgModel))
+            throw new TypeError(`${constructor.name} is not derivative of ShareCfgModel`);
+
+        console.log((<any>model).dependencies);
+
+        return await Promise.all((<ShareCfgModel>model).dependencies.map(async (k: string) => await this.get(k)));
     }
 
-    async get(type: string) : Promise<unknown> {
+    async get(type: string) : Promise<any> {
         const [ file, transform ] = this.dependencies.get(type);
 
         if (file === undefined)
