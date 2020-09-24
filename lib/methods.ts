@@ -36,7 +36,7 @@ const methods = (methodHandlers: {
 
     if (methodHandlers.model && methodHandlers.model instanceof Model) {
         const repo = new Repository(
-            "7c633d6aa8d36ce181312e07586728d80dd2d1cf",
+            "",
             "nobbyfix",
             "AzurLaneSourceJson",
             "master"
