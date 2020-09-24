@@ -1,6 +1,6 @@
 import Directory from "../github/github.directory";
 import Enmap from "enmap";
-import FileNotFoundError from "../fileNotFoundError";
+import Model from "lib/models/model.base";
 import Path from "path";
 import Repository from "../github/github.repository";
 import fs from "fs-extra";
@@ -14,7 +14,9 @@ interface ResolverLoadOptions {
     repository: string
 }
 
-export type Loader = (...any: unknown[]) => Promise<void>;
+export interface ResolverConstructor {
+    new (lang: string, repo: Repository) : Resolver;
+}
 
 export default abstract class Resolver {
     path: string;
@@ -86,7 +88,7 @@ export default abstract class Resolver {
      * Resolves a model's loader method and passes back resolved values to its arguments
      * @param loader A model's loader method
      */
-    abstract async resolve(loader: Loader) : Promise<any[]>
+    abstract async resolve(model: Model) : Promise<any[]>
 
     /**
      * Retrieves a file from cache or downloads the file from the repository if it doesn't exist.
@@ -99,11 +101,11 @@ export default abstract class Resolver {
         const remotePath = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
 
         if (this.files.get(file) === undefined)
-            throw new FileNotFoundError(`${remotePath} is not a file or is not found.`);
+            throw new Error(`${remotePath} is not a file or is not found.`);
 
         const refLocal = this.references.get(remotePath);
-        const refRemote = this.files.get(file).sha;
-        const targetDir = Path.join(Resolver.DATA_PATH, "/files", this.lang, "json");
+        const refRemote = this.files.get(file)?.sha ?? undefined;
+        const targetDir = Path.join(Resolver.DATA_PATH, "/files", this.lang, file);
 
         let obj: any;
         if (refLocal == refRemote) {

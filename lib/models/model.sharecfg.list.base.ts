@@ -1,8 +1,5 @@
-import ModelList from "./model.list.base";
-import ShareCfgResolver from "lib/resolvers/resolver.sharecfg.base";
+import ShareCfgModel from "./model.sharecfg.base";
 
-export default abstract class ShareCfgModelList extends ModelList {
-    constructor() {
-        super(ShareCfgResolver);
-    }
+export default abstract class ShareCfgModelList extends ShareCfgModel {
+    entries = [];
 }

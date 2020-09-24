@@ -24,8 +24,8 @@ export default class Directory {
     }
 
     get(name: string) : TreeItem {
-        const file = this.tree.find(file => file.path == name && file.type == "blob");
-        return file ? null : file;
+        const file = this.tree.find(f => f.path == name && f.type == "blob");
+        return file ? file : null;
     }
 
     async download(name:string) : Promise<string> {

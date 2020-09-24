@@ -1,6 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import ShipList from "lib/models/ships/model.ship.list";
+import methods from "lib/methods";
 
-export default (req, res) => {
-  res.statusCode = 200
-  res.json({ name: 'John Doe' })
-}
+export default methods({ model: new ShipList() });
