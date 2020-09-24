@@ -1,10 +1,9 @@
 import Directory from "../github/github.directory";
-import Enmap from "enmap";
 import Model from "lib/models/model.base";
 import Path from "path";
+import Redis from "ioredis";
 import Repository from "../github/github.repository";
 import fs from "fs-extra";
-
 interface ResolverLoadOptions {
     lang: string[],
     path?: string,
@@ -13,6 +12,7 @@ interface ResolverLoadOptions {
     branch: string,
     repository: string
 }
+
 
 export interface ResolverConstructor {
     new (lang: string, repo: Repository) : Resolver;
@@ -23,7 +23,7 @@ export default abstract class Resolver {
     lang: string;
     repo: Repository;
     files: Directory;
-    references: Enmap;
+    references: Redis.Redis;
 
     static DATA_PATH = "./.data";
     static MODULE_PATH = Path.resolve(__dirname, "modules");
@@ -74,14 +74,7 @@ export default abstract class Resolver {
     async init() : Promise<void> {
         this.files = await this.repo.getDirectory(Path.join(this.lang, this.path)
             .replace(/\\/g, "/"));
-
-        this.references = new Enmap({
-            name: "file_references",
-            dataDir: Resolver.DATA_PATH,
-            autoFetch: false
-        });
-
-        await this.references.defer;
+        this.references = new Redis(process.env.REDIS_URL);
     }
 
     /**
@@ -103,7 +96,7 @@ export default abstract class Resolver {
         if (this.files.get(file) === undefined)
             throw new Error(`${remotePath} is not a file or is not found.`);
 
-        const refLocal = this.references.get(remotePath);
+        const refLocal = await this.references.get(remotePath);
         const refRemote = this.files.get(file)?.sha ?? undefined;
         const targetDir = Path.join(Resolver.DATA_PATH, "/files", this.lang, file);
 
@@ -113,7 +106,9 @@ export default abstract class Resolver {
         }
         else {
             obj = JSON.parse(await this.files.download(file));
-            this.references.set(targetDir, obj);
+            // expire for 56 hours then pull the reference hash again
+            // this ensures we always have the fresh references always.
+            this.references.set(targetDir, obj, "ex", 1000 * 60 * 60 * 56);
         }
 
         return obj;
