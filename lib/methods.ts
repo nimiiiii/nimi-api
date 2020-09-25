@@ -22,32 +22,20 @@
  *  SOFTWARE.
  */
 
-import * as cors from "cors";
+import Cors from "cors";
+import RateLimit from "express-rate-limit";
 import handleError from "./handleError";
-import rateLimit from "express-rate-limit";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-async function runMiddleware(
-    req: NextApiRequest,
-    res: NextApiResponse,
-    fn: any
-) {
-    return new Promise((resolve, reject) => {
-        fn(req, res, (result: any) => {
-            if (result instanceof Error)
-                return reject(result);
-
-            return resolve(result);
-        });
-    });
-}
+const cors = initMiddleware(Cors());
+const rate = initMiddleware(RateLimit({ windowMs: 60 * 60 * 1000, max: 150 }));
 
 export default function methods(
     handlers: { [key: string]: NextApiHandler }
 ) : NextApiHandler {
     return async function (req, res) {
-        await runMiddleware(req, res, rateLimit({ windowMs: 60 * 60 * 1000, max: 500 }));
-        // await runMiddleware(req, res, cors);
+        await rate(req, res);
+        await cors(req, res);
 
         const handle = handlers[req.method.toLowerCase()];
 
@@ -55,5 +43,18 @@ export default function methods(
             return handleError(handle)(req, res);
 
         res.status(405).json({ code: 405, message: "Method not available on this endpoint" });
+    };
+}
+
+function initMiddleware(middleware: any) {
+    return (req: NextApiRequest, res: NextApiResponse) => {
+        return new Promise((resolve, reject) => {
+            middleware(req, res, (result) => {
+                if (result instanceof Error)
+                    return reject(result);
+
+                return resolve(result);
+            });
+        });
     };
 }
