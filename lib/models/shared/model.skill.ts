@@ -1,3 +1,4 @@
+import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
 @ShareCfgModel.dependsOn([ "skills" ])
@@ -17,7 +18,7 @@ export default class Skill extends ShareCfgModel {
         const skill = skills.find(s => s.id == this.id);
 
         if (!skill)
-            throw new Error("Skill not found.");
+            throw new RequestError(404, `Skill (ID: ${this.id}) is not found.`);
 
         this.name = skill.name.trim();
         this.type = skill.type;

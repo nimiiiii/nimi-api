@@ -1,4 +1,5 @@
 import Model from "../model.base";
+import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
 @ShareCfgModel.dependsOn([
@@ -40,7 +41,7 @@ export default class ShipListItem extends ShareCfgModel {
         super();
 
         if (breakoutLevel > 4 || breakoutLevel < 1)
-            throw new Error("Breakout level should only be between 1 and 4.");
+            throw new RequestError(400, "Breakout level should only be between 1 and 4.");
 
         this.groupId = groupId;
         this.breakoutLevel = breakoutLevel;
@@ -57,7 +58,7 @@ export default class ShipListItem extends ShareCfgModel {
         this.group = groups.find(g => g.group_type == this.groupId);
 
         if (!this.group)
-            throw new Error(`Ship Group (ID: ${this.groupId}) not found.`);
+            throw new RequestError(404, `Ship Group (ID: ${this.groupId}) not found.`);
 
         this.ship = ships.filter(s => s.group_type == this.group.group_type)[this.breakoutLevel - 1];
         this.stats = stats.find(s => s.id == this.ship.id);
