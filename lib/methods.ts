@@ -22,13 +22,33 @@
  *  SOFTWARE.
  */
 
-import { NextApiHandler } from "next";
+import * as cors from "cors";
 import handleError from "./handleError";
+import rateLimit from "express-rate-limit";
+import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-export default function methods(handlers:
-    { [key: string]: NextApiHandler }
+async function runMiddleware(
+    req: NextApiRequest,
+    res: NextApiResponse,
+    fn: any
+) {
+    return new Promise((resolve, reject) => {
+        fn(req, res, (result: any) => {
+            if (result instanceof Error)
+                return reject(result);
+
+            return resolve(result);
+        });
+    });
+}
+
+export default function methods(
+    handlers: { [key: string]: NextApiHandler }
 ) : NextApiHandler {
-    return function (req, res) {
+    return async function (req, res) {
+        await runMiddleware(req, res, rateLimit({ windowMs: 60 * 60 * 1000, max: 500 }));
+        await runMiddleware(req, res, cors);
+
         const handle = handlers[req.method.toLowerCase()];
 
         if (typeof handle === "function")
