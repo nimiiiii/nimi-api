@@ -31,34 +31,36 @@ interface ValidateOptions {
   location?: Locations;
 }
 
-interface ValidatedNextApiRequestBody<S> extends NextApiRequest {
-  body: S;
+interface ValidatedNextApiRequestBody<TSchema> extends NextApiRequest {
+  body: TSchema;
 }
 
-interface ValidatedNextApiRequestQuery<S extends {}> extends NextApiRequest {
-  query: S;
+interface ValidatedNextApiRequestQuery<TSchema extends {}> extends NextApiRequest {
+  query: TSchema;
 }
 
-type ValidatedNextApiRequest<S, L extends Locations> = L extends "body"
-  ? ValidatedNextApiRequestBody<S>
-  : ValidatedNextApiRequestQuery<S>;
+type ValidatedNextApiRequest<TSchema, TLocation extends Locations> = TLocation extends "body"
+  ? ValidatedNextApiRequestBody<TSchema>
+  : ValidatedNextApiRequestQuery<TSchema>;
 
-type ValidatedNextApiHandler<S, L extends Locations> = (
-  req: ValidatedNextApiRequest<S, L>,
+type ValidatedNextApiHandler<TSchema, TLocation extends Locations> = (
+  req: ValidatedNextApiRequest<TSchema, TLocation>,
   res: NextApiResponse
 ) => void;
 
-const validate = <S = any, L extends Locations = "body">(
+function validate<TSchema, TLocation extends Locations = "body">(
     { schema, location = "body" }: ValidateOptions,
-    handler: ValidatedNextApiHandler<S, L>
-): NextApiHandler => (req, res) => {
+    handler: ValidatedNextApiHandler<TSchema, TLocation>
+) : NextApiHandler {
+    return function (req, res) {
         const { error, value } = schema.validate(req[location]);
-        req.body = value; // Joi changes some values depending on schema, set that as body
+        req.body = value;
 
         if (!error)
-            return handler(req as ValidatedNextApiRequest<S, L>, res);
-        else
-            res.status(400).json({ code: 400, message: error.message });
+            return handler(req as ValidatedNextApiRequest<TSchema, TLocation>, res);
+
+        res.status(400).json({ code: 400, message: error.message });
     };
+}
 
 export default validate;

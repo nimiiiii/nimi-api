@@ -32,9 +32,9 @@ export default abstract class Model {
     /**
      * Runs the entire lifecycle of this model.
      * @param resolver The resolver to use.
-     * @param exclude Exclude properties decorated as private from serialization.
+     * @param raw Whether to return itself or the serialized version
      */
-    async run(resolver: Resolver, exclude = false) : Promise<any> {
+    async run(resolver: Resolver, raw = false) : Promise<any> {
         // The first resolve resolves models instanced in the constructor
         // making the properties ready for use in the load method
         await this.resolve(resolver);
@@ -42,19 +42,20 @@ export default abstract class Model {
         // The second resolve resolves models instanced in the load method
         await this.resolve(resolver);
         this.loadComplete();
-        return await this.serialize(exclude);
+        return raw ? this : await this.serialize();
     }
 
     /**
-     * Serializes properties into an Object.
-     * @param exclude Exclude properties decorated as private from serialization.
+     * Serializes public properties into an Object.
      */
-    protected async serialize(exclude : boolean) : Promise<any> {
+    protected async serialize() : Promise<any> {
         const output = {};
 
         for (const prop of Object.getOwnPropertyNames(this)) {
-            if (exclude && !Reflect.getMetadata("exclude", this, prop))
-                output[prop] = this[prop];
+            if (Reflect.getMetadata("exclude", this, prop) ?? false)
+                continue;
+
+            output[prop] = this[prop];
         }
 
         return output;
@@ -67,14 +68,14 @@ export default abstract class Model {
     protected async resolve(resolver: Resolver) : Promise<void> {
         for (const prop of Object.getOwnPropertyNames(this)) {
             if (this[prop] instanceof Model)
-                this[prop] = await (this[prop] as Model)?.run(resolver);
+                this[prop] = await (this[prop] as Model)?.run(resolver, true);
 
             if (Array.isArray(this[prop])) {
                 const resolved = [];
 
                 for (const nested of this[prop]) {
                     if (nested instanceof Model)
-                        resolved.push(await (nested as Model).run(resolver));
+                        resolved.push(await (nested as Model).run(resolver, true));
                 }
 
                 this[prop] = resolved;
@@ -83,7 +84,7 @@ export default abstract class Model {
             if (!Array.isArray(this[prop]) && typeof this[prop] === "object") {
                 for (const nested of Object.getOwnPropertyNames(this[prop])) {
                     if (this[prop][nested] instanceof Model)
-                        this[prop][nested] = await (this[prop][nested] as Model).run(resolver);
+                        this[prop][nested] = await (this[prop][nested] as Model).run(resolver, true);
                 }
             }
         }
@@ -97,7 +98,19 @@ export default abstract class Model {
             if (typeof target === "function")
                 throw new TypeError(`${propertyKey} of type ${typeof target} should not be a function`);
 
-            Reflect.defineMetadata("exclude", true, target);
+            Reflect.defineMetadata("exclude", true, target, propertyKey);
         };
+    }
+
+    /**
+     * Applies the provided model to this instance.
+     * @param model The model to be applied.
+     */
+    mixin(model: Model) {
+        for (const prop of Object.getOwnPropertyNames(model)) {
+            this[prop] = model[prop];
+            if (Reflect.getMetadata("exclude", model, prop) ?? false)
+                Reflect.defineMetadata("exclude", true, this, prop);
+        }
     }
 }

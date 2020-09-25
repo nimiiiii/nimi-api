@@ -1,5 +1,6 @@
 import ShareCfgModel from "../model.sharecfg.base";
 
+@ShareCfgModel.dependsOn([ "skills" ])
 export default class Skill extends ShareCfgModel {
     id: number;
     name: string;
@@ -8,7 +9,7 @@ export default class Skill extends ShareCfgModel {
     descriptionValues: string[];
 
     constructor(id: number) {
-        super([ "skills" ]);
+        super();
         this.id = id;
     }
 

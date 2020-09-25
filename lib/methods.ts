@@ -22,37 +22,18 @@
  *  SOFTWARE.
  */
 
-import Model from "./models/model.base";
 import { NextApiHandler } from "next";
-import Repository from "./github/github.repository";
+import handleError from "./handleError";
 
-// TODO: probably add CORS stuff as well
-const methods = (methodHandlers: {
-  // we can add method properties here later, for now we only have one method property which is run
-  model: Model
-}): NextApiHandler => async (req, res) => {
-    // const method = req.method.toLowerCase();
-    // const handler = methodHandlers[method];
+export default function methods(handlers:
+    { [key: string]: NextApiHandler }
+) : NextApiHandler {
+    return function (req, res) {
+        const handle = handlers[req.method.toLowerCase()];
 
-    if (methodHandlers.model && methodHandlers.model instanceof Model) {
-        const repo = new Repository(
-            "",
-            "nobbyfix",
-            "AzurLaneSourceJson",
-            "master"
-        );
+        if (typeof handle === "function")
+            return handleError(handle)(req, res);
 
-        const Resolver = (await import("./resolvers/modules/resolver.sharefcg.en")).default;
-        const resolver = new Resolver(repo);
-        await resolver.init();
-        const data = await methodHandlers.model.run(resolver, true);
-        res.status(200).json(data);
-    }
-    else {
-        res
-            .status(405)
-            .json({ code: 405, message: "Method not available on this endpoint" });
-    }
-};
-
-export default methods;
+        res.status(405).json({ code: 405, message: "Method not available on this endpoint" });
+    };
+}
