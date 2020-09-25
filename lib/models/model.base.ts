@@ -74,8 +74,11 @@ export default abstract class Model {
                 const resolved = [];
 
                 for (const nested of this[prop]) {
-                    if (nested instanceof Model)
-                        resolved.push(await (nested as Model).run(resolver, true));
+                    resolved.push(
+                        (nested instanceof Model)
+                            ? await (nested as Model).run(resolver, true)
+                            : nested
+                    );
                 }
 
                 this[prop] = resolved;
