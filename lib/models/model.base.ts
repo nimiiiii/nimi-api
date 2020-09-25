@@ -42,20 +42,43 @@ export default abstract class Model {
         // The second resolve resolves models instanced in the load method
         await this.resolve(resolver);
         this.loadComplete();
-        return raw ? this : await this.serialize();
+        return raw ? this : this.serialize();
     }
 
     /**
-     * Serializes public properties into an Object.
+     * Serializes public properties including those nested inside arrays and objects into an Object.
      */
-    protected async serialize() : Promise<any> {
+    protected serialize() : any {
         const output = {};
 
         for (const prop of Object.getOwnPropertyNames(this)) {
             if (Reflect.getMetadata("exclude", this, prop) ?? false)
                 continue;
 
-            output[prop] = this[prop];
+            if (Array.isArray(this[prop])) {
+                const serialized = [];
+
+                for (const nested of this[prop]) {
+                    serialized.push(
+                        (nested instanceof Model)
+                            ? (nested as Model).serialize()
+                            : nested
+                    );
+                }
+
+                output[prop] = serialized;
+            }
+            else if (typeof this[prop] === "object") {
+                output[prop] = {};
+
+                for (const nested of Object.getOwnPropertyNames(this[prop])) {
+                    output[prop][nested] = (this[prop][nested] instanceof Model)
+                        ? (this[prop][nested] as Model).serialize()
+                        : this[prop][nested];
+                }
+            }
+            else
+                output[prop] = this[prop];
         }
 
         return output;
