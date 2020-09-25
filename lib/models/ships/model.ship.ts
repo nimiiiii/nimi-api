@@ -1,6 +1,7 @@
 import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipListItem from "./model.ship.list.item";
+import ShipSkinList from "./model.ship.skin.list";
 import Skill from "../shared/model.skill";
 
 type ShipGroupDescriptionItem = [string, [ShipDescriptionAction, any]]
@@ -39,9 +40,6 @@ interface ShipAcquisitionDetails {
 @ShareCfgModel.dependsOn([ "ships", "shipBreakouts" ])
 export default class Ship extends ShareCfgModel {
     @Model.exclude()
-    breakoutLevel: number;
-
-    @Model.exclude()
     base: ShipListItem;
 
     ammoCount: number;
@@ -50,7 +48,7 @@ export default class Ship extends ShareCfgModel {
     attributes: any;
     skills: Skill[];
     breakouts: any[];
-    skins: any[];
+    skins: ShipSkinList;
     acquisition: ShipAcquisitionDetails;
 
     constructor(groupId: number, breakoutLevel: number) {
@@ -62,7 +60,7 @@ export default class Ship extends ShareCfgModel {
     async load(ships: any[], breakouts: any[]): Promise<void> {
         this.mixin(this.base);
 
-        const { ship, stats, group } = this.base;
+        const { ship, stats, group } = this.base.item;
 
         this.ammoCount = ship.ammo;
         this.skills = ship.buff_list.map((id: number) => new Skill(id));
@@ -96,6 +94,8 @@ export default class Ship extends ShareCfgModel {
 
                 return obj;
             }, {});
+
+        this.skins = new ShipSkinList(this.base.item.groupId);
 
         this.acquisition = group.description.reduce((
             output : ShipAcquisitionDetails,
