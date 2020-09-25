@@ -28,6 +28,13 @@ export default function Home() {
                         <h3>Contribute! &rarr;</h3>
                         <p>Help us make Unicorn better by sharing your ideas in GitHub.</p>
                     </a>
+                    <a href={process.env.STATUS_URL || "https://status.asatomi.live"} className={styles.card}>
+                        <h3>Platform Status &rarr;</h3>
+                        <p>
+                            Check if the API is currently available
+                            (PS: you can change this too if you plan to run your own version).
+                        </p>
+                    </a>
                 </div>
             </main>
 
