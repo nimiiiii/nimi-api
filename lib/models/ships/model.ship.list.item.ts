@@ -1,30 +1,11 @@
 import Model from "../model.base";
-import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import ShipItem from "../items/model.item.ship";
 
-@ShareCfgModel.dependsOn([
-    "ships",
-    "shipGroups",
-    "shipStats",
-    "shipSkins",
-    "shipRetrofits",
-    "shipBlueprints"
-])
+@ShareCfgModel.dependsOn([ "shipRetrofits", "shipBlueprints" ])
 export default class ShipListItem extends ShareCfgModel {
     @Model.exclude()
-    breakoutLevel: number;
-
-    @Model.exclude()
-    ship: any;
-
-    @Model.exclude()
-    stats: any;
-
-    @Model.exclude()
-    skin: any;
-
-    @Model.exclude()
-    group: any;
+    item: ShipItem;
 
     id: number;
     name: string;
@@ -34,45 +15,25 @@ export default class ShipListItem extends ShareCfgModel {
     nation: string;
     groupId: number;
     assetName: string;
-    isResearch: boolean;
-    hasRetrofit: boolean;
+    research: boolean;
+    retrofit: boolean;
 
     constructor(groupId: number, breakoutLevel = 1) {
         super();
 
-        if (breakoutLevel > 4 || breakoutLevel < 1)
-            throw new RequestError(400, "Breakout level should only be between 1 and 4.");
-
-        this.groupId = groupId;
-        this.breakoutLevel = breakoutLevel;
+        this.item = new ShipItem(groupId, breakoutLevel);
     }
 
-    async load(
-        ships : any[],
-        groups : any[],
-        stats : any[],
-        skins : any[],
-        retrofits : any[],
-        blueprints : any[]
-    ): Promise<void> {
-        this.group = groups.find(g => g.group_type == this.groupId);
+    async load(retrofits : any[], blueprints : any[]) {
+        this.mixin(this.item);
 
-        if (!this.group)
-            throw new RequestError(404, `Ship Group (ID: ${this.groupId}) not found.`);
+        const { stats, group } = this.item;
 
-        this.ship = ships.filter(s => s.group_type == this.group.group_type)[this.breakoutLevel - 1];
-        this.stats = stats.find(s => s.id == this.ship.id);
-        this.skin = skins.find(s => s.id == this.stats.skin_id);
-
-        this.id = this.ship.id;
-        this.name = this.stats.name.trim();
-        this.code = this.group.code;
-        this.type = this.stats.type;
-        this.groupId = this.group.group_type;
-        this.rarity = this.stats.rarity;
-        this.nation = this.stats.nationality;
-        this.assetName = this.skin.painting;
-        this.isResearch = blueprints.some(b => b.id == this.group.group_type);
-        this.hasRetrofit = retrofits.some(r => r.group_id == this.group.group_type);
+        this.code = group.code;
+        this.type = stats.type;
+        this.groupId = group.group_type;
+        this.nation = stats.nationality;
+        this.research = blueprints.some(b => b.id == group.group_type);
+        this.retrofit = retrofits.some(r => r.group_id == group.group_type);
     }
 }
