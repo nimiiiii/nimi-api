@@ -4,8 +4,8 @@ module.exports = {
             source: "/api/:name*",
             headers: [
                 {
-                    key: "cache-control",
-                    value: "s-maxage=28800, public"
+                    key: "Cache-Control",
+                    value: "s-maxage=1, stale-while-revalidate"
                 }
             ]
         }];
