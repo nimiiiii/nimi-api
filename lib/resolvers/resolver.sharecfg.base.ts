@@ -1,7 +1,6 @@
 import Model from "lib/models/model.base";
 import Repository from "../github/github.repository";
 import Resolver from "./resolver.base";
-import ShareCfgModel from "lib/models/model.sharecfg.base";
 
 type Transformer = (o: unknown) => unknown;
 
@@ -67,17 +66,17 @@ export default class ShareCfgResolver extends Resolver {
     }
 
     async resolve(model: Model) : Promise<any[]> {
-        const constructor = (<Object>model).constructor;
-        if (!(constructor.prototype instanceof ShareCfgModel))
-            throw new TypeError(`${constructor.name} is not derivative of ShareCfgModel`);
+        const dependencies : string[] = Reflect.getMetadata("dependencies", (<Object>model).constructor);
 
-        console.log((<any>model).dependencies);
-
-        return await Promise.all((<ShareCfgModel>model).dependencies.map(async (k: string) => await this.get(k)));
+        return await Promise.all(
+            (dependencies)
+                ? dependencies.map(async (k: string) => await this.get(k))
+                : []
+        );
     }
 
     async get(type: string) : Promise<any> {
-        const [ file, transform ] = this.dependencies.get(type);
+        const [ file, transform ] = this.dependencies.get(type) ?? [];
 
         if (file === undefined)
             throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${type}`);
