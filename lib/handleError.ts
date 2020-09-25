@@ -23,16 +23,17 @@
  */
 
 import { NextApiHandler } from "next";
+import RequestError from "lib/requestError";
 
-const handleError = (fn: NextApiHandler): NextApiHandler => async (
-    req,
-    res
-) => {
-    try {
-        return await fn(req, res);
-    } catch ({ message }) {
-        res.status(500).json({ code: 500, message });
-    }
-};
+function handleError(fn: NextApiHandler) : NextApiHandler {
+    return async function (req, res) {
+        try {
+            return await fn(req, res);
+        } catch (error) {
+            const status = (error instanceof RequestError) ? error.code : 500;
+            res.status(status).json({ code: status, message: error.message });
+        }
+    };
+}
 
 export default handleError;
