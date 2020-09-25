@@ -11,7 +11,7 @@ export default async function getResolver() : Promise<Resolver> {
     const repo = new Repository(process.env.GITHUB_TOKEN, owner, repoName);
 
     // TODO: get resolver based on model resolver type and language
-    const Resolver = (await import("lib/resolvers/modules/resolver.sharefcg.en")).default;
+    const Resolver = (await import("./resolvers/modules/resolver.sharefcg.en")).default;
 
     const resolver = new Resolver(repo);
     await resolver.init();
