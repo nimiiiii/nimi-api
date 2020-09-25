@@ -13,7 +13,7 @@ process.env.GITHUB_REPO = config.parsed.GITHUB_REPO
 process.env.GITHUB_TOKEN = config.parsed.GITHUB_TOKEN
 
 $('should do some math', async () => {
-    is(1 + 4, 5)
+	is(1 + 4, 5)
 })
 
 $('should request some ship info', async () => {
