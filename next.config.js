@@ -1,11 +1,11 @@
 module.exports = {
     async headers() {
         return [{
-            source: "/api/*",
+            source: "/api/:name*",
             headers: [
                 {
                     key: "cache-control",
-                    value: "s-maxage=201600, public"
+                    value: "s-maxage=28800, public"
                 }
             ]
         }];
