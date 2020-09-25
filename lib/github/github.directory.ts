@@ -37,6 +37,9 @@ export default class Directory {
             file_sha: file.sha
         });
 
-        return blob.data.content, blob.data.encoding;
+        // This is valid. Typescript just doesn't want it. I hate you.
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return Buffer.from(blob.data.content, blob.data.encoding).toString("utf-8");
     }
 }

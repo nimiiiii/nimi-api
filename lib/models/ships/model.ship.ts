@@ -36,6 +36,7 @@ interface ShipAcquisitionDetails {
     }
 }
 
+@ShareCfgModel.dependsOn([ "ships", "shipBreakouts" ])
 export default class Ship extends ShareCfgModel {
     @Model.exclude()
     breakoutLevel: number;
@@ -53,16 +54,13 @@ export default class Ship extends ShareCfgModel {
     acquisition: ShipAcquisitionDetails;
 
     constructor(groupId: number, breakoutLevel: number) {
-        super([
-            "ships",
-            "shipBreakouts"
-        ]);
+        super();
 
         this.base = new ShipListItem(groupId, breakoutLevel);
     }
 
     async load(ships: any[], breakouts: any[]): Promise<void> {
-        Object.apply(this, this.base);
+        this.mixin(this.base);
 
         const { ship, stats, group } = this.base;
 

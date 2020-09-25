@@ -1,6 +1,14 @@
 import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 
+@ShareCfgModel.dependsOn([
+    "ships",
+    "shipGroups",
+    "shipStats",
+    "shipSkins",
+    "shipRetrofits",
+    "shipBlueprints"
+])
 export default class ShipListItem extends ShareCfgModel {
     @Model.exclude()
     breakoutLevel: number;
@@ -29,14 +37,7 @@ export default class ShipListItem extends ShareCfgModel {
     hasRetrofit: boolean;
 
     constructor(groupId: number, breakoutLevel = 1) {
-        super([
-            "ships",
-            "shipGroups",
-            "shipStats",
-            "shipSkins",
-            "shipRetrofits",
-            "shipBlueprints"
-        ]);
+        super();
 
         if (breakoutLevel > 4 || breakoutLevel < 1)
             throw new Error("Breakout level should only be between 1 and 4.");
@@ -53,10 +54,10 @@ export default class ShipListItem extends ShareCfgModel {
         retrofits : any[],
         blueprints : any[]
     ): Promise<void> {
-        this.group = groups.find(g => g.group_type == this.group);
+        this.group = groups.find(g => g.group_type == this.groupId);
 
         if (!this.group)
-            throw new Error("Ship Group not found.");
+            throw new Error(`Ship Group (ID: ${this.groupId}) not found.`);
 
         this.ship = ships.filter(s => s.group_type == this.group.group_type)[this.breakoutLevel - 1];
         this.stats = stats.find(s => s.id == this.ship.id);

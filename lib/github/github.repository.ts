@@ -18,7 +18,7 @@ export default class Repository {
      * @param repoString the string used for the repository formatted as owner/name
      * @param branch the branch to pull data from
      */
-    constructor (token: string, owner: string, name: string, branch: string) {
+    constructor (token: string, owner: string, name: string, branch = "master") {
         this.owner = owner;
         this.name = name;
         this.branch = branch;
