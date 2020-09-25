@@ -75,6 +75,7 @@ export default class Ship extends ShareCfgModel {
                     description: (b.breakout_view != "N/A")
                         ? b.breakout_view.replace(/\//g, " / ")
                         : b.breakout_view,
+                    level: b.level,
                     cost: {
                         gold: b.use_gold,
                         ship: b.use_char_num
