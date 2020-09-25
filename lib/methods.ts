@@ -47,7 +47,7 @@ export default function methods(
 ) : NextApiHandler {
     return async function (req, res) {
         await runMiddleware(req, res, rateLimit({ windowMs: 60 * 60 * 1000, max: 500 }));
-        await runMiddleware(req, res, cors);
+        // await runMiddleware(req, res, cors);
 
         const handle = handlers[req.method.toLowerCase()];
 
