@@ -4,7 +4,7 @@
  * See LICENSE for details.
  */
 import Model from "../model.base";
-import RequestError from "lib/requestError";
+import RequestError from "../../../lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
 @ShareCfgModel.dependsOn([ "ships", "shipGroups", "shipStats", "shipSkins" ])

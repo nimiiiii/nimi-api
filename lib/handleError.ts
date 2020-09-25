@@ -23,7 +23,7 @@
  */
 
 import { NextApiHandler } from "next";
-import RequestError from "lib/requestError";
+import RequestError from "./requestError";
 
 function handleError(fn: NextApiHandler) : NextApiHandler {
     return async function (req, res) {
