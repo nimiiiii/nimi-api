@@ -10,7 +10,7 @@ export default function Home() {
             </Head>
 
             <main className={styles.main}>
-                <img src="/unicorn.gif" height="200"></img>
+                <img src="/unicorn.webp" height="200"></img>
                 <h1 className={styles.title}>
                     Welcome to Unicorn!
                 </h1>
