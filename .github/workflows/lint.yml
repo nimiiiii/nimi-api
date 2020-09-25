@@ -13,8 +13,6 @@ jobs:
         with:
           node_version: '12.x'
 
-      - run: npm ci
-
       - name: Code Inspection
         uses: samuelmeuli/lint-action@v1
         with:
