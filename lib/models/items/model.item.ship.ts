@@ -50,7 +50,7 @@ export default class ShipItem extends ShareCfgModel {
         this.skin = skins.find(s => s.id == this.stats.skin_id);
 
         this.id = this.ship.id;
-        this.name = this.stats.name.trim();
+        this.name = this.stats.name?.trim();
         this.rarity = this.stats.rarity;
         this.assetName = this.skin.painting;
     }

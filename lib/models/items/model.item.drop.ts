@@ -4,7 +4,8 @@
  * See LICENSE for details.
  */
 import ChatBubble from "./model.item.chat";
-import Equipment from "../equipment/model.equip";
+import EquipmentItem from "./model.item.equip";
+import EquipmentSkin from "../equipment/model.equip.skin";
 import Furniture from "./model.item.furniture";
 import IconFrame from "./model.item.icon";
 import Item from "./model.item";
@@ -49,7 +50,7 @@ export default class DropItem extends ShareCfgModel {
                 break;
 
             case DropType.Equipment:
-                this.item = new Equipment(id);
+                this.item = new EquipmentItem(id);
                 break;
 
             case DropType.Ship:
@@ -61,6 +62,7 @@ export default class DropItem extends ShareCfgModel {
                 break;
 
             case DropType.EquipmentSkin:
+                this.item = new EquipmentSkin(id);
                 break;
 
             case DropType.ShipSkin:

@@ -3,34 +3,46 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import RequestError from "lib/requestError";
+import EquipmentItem from "../items/model.item.equip";
+import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
+import Skill from "../shared/model.skill";
 
-@ShareCfgModel.dependsOn([ "equipStats" ])
 export default class Equipment extends ShareCfgModel {
-    id: number;
-    name: string;
-    type: number;
-    nation: number;
-    description: string;
-    assetName: string;
+    @Model.exclude()
+    item: EquipmentItem;
+
+    specialty: string;
+    ammoType: string;
+    torpedoCount: number;
+    range: number;
+    angle: number;
+    scatter: number;
+    skills: Skill[];
+    attributes: { [key: string]: number }
 
     constructor(id: number) {
         super();
 
-        this.id = id;
+        this.item = new EquipmentItem(id);
     }
 
-    async load(stats: any[]) {
-        const data = stats.find(e => e.id == this.id);
+    async load() {
+        const { data } = this.item;
 
-        if (!data)
-            throw new RequestError(404, `Equipment (ID: ${this.id}) is not found.`);
+        this.specialty = data.specialty;
+        this.ammoType = data.ammo;
+        this.torpedoCount = data.torpedo_ammo;
+        this.range = data.range;
+        this.angle = data.angle;
+        this.scatter = data.scatter;
 
-        this.name = data.name;
-        this.type = data.type;
-        this.nation = data.nationality;
-        this.description = data.descrip;
-        this.assetName = data.icon;
+        this.skills = data.skill_id.map(id => new Skill(id));
+        this.attributes = Object.keys(data)
+            .filter(k => /attribute_(\d+)/.test(k))
+            .reduce((obj, key, index) => {
+                obj[key] = data[`value_${index + 1}`];
+                return obj;
+            }, {});
     }
 }

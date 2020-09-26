@@ -8,7 +8,7 @@ import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
 @ShareCfgModel.dependsOn([ "equipSkins" ])
-export default class EquipSkin extends Item {
+export default class EquipmentSkin extends Item {
     themeId: number;
     type: number;
     description: string;

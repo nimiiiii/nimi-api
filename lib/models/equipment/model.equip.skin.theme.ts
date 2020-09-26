@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import EquipSkin from "./model.equip.skin";
+import EquipmentSkin from "./model.equip.skin";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
 
 @ShareCfgModel.dependsOn([ "equipSkinThemes" ])
-export default class EquipSkinTheme extends ShareCfgModelList<EquipSkin> {
+export default class EquipmentSkinTheme extends ShareCfgModelList<EquipmentSkin> {
     id: number;
     name: string;
 
@@ -26,6 +26,6 @@ export default class EquipSkinTheme extends ShareCfgModelList<EquipSkin> {
             throw new RequestError(404, `Equipment Skin Theme (ID: ${this.id}) is not found.`);
 
         this.name = theme.name;
-        this.entries = theme.ids.map((id: number) => new EquipSkin(id));
+        this.entries = theme.ids.map((id: number) => new EquipmentSkin(id));
     }
 }
