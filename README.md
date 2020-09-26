@@ -10,12 +10,21 @@ This is a unofficial API that returns JSON data from [Azur Lane](https://azurlan
 
 ## State
 
-We're on the process of re-writing the entire backend, so check back later!
+Welcome aboard! Things have changed since you stopped by to checked the API! We're now using a serverless approach for writing the new version, there might be some bugs and of course, we change some stuff really fast so beware of maelstroms and icebergs, Captain!
+
+### Compared to previous version
+
+Due to the stateless architecture of the new API, we are able to reach more audiences much more better than before. And thanks to the new API's architecture and [Vercel](https://vercel.com?utm_source=azur-lane-api&utm_campaign=oss), the service is now accessible anywhere in the world, we're no longer isolated in one region! You're always 80ms or 160ms away from the service.
+
+### What's next?
+
+We're just getting started. We have a viewer coming up (and it's fully automated unlike the Azur Lane Wiki), and much more, so stay tuned! If you have any requests of your own, be sure to drop it by at the issues page.
+
 
 ## Motivation
 
 ### General
-There aren't many data providers for this mobile game. For aspiring developers to help out the community. Opportunities like Discord bots or self-hosted websites with tools and viewers.
+There aren't many data providers for this mobile game, so we decided to make one for the community. These allows aspiring developers to help out the community and opportunities like Discord bots or self-hosted websites with tools and viewers.
 
 ## Credits
 
