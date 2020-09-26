@@ -10,7 +10,7 @@ export default function Home() {
             </Head>
 
             <main className={styles.main}>
-                <img src="/unicorn.gif" height="200"></img>
+                <img src="/unicorn.webp" height="200"></img>
                 <h1 className={styles.title}>
                     Welcome to Unicorn!
                 </h1>
@@ -27,6 +27,13 @@ export default function Home() {
                     <a href="https://github.com/LeNitrous/azur-lane-api/" className={styles.card}>
                         <h3>Contribute! &rarr;</h3>
                         <p>Help us make Unicorn better by sharing your ideas in GitHub.</p>
+                    </a>
+                    <a href={process.env.STATUS_URL || "https://status.asatomi.live"} className={styles.card}>
+                        <h3>Platform Status &rarr;</h3>
+                        <p>
+                            Check if the API is currently available
+                            (PS: you can change this too if you plan to run your own version).
+                        </p>
                     </a>
                 </div>
             </main>
