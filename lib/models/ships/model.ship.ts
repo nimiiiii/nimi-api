@@ -1,7 +1,6 @@
 import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipListItem from "./model.ship.list.item";
-import ShipSkinList from "./model.ship.skin.list";
 import Skill from "../shared/model.skill";
 
 type ShipGroupDescriptionItem = [string, [ShipDescriptionAction, any]]
@@ -48,7 +47,6 @@ export default class Ship extends ShareCfgModel {
     attributes: any;
     skills: Skill[];
     breakouts: any[];
-    skins: ShipSkinList;
     acquisition: ShipAcquisitionDetails;
 
     constructor(groupId: number, breakoutLevel: number) {
@@ -94,8 +92,6 @@ export default class Ship extends ShareCfgModel {
 
                 return obj;
             }, {});
-
-        this.skins = new ShipSkinList(this.base.item.groupId);
 
         this.acquisition = group.description.reduce((
             output : ShipAcquisitionDetails,

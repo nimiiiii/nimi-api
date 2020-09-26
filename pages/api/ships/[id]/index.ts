@@ -4,12 +4,12 @@ import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 
-interface GetShipQuery {
+export interface GetShipQuery {
     id: number,
     breakoutLevel: number
 }
 
-const GetShipSchema = Joi.object({
+export const GetShipSchema = Joi.object({
     id: Joi.number(),
     breakoutLevel: Joi.number().default(1)
 });

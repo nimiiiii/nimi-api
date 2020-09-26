@@ -25,7 +25,7 @@ export default class ShipSkinListItem extends ShareCfgModel {
         if (!this.data)
             throw new RequestError(404, `Ship Skin (ID: ${this.id}) is not found.`);
 
-        this.name = this.data.name.trim();
+        this.name = this.data.name?.trim();
         this.type = this.data.skin_type;
         this.description = this.data.desc;
         this.assetName = this.data.painting;

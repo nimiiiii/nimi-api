@@ -9,14 +9,16 @@ export default class ShipSkinList extends ShareCfgModelList<ShipSkinListItem> {
     @Model.exclude()
     groupId: number;
 
-    constructor(groupId: number) {
+    constructor(groupId: number = undefined) {
         super();
 
         this.groupId = groupId;
     }
 
     async load(skins: any[]) {
-        const entries = skins.filter(s => s.ship_group == this.groupId);
+        const entries = this.groupId !== undefined
+            ? skins.filter(s => s.ship_group == this.groupId)
+            : skins;
 
         if (entries.length < 1)
             throw new RequestError(404, `Ship (Group ID: ${this.groupId}) has no skins.`);
