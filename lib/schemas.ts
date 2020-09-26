@@ -22,3 +22,12 @@ export const getShipQuerySchema = Joi.object({
     groupId: Joi.number().optional(),
     breakoutLevel: Joi.number().optional()
 });
+
+
+/**
+ * Represents a file entry structure in the database.
+ */
+export interface FileEntry {
+    id: string;
+    file: Buffer;
+}
