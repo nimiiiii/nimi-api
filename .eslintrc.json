@@ -12,7 +12,7 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "ignorePatterns": ["old/*", "*.js"],
+    "ignorePatterns": ["old/*", "node_modules/**"],
     "plugins": [
         "@typescript-eslint"
     ],
