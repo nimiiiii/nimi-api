@@ -3,14 +3,14 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
+import { GetEntryByIdQuery } from "lib/schemas";
 import Joi from "@hapi/joi";
 import Ship from "lib/models/ships/model.ship";
 import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 
-export interface GetShipQuery {
-    id: number,
+export interface GetShipQuery extends GetEntryByIdQuery {
     breakoutLevel: number
 }
 
