@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "lint": "eslint --fix -c .eslintrc.json .",
     "build": "next build",
     "start": "next start"
   },

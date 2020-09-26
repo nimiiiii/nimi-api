@@ -1,4 +1,4 @@
-name: lint
+name: Test
 
 on: [push, pull_request]
 
@@ -15,10 +15,6 @@ jobs:
           
       - name: Install dependencies
         run: yarn
-
-      - name: Code Inspection
-        uses: samuelmeuli/lint-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          eslint: true
-          prettier: false
+      
+      - name: run linting
+        run: yarn lint
