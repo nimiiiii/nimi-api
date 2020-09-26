@@ -3,24 +3,36 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Equipment from "./model.item.equip";
+import ChatBubble from "./model.item.chat";
+import Equipment from "../equipment/model.equip";
 import Furniture from "./model.item.furniture";
+import IconFrame from "./model.item.icon";
 import Item from "./model.item";
 import Resource from "./model.item.resource";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipItem from "./model.item.ship";
+import ShipSkinListItem from "../ships/model.ship.skin.list.item";
 
 enum DropType {
     Resource = 1,
     Item,
     Equipment,
     Ship,
-    Furniture
+    Furniture,
+    Strategy,
+    ShipSkin,
+    VItem,              // ???
+    EquipmentSkin,
+    ShipNPC,
+    WorldItem = 12,
+    IconFrame = 14,
+    ChatFrame,
+    Emoji = 17
 }
 
 export default class DropItem extends ShareCfgModel {
     type: DropType;
-    item: Item | Resource | Furniture | ShipItem | Equipment;
+    item: ShareCfgModel;
 
     constructor(id: number, type: DropType) {
         super();
@@ -46,6 +58,21 @@ export default class DropItem extends ShareCfgModel {
 
             case DropType.Furniture:
                 this.item = new Furniture(id);
+                break;
+
+            case DropType.EquipmentSkin:
+                break;
+
+            case DropType.ShipSkin:
+                this.item = new ShipSkinListItem(id);
+                break;
+
+            case DropType.ChatFrame:
+                this.item = new ChatBubble(id);
+                break;
+
+            case DropType.IconFrame:
+                this.item = new IconFrame(id);
                 break;
         }
     }
