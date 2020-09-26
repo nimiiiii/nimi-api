@@ -4,7 +4,6 @@
  * See LICENSE for details.
  */
 import Model from "../model.base";
-import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
 import ShipSkinListItem from "./model.ship.skin.list.item";
@@ -15,19 +14,12 @@ export default class ShipSkinList extends ShareCfgModelList<ShipSkinListItem> {
     groupId: number;
 
     constructor(groupId: number = undefined) {
-        super();
+        super(ShipSkinListItem);
 
         this.groupId = groupId;
     }
 
-    async load(skins: any[]) {
-        const entries = this.groupId !== undefined
-            ? skins.filter(s => s.ship_group == this.groupId)
-            : skins;
-
-        if (entries.length < 1)
-            throw new RequestError(404, `Ship (Group ID: ${this.groupId}) has no skins.`);
-
-        this.entries = entries.map(s => new ShipSkinListItem(s.id));
+    modify(skins: any[]) {
+        return this.groupId !== undefined ? skins.filter(s => s.ship_group == this.groupId) : skins;
     }
 }

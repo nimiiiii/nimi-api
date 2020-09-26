@@ -9,7 +9,7 @@ import ShareCfgModelList from "../model.sharecfg.list.base";
 
 @ShareCfgModel.dependsOn([ "equipStats" ])
 export default class EquipmentItemList extends ShareCfgModelList<Equipment> {
-    async load(items: any[]) {
-        this.entries = items.map(i => new Equipment(i.id));
+    constructor() {
+        super(Equipment);
     }
 }
