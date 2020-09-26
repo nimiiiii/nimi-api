@@ -7,7 +7,7 @@
     "lint": "eslint --fix -c .eslintrc.json .",
     "build": "next build",
     "start": "next start",
-    "test": "uvu -r ts-node/register tests"
+    "test": "cross-env NODE_PATH='.' uvu -r ts-node/register tests"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",

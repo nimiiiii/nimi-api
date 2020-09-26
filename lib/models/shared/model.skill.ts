@@ -3,7 +3,7 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import RequestError from "../../../lib/requestError";
+import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
 @ShareCfgModel.dependsOn([ "skills" ])
