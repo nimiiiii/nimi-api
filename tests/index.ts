@@ -1,6 +1,6 @@
-import Ship from "../lib/models/ships/model.ship";
+import Ship from "lib/models/ships/model.ship";
 import dotenv from "dotenv";
-import getResolver from "../lib/getResolver";
+import getResolver from "lib/getResolver";
 import { is } from "uvu/assert";
 import path from "path";
 import { suite } from "uvu";
