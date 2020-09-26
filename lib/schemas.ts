@@ -10,22 +10,14 @@ import Joi from "@hapi/joi";
  * if you're planning to check more than one argument, you will need a new Joi.object
  * to see what to expect in the request querystring.
  */
-export const langQueryStringSchema = Joi.string().valid("en", "jp", "tw", "cn", "kr");
+export const LangQueryStringSchema = Joi.string().valid("en", "jp", "tw", "cn", "kr");
 
-/**
- * The expected values for the ship endpoint.
- */
-export interface getShipQuery {
-    groupId?: number,
-    breakoutLevel?: number
+export interface GetEntryByIdQuery {
+    id: number;
 }
 
-/**
- * Validation schema for the ship endpoint queries.
- */
-export const getShipQuerySchema = Joi.object({
-    groupId: Joi.number().optional(),
-    breakoutLevel: Joi.number().optional()
+export const GetEntryByIdSchema = Joi.object({
+    id: Joi.number()
 });
 
 
