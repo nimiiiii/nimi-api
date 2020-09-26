@@ -59,6 +59,9 @@ export default class ShareCfgResolver extends Resolver {
         this.add("socialNpc", "activity_ins_npc_template.json");
         this.add("socialNpcGroup", "activity_ins_ship_group_template.json");
 
+        this.add("meowfficers", "commander_data_template.json");
+        this.add("meowfficerSkills", "commander_skill_template.json");
+
         await super.init();
     }
 
