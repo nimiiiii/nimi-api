@@ -1,3 +1,8 @@
+/*
+ * Copyright 2019 - 2020 Nathan Alo, Ayane Satomi, et al.
+ * Licensed under the GNU General Public License v3
+ * See LICENSE for details.
+ */
 import EquipSkin from "./model.equip.skin";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
