@@ -16,5 +16,6 @@ module.exports = {
             ]
         }];
     },
-    target: "serverless"
+    target: "serverless",
+    trailingSlash: true
 };
