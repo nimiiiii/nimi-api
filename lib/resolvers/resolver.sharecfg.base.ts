@@ -40,6 +40,8 @@ export default class ShareCfgResolver extends Resolver {
         this.add("skills", "skill_data_template.json");
 
         this.add("items", "item_data_statistics.json");
+        this.add("itemChatFrames", "item_data_chat.json");
+        this.add("itemIconFrames", "item_data_frames.json");
         this.add("itemPlayerResources", "player_resource.json");
         this.add("furniture", "furniture_data_template.json");
 
