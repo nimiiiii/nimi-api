@@ -7,7 +7,7 @@
 module.exports = {
     async headers() {
         return [{
-            source: "/api/:name*",
+            source: "/api/:path*",
             headers: [
                 {
                     key: "Cache-Control",
