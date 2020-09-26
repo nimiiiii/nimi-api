@@ -14,7 +14,7 @@ import Task from "./model.task";
 
 @ShareCfgModel.dependsOn([ "tasks" ])
 export default class TaskList extends ShareCfgModelList<Task> {
-    async load(tasks: any[]) {
-        this.entries = tasks.map(s => new Task(s.id));
+    constructor() {
+        super(Task);
     }
 }

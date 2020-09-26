@@ -9,7 +9,7 @@ import ShareCfgModelList from "../model.sharecfg.list.base";
 
 @ShareCfgModel.dependsOn([ "equipSkins" ])
 export default class EquipmentSkinList extends ShareCfgModelList<EquipmentSkin> {
-    async load(skins: any[]) {
-        this.entries = skins.map(s => new EquipmentSkin(s.id));
+    constructor() {
+        super(EquipmentSkin);
     }
 }

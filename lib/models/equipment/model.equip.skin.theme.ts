@@ -14,18 +14,19 @@ export default class EquipmentSkinTheme extends ShareCfgModelList<EquipmentSkin>
     name: string;
 
     constructor(id: number) {
-        super();
+        super(EquipmentSkin);
 
         this.id = id;
     }
 
-    async load(themes: any[]) {
+    modify(themes: any[]) {
         const theme = themes.find(t => t.id == this.id);
 
         if (!theme)
             throw new RequestError(404, `Equipment Skin Theme (ID: ${this.id}) is not found.`);
 
         this.name = theme.name;
-        this.entries = theme.ids.map((id: number) => new EquipmentSkin(id));
+
+        return theme;
     }
 }
