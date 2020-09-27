@@ -46,7 +46,7 @@ If you found something that isnt right, want to ask a question, or have a sugges
 
 Our project is powered by [Vercel](https://vercel.com?utm_source=azur-lane-api&utm_campaign=oss)! We host the project there and if you have a upcoming project, you should consider choosing Vercel as your host.
 
-This API is Copyright &copy; Nathan Alo and Ayane Satomi. Licensed under GNU Affero General Public License. 
+This API is Copyright &copy; Nathan Alo and Ayane Satomi. Licensed under GNU General Public License v3.0. 
 
 Contains code from [Aya](https://github.com/ClarityCafe/Aya). Aya's components are Copyright &copy; Ayane Satomi, Michael Mitchell, et al. Licensed under MIT.
 
