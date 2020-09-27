@@ -10,6 +10,6 @@ import ShipListItem from "./model.ship.list.item";
 @ShareCfgModel.dependsOn([ "shipGroups" ])
 export default class ShipList extends ShareCfgModelList<ShipListItem> {
     constructor() {
-        super(ShipListItem);
+        super(ShipListItem, "group_type");
     }
 }

@@ -7,23 +7,26 @@ import Model from "./model.base";
 import ShareCfgModel from "./model.sharecfg.base";
 
 /**
- * A Model that has an entries key and lists all results from it. The model to be constained
- * must have an `id` for this to work.
+ * A Model that has an entries key and lists all results from it.
  */
 export default abstract class ShareCfgModelList<T extends ShareCfgModel> extends ShareCfgModel {
     @Model.exclude()
     ctor: { new(id: number): T };
 
+    @Model.exclude()
+    key: string;
+
     entries : Array<T> = new Array<T>();
 
-    constructor(ctor: ({ new(id: number): T })) {
+    constructor(ctor: ({ new(id: number): T }), key = "id") {
         super();
 
+        this.key = key;
         this.ctor = ctor;
     }
 
     async load(...args: any[]) {
-        this.entries = this.modify(...args).map((i: { id: number }) => new this.ctor(i.id));
+        this.entries = this.modify(...args).map((i: { [key: string]: number }) => new this.ctor(i[this.key]));
     }
 
     /**
