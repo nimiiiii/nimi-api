@@ -7,7 +7,7 @@ import Resource from "./model.item.resource";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
 
-@ShareCfgModel.dependsOn([ "resources" ])
+@ShareCfgModel.dependsOn([ "itemPlayerResources" ])
 export default class ResourceList extends ShareCfgModelList<Resource> {
     constructor() {
         super(Resource);
