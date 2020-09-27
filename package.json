@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "doc": "typedoc --mode file --out docs lib",
+    "doc": "typedoc --mode file --exclude ./lib/model/**/* --out docs lib",
     "lint": "eslint --fix -c .eslintrc.json .",
     "build": "next build",
     "start": "next start",
