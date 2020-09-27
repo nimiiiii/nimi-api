@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Equipment from "./model.equip";
+import EquipmentItem from "../items/model.item.equip";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
 
 @ShareCfgModel.dependsOn([ "equipStats" ])
-export default class EquipmentItemList extends ShareCfgModelList<Equipment> {
+export default class EquipmentItemList extends ShareCfgModelList<EquipmentItem> {
     constructor() {
-        super(Equipment);
+        super(EquipmentItem);
     }
 }
