@@ -7,7 +7,7 @@ import Item from "./model.item";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 
-@ShareCfgModel.dependsOn([ "resources" ])
+@ShareCfgModel.dependsOn([ "itemPlayerResources" ])
 export default class Resource extends ShareCfgModel {
     id: number;
     name: string;
