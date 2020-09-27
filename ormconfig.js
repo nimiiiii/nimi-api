@@ -10,6 +10,6 @@ module.exports = {
     useNewUrlParser: true,
     synchronize: true,
     logging: true,
-    entities: ["./lib/entities/*.*"],
-    migrations: ["./lib/migrations/*.*"]
+    entities: ["./lib/entities/*.ts"],
+    migrations: ["./lib/migrations/*.ts"]
 };
