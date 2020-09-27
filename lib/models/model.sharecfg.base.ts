@@ -6,11 +6,18 @@
 import Model from "./model.base";
 import ShareCfgResolver from "../resolvers/resolver.sharecfg.base";
 
+/**
+ * A model variant that uses a `ShareCfgResolver` to resolve dependencies
+ */
 export default abstract class ShareCfgModel extends Model {
     constructor() {
         super(ShareCfgResolver);
     }
 
+    /**
+     * Denote a `ShareCfgModel` depends on data that will be resolved and passed to it's loader method.
+     * @param dependencies An array of dependency names as listed in `ShareCfgResolver`
+     */
     static dependsOn(dependencies: Array<string>) {
         return Reflect.metadata("dependencies", dependencies);
     }

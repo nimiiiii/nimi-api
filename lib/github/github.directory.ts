@@ -15,12 +15,22 @@ type TreeItem = {
     url: string;
 }
 
+/**
+ * Represents a directory in GitHub
+ */
 export default class Directory {
     github: Octokit;
     repo: Repository;
     path: string;
     tree: TreeItem[];
 
+    /**
+     * 
+     * @param github The GitHub API
+     * @param repo The repository that instantiated the directory listing
+     * @param path The relative path that leads to this directory
+     * @param tree The directory listing
+     */
     constructor(github: Octokit, repo: Repository, path: string, tree: TreeItem[]) {
         this.github = github;
         this.repo = repo;
@@ -28,11 +38,19 @@ export default class Directory {
         this.tree = tree;
     }
 
+    /**
+     * Obtain a file's metadata from a directory
+     * @param name The file to retrieve
+     */
     get(name: string) : TreeItem {
         const file = this.tree.find(f => f.path == name && f.type == "blob");
         return file ? file : null;
     }
 
+    /**
+     * Download a file from the repository
+     * @param name The file to download
+     */
     async download(name:string) : Promise<string> {
         const file = this.get(name);
 
