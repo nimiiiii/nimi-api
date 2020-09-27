@@ -6,7 +6,7 @@
 /* eslint-disable no-undef */
 module.exports = {
     type: "mongodb",
-    host: process.env.UNICORN_DB_HOST || "mongodb://localhost:27017/nimi",
+    host: process.env.UNICORN_DB_HOST || "localhost",
     useNewUrlParser: true,
     synchronize: true,
     logging: true,
