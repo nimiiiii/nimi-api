@@ -7,7 +7,7 @@ import Repository from "./github/github.repository";
 import Resolver from "./resolvers/resolver.base";
 
 export default async function getResolver() : Promise<Resolver> {
-    const [ owner, repoName ] = process.env.GITHUB_REPO.split("/");
+    const [ owner, repoName ] = process.env.REMOTE_REPO.split("/");
     const repo = new Repository(process.env.GITHUB_TOKEN, owner, repoName);
 
     // TODO: get resolver based on model resolver type and language

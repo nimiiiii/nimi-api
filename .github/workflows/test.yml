@@ -16,10 +16,23 @@ jobs:
       - name: Install dependencies
         run: yarn
       
-      - name: run linting
+      - name: Run linting
         run: yarn lint
 
-      - name: run tests
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@main
+        with:
+          node-version: '14.x'
+          
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run tests
         run: yarn test
         env:
           REMOTE_REPO: ${{ secrets.REMOTE_REPO }}
