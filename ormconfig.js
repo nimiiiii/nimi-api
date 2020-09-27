@@ -6,7 +6,10 @@
 /* eslint-disable no-undef */
 module.exports = {
     type: "mongodb",
-    host: process.env.UNICORN_DB_HOST || "localhost",
-    entities: ["./entities/*.ts"],
-    migrations: ["./migrations/*.ts"]
+    host: process.env.UNICORN_DB_HOST || "mongodb://localhost:27017",
+    useNewUrlParser: true,
+    synchronize: true,
+    logging: true,
+    entities: ["./lib/entities/*.*"],
+    migrations: ["./lib/migrations/*.*"]
 };
