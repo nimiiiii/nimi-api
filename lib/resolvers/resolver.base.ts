@@ -4,9 +4,16 @@
  * See LICENSE for details.
  */
 import Directory from "../github/github.directory";
+import File from "../../lib/entities/File";
 import Model from "lib/models/model.base";
 import Path from "path";
 import Repository from "../github/github.repository";
+import snappy from "snappy";
+import util from "util";
+import { createFileEntry, getFileEntry, updateFileEntry } from "lib/database";
+
+const compress = util.promisify(snappy.compress);
+const uncompress = util.promisify(snappy.uncompress);
 
 export interface ResolverConstructor {
     new (lang: string, repo: Repository) : Resolver;
@@ -51,17 +58,37 @@ export default abstract class Resolver {
         if (!this.initialized)
             throw new Error("Remote has not been initialized");
 
-        const remotePath = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
+        const path = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
+        const remote = this.files.get(file);
 
-        if (this.files.get(file) === undefined)
-            throw new Error(`${remotePath} is not a file or is not found.`);
+        if (remote === undefined)
+            throw new Error(`${path} is not a file or is not found.`);
 
+        // First, check if we have the file cached in memory.
         if (this.cache.has(file))
             return this.cache.get(file);
 
-        const data = JSON.parse(await this.files.download(file));
-        this.cache.set(file, data);
+        // If we don't have it, check if it is cached in our database.
+        let cached : File;
+        try {
+            cached = <File>(await getFileEntry(file));
+            if (cached.hash === remote.sha) {
+                const data = <string>(await uncompress(cached.file, { asBuffer: false }));
+                this.cache.set(file, data);
+                return data;
+            }
+        } catch (error) {
+            console.error(error);
+        }
 
+        // If we really don't have it or we have an outdated entry, obtain it from GitHub.
+        const data = JSON.parse(await this.files.download(file));
+        if (cached?.hash === undefined)
+            createFileEntry({ id: file, hash: remote.sha, file: await compress(data) });
+        else
+            updateFileEntry({ id: file, hash: remote.sha, file: await compress(data) });
+
+        this.cache.set(file, data);
         return data;
     }
 }

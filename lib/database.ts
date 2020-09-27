@@ -8,37 +8,35 @@ import File from "./entities/File";
 import { FileEntry } from "./schemas";
 import { getConnection } from "typeorm";
 
-
-
 const query = () => getConnection().createQueryBuilder();
 const getOneOfType = <T extends typeof Base>(type: T) => (id: string) =>
     type.findOneOrFail({ id });
 
-
 /**
  * Creates a file entry on the database.
- * @param id the identifier for the file entry, this must be a SHA of the file.
+ * @param id the identifier for the file entry.
+ * @param hash the file's SHA
  * @param file a gzippped buffer of the file.
  */
-export const createFileEntry = async({ id, file }: FileEntry) => {
+export const createFileEntry = async({ id, file, hash }: FileEntry) => {
     await query()
         .insert()
         .into(File)
-        .values([{ id, file }])
+        .values([{ id, file, hash }])
         .execute();
 };
 
 /**
  * Updates a file entry on the database. It's more than likely you need to do this often if the source file
  * Needs to be updated because there's a new version of it somewhere.
- * @param id the identifier of the file entry. this must be a SHA of the file.
+ * @param id the identifier of the file entry.
  * @param file a gzipped buffer of the file.
  */
-export const updateFileEntry = async({ id, file }: FileEntry) => {
+export const updateFileEntry = async({ id, file, hash }: FileEntry) => {
     // using repository is wack so we're using Query builder instead.
     await query()
         .update(File)
-        .set({ file })
+        .set({ file, hash })
         .where("id = :id", { id })
         .execute();
 };

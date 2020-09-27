@@ -27,4 +27,5 @@ export const GetEntryByIdSchema = Joi.object({
 export interface FileEntry {
     id: string;
     file: Buffer;
+    hash: string;
 }
