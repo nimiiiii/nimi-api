@@ -10,4 +10,7 @@ import { Column, Entity } from "typeorm";
 export default class File extends Base {
     @Column("binary")
     file: Buffer;
+
+    @Column("text")
+    hash: string;
 }
