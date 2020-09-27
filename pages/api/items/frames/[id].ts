@@ -3,7 +3,7 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Equipment from "lib/models/equipment/model.equip";
+import IconFrame from "lib/models/items/model.item.icon";
 import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
@@ -14,7 +14,7 @@ export default methods({
         { schema: GetEntryByIdSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new Equipment(req.body.id).run(await getResolver())
+                await new IconFrame(req.body.id).run(await getResolver())
             )
     )
 });

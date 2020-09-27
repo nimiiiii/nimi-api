@@ -3,11 +3,11 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import EquipmentList from "lib/models/equipment/model.equip.list";
+import IconFrameList from "lib/models/items/model.item.icon.list";
 import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new EquipmentList().run(await getResolver()))
+        res.status(200).json(await new IconFrameList().run(await getResolver()))
 });
