@@ -33,6 +33,5 @@ export default abstract class ShareCfgModelList<T extends ShareCfgModel> extends
      * Called before the returned entries are mapped into an array.
      * @param args Resolved dependencies
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     modify(...args: any[]) : any[] { return args[0]; }
 }

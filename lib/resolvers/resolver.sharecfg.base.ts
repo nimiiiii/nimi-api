@@ -9,9 +9,17 @@ import Resolver from "./resolver.base";
 
 type Transformer = (o: unknown) => unknown;
 
+/**
+ * A resolver that resolves files from the `/sharecfg` directory
+ */
 export default class ShareCfgResolver extends Resolver {
     dependencies: Map<string, [string, Transformer]>;
 
+    /**
+     * 
+     * @param lang the language
+     * @param repo the repository to obtain data from
+     */
     constructor(lang: string, repo: Repository) {
         super("/sharecfg", lang, repo);
 
@@ -25,6 +33,10 @@ export default class ShareCfgResolver extends Resolver {
         return Object.values(obj);
     }
 
+    /**
+     * Initializes this resolver. This is also where file names are mapped onto strings
+     * for dependency resolution.
+     */
     async init() : Promise<void> {
         this.add("ships", "ship_data_template.json");
         this.add("shipStats", "ship_data_statistics.json");
@@ -85,6 +97,10 @@ export default class ShareCfgResolver extends Resolver {
         );
     }
 
+    /**
+     * Resolve a dependency
+     * @param type The dependency name
+     */
     async get(type: string) : Promise<any> {
         const [ file, transform ] = this.dependencies.get(type) ?? [];
 

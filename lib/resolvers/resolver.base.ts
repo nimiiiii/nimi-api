@@ -19,6 +19,9 @@ export interface ResolverConstructor {
     new (lang: string, repo: Repository) : Resolver;
 }
 
+/**
+ * The base class for all resolvers. Resolvers manage obtaining and caching files from the remote repository.
+ */
 export default abstract class Resolver {
     path: string;
     lang: string;
@@ -26,6 +29,11 @@ export default abstract class Resolver {
     files: Directory;
     cache: Map<string, any>;
 
+    /**
+     * @param path The path relative from the repository's root
+     * @param lang The language
+     * @param repo The GitHub repository
+     */
     constructor(path: string, lang: string, repo: Repository) {
         this.path = path;
         this.lang = lang;
@@ -38,6 +46,9 @@ export default abstract class Resolver {
         return this.files !== null;
     }
 
+    /**
+     * Initializes this repository by loading the directory and retrieving its files
+     */
     async init() : Promise<void> {
         this.files = await this.repo.getDirectory(
             Path.join(this.lang, this.path).replace(/\\/g, "/")
