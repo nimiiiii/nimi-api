@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "doc": "typedoc --mode file --out docs lib",
     "lint": "eslint --fix -c .eslintrc.json .",
     "build": "next build",
     "start": "next start",
@@ -19,8 +20,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "reflect-metadata": "^0.1.13",
-    "snappy": "^6.3.4",
-    "typeorm": "^0.2.26"
+    "snappy": "^6.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -37,6 +37,7 @@
     "eslint": "^7.9.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3",
+    "typedoc": "^0.19.2",
     "uvu": "^0.3.3"
   }
 }
