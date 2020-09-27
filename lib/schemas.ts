@@ -4,6 +4,7 @@
  * See LICENSE for details.
  */
 import Joi from "@hapi/joi";
+import mongoose from "mongoose";
 
 /**
  * The valid schemas for Language strings. Note it only check ?lang= querysring so
@@ -21,11 +22,26 @@ export const GetEntryByIdSchema = Joi.object({
 });
 
 
+export const FileSchema = new mongoose.Model({
+    name: {
+        type: String,
+        required: true
+    },
+    hash: {
+        type: String,
+        required: true
+    },
+    contents: {
+        type: Buffer,
+        required: true
+    }
+});
+
 /**
- * Represents a file entry structure in the database.
+ * Interface that describes the model of a file entry in MongoDB
  */
-export interface FileEntry {
-    id: string;
-    file: Buffer;
-    hash: string;
+export interface IFileSchema extends mongoose.Document {
+    name: string,
+    hash: string,
+    contents: Buffer
 }
