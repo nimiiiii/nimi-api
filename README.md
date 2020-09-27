@@ -5,7 +5,7 @@
 # Nimi
 ![Test](https://github.com/LeNitrous/azur-lane-api/workflows/Test/badge.svg)
 
-Welcome aboard! Nimi is the unofficial API that returns JSON data from [Azur Lane](https://azurlane.yo-star.com/) and is always updated to the latest game version. Things have changed since you stopped since you last checked the API! We're now using a serverless approach for writing the new version, there might be some bugs and of course, we change some stuff really fast so beware of maelstroms and icebergs, Captain!
+Welcome aboard! Nimi is the unofficial API that returns JSON data from [Azur Lane](https://azurlane.yo-star.com/) and is always updated to the latest game version. Unlike most projects of the same mission, we're using a serverless approach for providing you these data, however, since we're iterating rapidly, there might be some bugs and of course, we change some stuff really fast so beware of maelstroms and icebergs, Captain!
 
 ### Compared to previous version
 
