@@ -18,3 +18,8 @@ jobs:
       
       - name: run linting
         run: yarn lint
+
+      - name: run tests
+        run: yarn test
+        env:
+          REMOTE_REPO: ${{ secrets.REMOTE_REPO }}
