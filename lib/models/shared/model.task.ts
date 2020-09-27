@@ -18,7 +18,6 @@ export default class Task extends ShareCfgModel {
     minLevel: number;
     nextTaskId: number;
     storyId: number;
-    consume: Item;
     rewards: { count: number, item: DropItem }[]
 
     constructor(id: number) {
@@ -40,8 +39,6 @@ export default class Task extends ShareCfgModel {
         this.minLevel = task.level;
         this.nextTaskId = task.next_task;
         this.storyId = task.storyId;
-
-        this.consume = (task.target_id_for_client > 0) ? new Item(task.target_id_for_client) : undefined;
 
         // TODO: Parse Lua Strings (for some reason they are)
         this.rewards = Array.isArray(task.award_display)
