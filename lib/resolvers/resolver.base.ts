@@ -94,12 +94,13 @@ export default abstract class Resolver {
         }
 
         // If we really don't have it or we have an outdated entry, obtain it from GitHub.
-        const data = JSON.parse(await this.files.download(file));
+        const download = await this.files.download(file);
         if (cached?.hash === undefined)
-            createFileEntry(file, remote.sha, await compress(data));
+            createFileEntry(file, remote.sha, await compress(download));
         else
-            updateFileEntry(file, remote.sha, await compress(data));
+            updateFileEntry(file, remote.sha, await compress(download));
 
+        const data = JSON.parse(download);
         this.cache.set(file, data);
         return data;
     }
