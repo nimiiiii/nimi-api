@@ -22,7 +22,7 @@ export const GetEntryByIdSchema = Joi.object({
 });
 
 
-export const FileSchema = new mongoose.Model({
+export const FileSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true

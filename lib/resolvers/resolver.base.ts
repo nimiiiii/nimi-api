@@ -4,13 +4,14 @@
  * See LICENSE for details.
  */
 import Directory from "../github/github.directory";
-import File from "../../lib/entities/File";
+import { IFileSchema } from "lib/schemas";
 import Model from "lib/models/model.base";
 import Path from "path";
 import Repository from "../github/github.repository";
 import snappy from "snappy";
 import util from "util";
 import { createFileEntry, getFileEntry, updateFileEntry } from "lib/database";
+
 
 const compress = util.promisify(snappy.compress);
 const uncompress = util.promisify(snappy.uncompress);
@@ -80,11 +81,11 @@ export default abstract class Resolver {
             return this.cache.get(file);
 
         // If we don't have it, check if it is cached in our database.
-        let cached : File;
+        let cached : IFileSchema;
         try {
-            cached = <File>(await getFileEntry(file));
+            cached = <IFileSchema>(await getFileEntry(file));
             if (cached.hash === remote.sha) {
-                const data = <string>(await uncompress(cached.file, { asBuffer: false }));
+                const data = <string>(await uncompress(cached.contents, { asBuffer: false }));
                 this.cache.set(file, data);
                 return data;
             }
@@ -95,9 +96,9 @@ export default abstract class Resolver {
         // If we really don't have it or we have an outdated entry, obtain it from GitHub.
         const data = JSON.parse(await this.files.download(file));
         if (cached?.hash === undefined)
-            createFileEntry({ id: file, hash: remote.sha, file: await compress(data) });
+            createFileEntry(file, remote.sha, await compress(data));
         else
-            updateFileEntry({ id: file, hash: remote.sha, file: await compress(data) });
+            updateFileEntry(file, remote.sha, await compress(data));
 
         this.cache.set(file, data);
         return data;
