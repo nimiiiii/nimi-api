@@ -81,16 +81,12 @@ export default abstract class Resolver {
             return this.cache.get(file);
 
         // If we don't have it, check if it is cached in our database.
-        let cached : IFileSchema;
-        try {
-            cached = <IFileSchema>(await getFileEntry(file));
-            if (cached.hash === remote.sha) {
-                const data = <string>(await uncompress(cached.contents, { asBuffer: false }));
-                this.cache.set(file, data);
-                return data;
-            }
-        } catch (error) {
-            console.error(error);
+        const cached = <IFileSchema>(await getFileEntry(file));
+        if (cached?.hash === remote.sha) {
+            const uncompressed = <string>(await uncompress(Buffer.from(cached.contents.buffer), { asBuffer: false }));
+            const data = JSON.parse(uncompressed);
+            this.cache.set(file, data);
+            return data;
         }
 
         // If we really don't have it or we have an outdated entry, obtain it from GitHub.
