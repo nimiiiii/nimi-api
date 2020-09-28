@@ -6,8 +6,13 @@
 import mongoose from "mongoose";
 import { FileSchema, IFileSchema } from "./schemas";
 
+let FileModel : mongoose.Model<IFileSchema, {}>;
+try {
+    FileModel = mongoose.model<IFileSchema>("File");
+} catch {
+    FileModel = mongoose.model<IFileSchema>("File", FileSchema);
+}
 
-const FileModel = mongoose.model<IFileSchema>("File", FileSchema);
 const connectDB = async () => mongoose.connect(process.env.NIMI_MONGODB_HOST ||
     "mongodb://localhost:27017", { useNewUrlParser: true });
 
@@ -54,17 +59,11 @@ export async function updateFileEntry(name: string, hash:string, contents: Buffe
  * @param name the name of the file.
  * @returns the JavaScript object. This also contains the document id (_id). This is a instance of IFileModel as object.
  */
-export async function getFileEntry(name: string): Promise<object> {
+export async function getFileEntry(name: string) {
     await connectDB();
     const File: typeof FileModel = FileModel;
-
-    try {
-        const entry: IFileSchema = await File.findOne({ name });
-
-        return entry.toObject;
-    } catch (e) {
-        throw new Error(e);
-    }
+    const entry: IFileSchema = await File.findOne({ name });
+    return entry?.toObject();
 }
 
 /**
