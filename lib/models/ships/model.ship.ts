@@ -4,6 +4,7 @@
  * See LICENSE for details.
  */
 import Model from "../model.base";
+import { SHIP_ATTR_TYPE } from "lib/constants";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipListItem from "./model.ship.list.item";
 import Skill from "../shared/model.skill";
@@ -32,6 +33,7 @@ interface ShipAcquisitionDetails {
     event: string,
     exchange: ShipExchangeLocation,
     collection: boolean,
+    attributes: { [key: string]: number };
     construction: {
         light: boolean,
         heavy: boolean,
@@ -97,6 +99,13 @@ export default class Ship extends ShareCfgModel {
 
                 return obj;
             }, {});
+
+        this.attributes = Object.entries(SHIP_ATTR_TYPE)
+            .reduce((obj, entry) => {
+                const [key, val] = entry;
+                obj[val] = stats.attrs[parseInt(key)];
+                return obj;
+            }, { oxy: ship.oxy_max });
 
         this.acquisition = group.description.reduce((
             output : ShipAcquisitionDetails,
