@@ -48,6 +48,7 @@ export default class ShareCfgResolver extends Resolver {
         this.add("shipRetrofits", "ship_data_trans.json");
         this.add("shipRetrofitTasks", "transform_data_template.json");
         this.add("shipBlueprints", "ship_data_blueprint.json");
+        this.add("shipConstruction", "ship_data_create_material.json");
 
         this.add("equip", "equip_data_template.json");
         this.add("equipStats", "equip_data_statistics.json");

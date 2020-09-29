@@ -27,3 +27,5 @@ export const REGIONS = {
 };
 
 export const TAG_REGEX = /<[^>]*>/g;
+
+export const NAMECODE_REGEX = /{namecode:(\d+)}/;
