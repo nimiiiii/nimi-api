@@ -114,8 +114,9 @@ export default class Ship extends ShareCfgModel {
             text = text.trim();
 
             switch (action) {
-                case ShipDescriptionAction.Shop && args.warp:
-                    output.exchange = ACQUISITION_WARP[args.warp];
+                case ShipDescriptionAction.Shop:
+                    if (args.warp)
+                        output.exchange = ACQUISITION_WARP[args.warp];
                     break;
 
                 case ShipDescriptionAction.Collection:
