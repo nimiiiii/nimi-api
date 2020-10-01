@@ -75,6 +75,9 @@ export default class ShareCfgResolver extends Resolver {
         this.add("meowfficers", "commander_data_template.json");
         this.add("meowfficerSkills", "commander_skill_template.json");
 
+        this.add("commissions", "collection_template.json");
+        this.add("research", "technology_data_template.json");
+
         await super.init();
     }
 
