@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" width="256" title="nimiiiiiiiiiiiiiii~">
+  <img src="https://github.com/nimiiiii/Nimi/raw/master/icon.png" width="256" title="nimiiiiiiiiiiiiiii~">
 </p>
 
 # Nimi
