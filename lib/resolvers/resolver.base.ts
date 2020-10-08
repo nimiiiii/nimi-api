@@ -68,7 +68,7 @@ export default abstract class Resolver {
         const path = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
         const remote = this.files.get(file);
 
-        if (remote === undefined)
+        if (remote === null)
             throw new Error(`${path} is not a file or is not found.`);
 
         // First, check if we have the file cached in memory.
