@@ -7,6 +7,5 @@ import ChatBubbleList from "lib/models/items/model.item.chat.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ChatBubbleList().run()
+    get: async (_, res) => res.status(200).json(await new ChatBubbleList().run())
 });

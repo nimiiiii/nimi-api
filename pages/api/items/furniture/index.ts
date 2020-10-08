@@ -7,6 +7,5 @@ import FurnitureList from "lib/models/items/model.item.furniture.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new FurnitureList().run()
+    get: async (_, res) => res.status(200).json(await new FurnitureList().run())
 });

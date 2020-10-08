@@ -48,7 +48,7 @@ export default abstract class Model<T extends Resolver> implements IModel {
      * Runs the entire lifecycle of this model.
      * @param raw Whether to return itself or the serialized version
      */
-    async run(raw = false, resolver: Resolver) : Promise<any> {
+    async run(raw = false, resolver: Resolver = null) : Promise<any> {
         // Instantiate the resolver only when we don't supply one
         if (!resolver) {
             const [ owner, repoName ] = process.env.REMOTE_REPO.split("/");

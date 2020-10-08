@@ -7,6 +7,5 @@ import ResearchList from "lib/models/research/model.research.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ResearchList().run())
+    get: async (_, res) => res.status(200).json(await new ResearchList().run())
 });

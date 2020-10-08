@@ -7,6 +7,5 @@ import CommissionList from "lib/models/commission/model.commission.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new CommissionList().run()
+    get: async (_, res) => res.status(200).json(await new CommissionList().run())
 });

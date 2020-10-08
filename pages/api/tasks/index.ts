@@ -7,6 +7,5 @@ import TaskList from "lib/models/shared/model.task.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new TaskList().run()
+    get: async (_, res) => res.status(200).json(await new TaskList().run())
 });

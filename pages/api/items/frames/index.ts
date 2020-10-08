@@ -7,6 +7,5 @@ import IconFrameList from "lib/models/items/model.item.icon.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new IconFrameList().run()
+    get: async (_, res) => res.status(200).json(await new IconFrameList().run())
 });

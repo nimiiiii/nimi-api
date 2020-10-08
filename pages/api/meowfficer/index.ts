@@ -7,6 +7,5 @@ import MeowfficerList from "lib/models/meowfficer/model.meowfficer.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new MeowfficerList().run()
+    get: async (_, res) => res.status(200).json(await new MeowfficerList().run())
 });

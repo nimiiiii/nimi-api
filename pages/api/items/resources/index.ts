@@ -7,6 +7,5 @@ import ResourceList from "lib/models/items/model.item.resource.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ResourceList().run()
+    get: async (_, res) => res.status(200).json(await new ResourceList().run())
 });

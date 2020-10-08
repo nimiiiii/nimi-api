@@ -4,7 +4,6 @@
  * See LICENSE for details.
  */
 import DropItem from "../items/model.item.drop";
-import Item from "../items/model.item";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 

@@ -7,6 +7,5 @@ import EquipmentList from "lib/models/equipment/model.equip.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new EquipmentList().run()
+    get: async (_, res) => res.status(200).json(await new EquipmentList().run())
 });

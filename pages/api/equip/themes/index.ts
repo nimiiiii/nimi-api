@@ -7,6 +7,5 @@ import EquipmentSkinThemeList from "lib/models/equipment/model.equip.skin.theme.
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new EquipmentSkinThemeList().run()
+    get: async (_, res) => res.status(200).json(await new EquipmentSkinThemeList().run())
 });

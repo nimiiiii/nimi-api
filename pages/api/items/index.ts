@@ -7,6 +7,5 @@ import ItemList from "lib/models/items/model.item.list";
 import methods from "lib/methods";
 
 export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ItemList().run()
+    get: async (_, res) => res.status(200).json(await new ItemList().run())
 });
