@@ -9,7 +9,7 @@ import ShareCfgResolver from "../resolvers/resolver.sharecfg.base";
 /**
  * A model variant that uses a `ShareCfgResolver` to resolve dependencies
  */
-export default abstract class ShareCfgModel extends Model {
+export default abstract class ShareCfgModel extends Model<ShareCfgResolver> {
     constructor() {
         super(ShareCfgResolver);
     }

@@ -5,7 +5,6 @@
  */
 import Joi from "@hapi/joi";
 import ShipSkin from "lib/models/ships/model.ship.skin";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 
@@ -22,7 +21,7 @@ export default methods({
         { schema: GetShipSkinSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new ShipSkin(req.body.id).run(await getResolver())
+                await new ShipSkin(req.body.id).run()
             )
     )
 });

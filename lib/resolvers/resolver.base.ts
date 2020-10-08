@@ -5,20 +5,15 @@
  */
 import Directory from "../github/github.directory";
 import { IFileSchema } from "lib/schemas";
-import Model from "lib/models/model.base";
+import { IModel } from "lib/models/model.base";
 import Path from "path";
 import Repository from "../github/github.repository";
 import snappy from "snappy";
 import util from "util";
 import { createFileEntry, getFileEntry, updateFileEntry } from "lib/database";
 
-
 const compress = util.promisify(snappy.compress);
 const uncompress = util.promisify(snappy.uncompress);
-
-export interface ResolverConstructor {
-    new (lang: string, repo: Repository) : Resolver;
-}
 
 /**
  * The base class for all resolvers. Resolvers manage obtaining and caching files from the remote repository.
@@ -48,7 +43,7 @@ export default abstract class Resolver {
     }
 
     /**
-     * Initializes this repository by loading the directory and retrieving its files
+     * Initializes this repository by sloading the directory and retrieving its files
      */
     async init() : Promise<void> {
         this.files = await this.repo.getDirectory(
@@ -60,7 +55,7 @@ export default abstract class Resolver {
      * Resolves a model's loader method and passes back resolved values to its arguments
      * @param loader A model's loader method
      */
-    abstract async resolve(model: Model) : Promise<any[]>
+    abstract async resolve(model: IModel) : Promise<any[]>
 
     /**
      * Retrieves a file from cache or downloads the file from the repository if it doesn't exist.

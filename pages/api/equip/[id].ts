@@ -4,7 +4,6 @@
  * See LICENSE for details.
  */
 import Equipment from "lib/models/equipment/model.equip";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 import { GetEntryByIdQuery, GetEntryByIdSchema } from "lib/schemas";
@@ -14,7 +13,7 @@ export default methods({
         { schema: GetEntryByIdSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new Equipment(req.body.id).run(await getResolver())
+                await new Equipment(req.body.id).run()
             )
     )
 });

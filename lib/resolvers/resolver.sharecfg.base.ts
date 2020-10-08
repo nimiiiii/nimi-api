@@ -3,7 +3,7 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "lib/models/model.base";
+import { IModel } from "lib/models/model.base";
 import Repository from "../github/github.repository";
 import Resolver from "./resolver.base";
 
@@ -91,7 +91,7 @@ export default class ShareCfgResolver extends Resolver {
         this.dependencies.set(type, [file, transform]);
     }
 
-    async resolve(model: Model) : Promise<any[]> {
+    async resolve(model: IModel) : Promise<any[]> {
         const dependencies : string[] = Reflect.getMetadata("dependencies", (<Object>model).constructor);
 
         return await Promise.all(

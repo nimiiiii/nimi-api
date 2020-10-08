@@ -4,10 +4,9 @@
  * See LICENSE for details.
  */
 import MeowfficerSkillList from "lib/models/meowfficer/model.mewofficer.skill.list";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new MeowfficerSkillList().run(await getResolver()))
+        res.status(200).json(await new MeowfficerSkillList().run()
 });

@@ -4,10 +4,9 @@
  * See LICENSE for details.
  */
 import MeowfficerList from "lib/models/meowfficer/model.meowfficer.list";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new MeowfficerList().run(await getResolver()))
+        res.status(200).json(await new MeowfficerList().run()
 });

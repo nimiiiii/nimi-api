@@ -4,7 +4,6 @@
  * See LICENSE for details.
  */
 import Item from "lib/models/items/model.item";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 import { GetEntryByIdQuery, GetEntryByIdSchema } from "lib/schemas";
@@ -14,7 +13,7 @@ export default methods({
         { schema: GetEntryByIdSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new Item(req.body.id).run(await getResolver())
+                await new Item(req.body.id).run()
             )
     )
 });

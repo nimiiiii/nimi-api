@@ -6,7 +6,6 @@
 import { GetEntryByIdQuery } from "lib/schemas";
 import Joi from "@hapi/joi";
 import Ship from "lib/models/ships/model.ship";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 
@@ -24,7 +23,7 @@ export default methods({
         { schema: GetShipSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new Ship(req.body.id, req.body.breakoutLevel).run(await getResolver())
+                await new Ship(req.body.id, req.body.breakoutLevel).run()
             )
     )
 });

@@ -4,7 +4,6 @@
  * See LICENSE for details.
  */
 import MeowfficerSkill from "lib/models/meowfficer/model.meowfficer.skill";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 import validate from "lib/validate";
 import { GetEntryByIdQuery, GetEntryByIdSchema } from "lib/schemas";
@@ -14,7 +13,7 @@ export default methods({
         { schema: GetEntryByIdSchema, location: "query" },
         async (req, res) =>
             res.status(200).json(
-                await new MeowfficerSkill(req.body.id).run(await getResolver())
+                await new MeowfficerSkill(req.body.id).run()
             )
     )
 });

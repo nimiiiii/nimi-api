@@ -4,10 +4,9 @@
  * See LICENSE for details.
  */
 import EquipmentSkinThemeList from "lib/models/equipment/model.equip.skin.theme.list";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new EquipmentSkinThemeList().run(await getResolver()))
+        res.status(200).json(await new EquipmentSkinThemeList().run()
 });

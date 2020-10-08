@@ -15,6 +15,6 @@ export default class GameCfgResolver extends Resolver {
     }
 
     async resolve() {
-        return [this];
+        return [this.get];
     }
 }

@@ -4,10 +4,9 @@
  * See LICENSE for details.
  */
 import PostList from "lib/models/social/model.post.list";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new PostList().run(await getResolver()))
+        res.status(200).json(await new PostList().run())
 });

@@ -4,10 +4,9 @@
  * See LICENSE for details.
  */
 import ChatBubbleList from "lib/models/items/model.item.chat.list";
-import getResolver from "lib/getResolver";
 import methods from "lib/methods";
 
 export default methods({
     get: async (_, res) =>
-        res.status(200).json(await new ChatBubbleList().run(await getResolver()))
+        res.status(200).json(await new ChatBubbleList().run()
 });
