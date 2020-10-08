@@ -157,7 +157,7 @@ export default abstract class Model<T extends Resolver> implements IModel {
      * Applies the provided model to this instance.
      * @param model The model to be applied.
      */
-    mixin(model: IModel) {
+    mixin(model: Model<T>) {
         for (const prop of Object.getOwnPropertyNames(model)) {
             this[prop] = model[prop];
             if (Reflect.getMetadata("exclude", model, prop) ?? false)
