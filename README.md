@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" width="256" title="nimiiiiiiiiiiiiiii~">
+  <img src="https://github.com/nimiiiii/Nimi/raw/master/icon.png" width="256" title="nimiiiiiiiiiiiiiii~">
 </p>
 
 # Nimi
@@ -40,7 +40,7 @@ If you found something that isnt right, want to ask a question, or have a sugges
 
 <br>
 <p align="center">
-<a href="https://vercel.com?utm_source=azur-lane-api&utm_campaign=oss"><img src="public/vercel.svg" height="50em"></a> 
+<a href="https://vercel.com?utm_source=azur-lane-api&utm_campaign=oss"><img src="https://github.com/nimiiiii/Nimi/raw/master/public/vercel.svg" height="50em"></a> 
 </p>
 <br>
 
