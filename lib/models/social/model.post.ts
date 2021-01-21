@@ -5,6 +5,7 @@
  */
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
 interface JuustagramPost {
     name: string,
@@ -14,7 +15,7 @@ interface JuustagramPost {
     replies: JuustagramPost[]
 }
 
-@ShareCfgModel.dependsOn([ "social", "socialNpc", "socialNpcGroup", "lang" ])
+@dependsOn([ "social", "socialNpc", "socialNpcGroup", "lang" ])
 export default class Post extends ShareCfgModel implements JuustagramPost {
     id: number;
     name: string;

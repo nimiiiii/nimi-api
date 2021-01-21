@@ -6,9 +6,10 @@
 import Item from "../items/model.item";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 import { NAMECODE_REGEX, TAG_REGEX } from "lib/constants";
 
-@ShareCfgModel.dependsOn([ "shipConstruction", "codes" ])
+@dependsOn([ "shipConstruction", "codes" ])
 export default class Construct extends ShareCfgModel {
     id: number;
     type: number;

@@ -5,9 +5,9 @@
  */
 import Item from "../items/model.item";
 import RequestError from "lib/requestError";
-import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "equipSkins" ])
+@dependsOn([ "equipSkins" ])
 export default class EquipmentSkin extends Item {
     themeId: number;
     type: number;

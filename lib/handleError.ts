@@ -30,8 +30,14 @@ function handleError(fn: NextApiHandler) : NextApiHandler {
         try {
             return await fn(req, res);
         } catch (error) {
-            const status = (error instanceof RequestError) ? error.code : 500;
-            res.status(status).json({ code: status, message: error.message });
+            const code = (error instanceof RequestError) ? error.code : 500;
+            const isServerError = code === 500;
+
+            const message = !isServerError ? error.message : "An internal server error has occured.";
+            res.status(code).json({ code, message });
+
+            if (process.env.NODE_ENV === "development" && isServerError)
+                console.error(error);
         }
     };
 }

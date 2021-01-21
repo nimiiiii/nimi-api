@@ -30,9 +30,17 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 const cors = initMiddleware(Cors());
 const rate = initMiddleware(RateLimit({ windowMs: 60 * 60 * 1000, max: 150 }));
 
-export default function methods(
-    handlers: { [key: string]: NextApiHandler }
-) : NextApiHandler {
+export type HTTPMethods =
+    | "get"
+    | "head"
+    | "post"
+    | "put"
+    | "delete"
+    | "connect"
+    | "trace"
+    | "patch";
+
+export default function methods(handlers: { [key in HTTPMethods]?: NextApiHandler }) : NextApiHandler {
     return async function (req, res) {
         await rate(req, res);
         await cors(req, res);

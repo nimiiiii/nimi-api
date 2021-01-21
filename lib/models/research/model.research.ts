@@ -4,12 +4,12 @@
  * See LICENSE for details.
  */
 import DropItem from "../items/model.item.drop";
-import Model from "../model.base";
 import ResearchItem from "./model.research.list.item";
 import ShareCfgModel from "../model.sharecfg.base";
+import { exclude } from "../model.helpers";
 
 export default class Research extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     base: any;
 
     playerLevel: number;

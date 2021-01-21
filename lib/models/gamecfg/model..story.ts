@@ -4,8 +4,8 @@
  * See LICENSE for details.
  */
 import GameCfgModel from "../model.gamecfg.base";
-import Model from "../model.base";
 import StoryGameCfgResolver from "../../resolvers/resolver.gamecfg.story";
+import { exclude } from "../model.helpers";
 
 interface Dialogue {
     actorId: number,
@@ -19,7 +19,7 @@ interface Dialogue {
 }
 
 export default class Story extends GameCfgModel<StoryGameCfgResolver> {
-    @Model.exclude()
+    @exclude()
     id: string;
 
     dialogue: Dialogue[]

@@ -6,8 +6,9 @@
 import DropItem from "../items/model.item.drop";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "tasks" ])
+@dependsOn([ "tasks" ])
 export default class Task extends ShareCfgModel {
     id: number;
     type: number;

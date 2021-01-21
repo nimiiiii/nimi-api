@@ -4,9 +4,6 @@
  * See LICENSE for details.
  */
 import PostList from "lib/models/social/model.post.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new PostList().run())
-});
+export default createModel(PostList);

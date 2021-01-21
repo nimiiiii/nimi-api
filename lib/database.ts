@@ -4,9 +4,23 @@
  * See LICENSE for details.
  */
 import mongoose from "mongoose";
-import { FileSchema, IFileSchema } from "./schemas";
 
-let FileModel : mongoose.Model<IFileSchema, {}>;
+const FileSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    hash: {
+        type: String,
+        required: true
+    },
+    contents: {
+        type: Buffer,
+        required: true
+    }
+});
+
+let FileModel : mongoose.Model<IFileSchema>;
 try {
     FileModel = mongoose.model<IFileSchema>("File");
 } catch {
@@ -16,6 +30,14 @@ try {
 const connectDB = async () => mongoose.connect(process.env.NIMI_MONGODB_HOST ||
     "mongodb://localhost:27017", { useNewUrlParser: true });
 
+/**
+ * Interface that describes the model of a file entry in MongoDB
+ */
+export interface IFileSchema extends mongoose.Document {
+    name: string,
+    hash: string,
+    contents: Buffer
+}
 
 /**
  * Creates a new file entry in the database.

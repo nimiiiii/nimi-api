@@ -7,5 +7,5 @@ import GameCfgResolver from "lib/resolvers/resolver.gamecfg.base";
 import Model from "./model.base";
 
 export default abstract class GameCfgModel<T extends GameCfgResolver> extends Model<T> {
-    abstract async load(resolver: T) : Promise<void>;
+    abstract load(resolver: T) : Promise<void>;
 }

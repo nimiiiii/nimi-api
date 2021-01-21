@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import ResourceList from "lib/models/items/model.item.resource.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new ResourceList().run())
-});
+export default createModel(ResourceList);

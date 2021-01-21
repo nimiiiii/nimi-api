@@ -3,17 +3,17 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "./model.base";
 import ShareCfgModel from "./model.sharecfg.base";
+import { exclude } from "./model.helpers";
 
 /**
  * A Model that has an entries key and lists all results from it.
  */
 export default abstract class ShareCfgModelList<T extends ShareCfgModel> extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     ctor: { new(id: number): T };
 
-    @Model.exclude()
+    @exclude()
     key: string;
 
     entries : Array<T> = new Array<T>();

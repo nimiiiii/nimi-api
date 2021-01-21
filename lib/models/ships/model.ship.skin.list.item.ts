@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "../model.base";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn, exclude } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "shipSkins" ])
+@dependsOn([ "shipSkins" ])
 export default class ShipSkinListItem extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     data: any;
 
     id: number;

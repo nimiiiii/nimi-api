@@ -4,12 +4,12 @@
  * See LICENSE for details.
  */
 import EquipmentItem from "../items/model.item.equip";
-import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 import Skill from "../shared/model.skill";
+import { exclude } from "../model.helpers";
 
 export default class Equipment extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     item: EquipmentItem;
 
     specialty: string;

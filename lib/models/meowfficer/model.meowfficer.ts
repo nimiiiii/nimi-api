@@ -6,8 +6,9 @@
 import MeowfficerSkill from "./model.meowfficer.skill";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "meowfficers" ])
+@dependsOn([ "meowfficers" ])
 export default class Meowfficer extends ShareCfgModel {
     id: number;
     groupId: number;

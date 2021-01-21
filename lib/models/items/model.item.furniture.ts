@@ -5,9 +5,9 @@
  */
 import Item from "./model.item";
 import RequestError from "lib/requestError";
-import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "items", "furniture" ])
+@dependsOn([ "items", "furniture" ])
 export default class Furniture extends Item {
     type: number;
     description: string;

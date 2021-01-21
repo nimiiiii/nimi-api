@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import EquipSkinTheme from "./model.equip.skin.theme";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "equipSkinThemes" ])
+@dependsOn([ "equipSkinThemes" ])
 export default class EquipmentSkinThemeList extends ShareCfgModelList<EquipSkinTheme> {
     constructor() {
         super(EquipSkinTheme);

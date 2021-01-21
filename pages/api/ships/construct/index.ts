@@ -4,9 +4,6 @@
  * See LICENSE for details.
  */
 import ConstructList from "lib/models/ships/model.ship.construct.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ConstructList().run())
-});
+export default createModel(ConstructList);

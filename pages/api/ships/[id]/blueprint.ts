@@ -3,17 +3,8 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
+import { GetShipQuery } from ".";
 import ShipBlueprint from "lib/models/ships/model.ship.blueprint";
-import methods from "lib/methods";
-import validate from "lib/validate";
-import { GetShipQuery, GetShipSchema } from ".";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: validate<GetShipQuery, "query">(
-        { schema: GetShipSchema, location: "query" },
-        async (req, res) =>
-            res.status(200).json(
-                await new ShipBlueprint(req.body.id).run()
-            )
-    )
-});
+export default createModel(ShipBlueprint, GetShipQuery);

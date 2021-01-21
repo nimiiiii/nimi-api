@@ -5,8 +5,9 @@
  */
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "meowfficerSkills" ])
+@dependsOn([ "meowfficerSkills" ])
 export default class MeowfficerSkill extends ShareCfgModel {
     id: number;
     nextId: number;
@@ -31,6 +32,6 @@ export default class MeowfficerSkill extends ShareCfgModel {
         this.nextId = data.next_id;
         this.level = data.lv;
         this.assetName = data.icon;
-        this.description = data.desc.map(([level, text]) => ({ [level]: text }));
+        this.description = data.desc;
     }
 }

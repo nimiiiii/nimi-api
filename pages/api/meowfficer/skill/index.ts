@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import MeowfficerSkillList from "lib/models/meowfficer/model.mewofficer.skill.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new MeowfficerSkillList().run())
-});
+export default createModel(MeowfficerSkillList);

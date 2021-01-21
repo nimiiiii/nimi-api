@@ -1,5 +1,5 @@
 import ChatBubble from "./model.item.chat";
-import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "itemIconFrames" ])
+@dependsOn([ "itemIconFrames" ])
 export default class IconFrame extends ChatBubble {}

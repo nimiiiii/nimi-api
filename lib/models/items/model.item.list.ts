@@ -1,8 +1,8 @@
 import Item from "./model.item";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "items" ])
+@dependsOn([ "items" ])
 export default class ItemList extends ShareCfgModelList<Item> {
     constructor() {
         super(Item);

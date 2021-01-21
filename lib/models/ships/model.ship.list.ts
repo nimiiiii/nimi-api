@@ -3,11 +3,11 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
 import ShipListItem from "./model.ship.list.item";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "shipGroups" ])
+@dependsOn([ "shipGroups" ])
 export default class ShipList extends ShareCfgModelList<ShipListItem> {
     constructor() {
         super(ShipListItem, "group_type");

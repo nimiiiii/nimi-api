@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import Construct from "./model.ship.construct";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "shipConstruction" ])
+@dependsOn([ "shipConstruction" ])
 export default class ConstructList extends ShareCfgModelList<Construct> {
     constructor() {
         super(Construct);

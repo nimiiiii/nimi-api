@@ -4,15 +4,15 @@
  * See LICENSE for details.
  */
 import Item from "../items/model.item";
-import Model from "../model.base";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
 import Skill from "../shared/model.skill";
 import Task from "../shared/model.task";
+import { dependsOn, exclude } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "shipBlueprints" ])
+@dependsOn([ "shipBlueprints" ])
 export default class ShipBlueprint extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     groupId: number;
 
     name: string;

@@ -5,11 +5,11 @@
  */
 import CommissionItem from "./model.commission.list.item";
 import DropItem from "../items/model.item.drop";
-import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
+import { exclude } from "../model.helpers";
 
 export default class Commission extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     base: CommissionItem;
 
     oil: number;

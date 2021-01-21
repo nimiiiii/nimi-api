@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import MonthlySignIn from "lib/models/shared/model.monthly";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new MonthlySignIn().run())
-});
+export default createModel(MonthlySignIn);

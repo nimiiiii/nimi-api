@@ -4,16 +4,7 @@
  * See LICENSE for details.
  */
 import Equipment from "lib/models/equipment/model.equip";
-import methods from "lib/methods";
-import validate from "lib/validate";
-import { GetEntryByIdQuery, GetEntryByIdSchema } from "lib/schemas";
+import { GetEntryByIdQuery } from "lib/schemas";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: validate<GetEntryByIdQuery, "query">(
-        { schema: GetEntryByIdSchema, location: "query" },
-        async (req, res) =>
-            res.status(200).json(
-                await new Equipment(req.body.id).run()
-            )
-    )
-});
+export default createModel(Equipment, GetEntryByIdQuery);

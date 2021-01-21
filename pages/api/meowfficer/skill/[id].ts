@@ -3,17 +3,8 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
+import { GetEntryByIdQuery } from "lib/schemas";
 import MeowfficerSkill from "lib/models/meowfficer/model.meowfficer.skill";
-import methods from "lib/methods";
-import validate from "lib/validate";
-import { GetEntryByIdQuery, GetEntryByIdSchema } from "lib/schemas";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: validate<GetEntryByIdQuery, "query">(
-        { schema: GetEntryByIdSchema, location: "query" },
-        async (req, res) =>
-            res.status(200).json(
-                await new MeowfficerSkill(req.body.id).run()
-            )
-    )
-});
+export default createModel(MeowfficerSkill, GetEntryByIdQuery);

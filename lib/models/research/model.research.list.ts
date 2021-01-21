@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import ResearchItem from "./model.research.list.item";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "research" ])
+@dependsOn([ "research" ])
 export default class ResearchList extends ShareCfgModelList<ResearchItem> {
     constructor() {
         super(ResearchItem);

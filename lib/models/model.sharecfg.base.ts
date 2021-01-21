@@ -13,12 +13,4 @@ export default abstract class ShareCfgModel extends Model<ShareCfgResolver> {
     constructor() {
         super(ShareCfgResolver);
     }
-
-    /**
-     * Denote a `ShareCfgModel` depends on data that will be resolved and passed to it's loader method.
-     * @param dependencies An array of dependency names as listed in `ShareCfgResolver`
-     */
-    static dependsOn(dependencies: Array<string>) {
-        return Reflect.metadata("dependencies", dependencies);
-    }
 }

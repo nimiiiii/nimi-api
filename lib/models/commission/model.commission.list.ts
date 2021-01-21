@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import CommissionItem from "./model.commission.list.item";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "commissions" ])
+@dependsOn([ "commissions" ])
 export default class CommissionList extends ShareCfgModelList<CommissionItem> {
     constructor() {
         super(CommissionItem);

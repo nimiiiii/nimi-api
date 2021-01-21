@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import ChatBubble from "./model.item.chat";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "itemChatFrames" ])
+@dependsOn([ "itemChatFrames" ])
 export default class ChatBubbleList extends ShareCfgModelList<ChatBubble> {
     constructor() {
         super(ChatBubble);

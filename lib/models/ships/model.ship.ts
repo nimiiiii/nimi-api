@@ -3,11 +3,11 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "../model.base";
 import { SHIP_ATTR_TYPE } from "lib/constants";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipListItem from "./model.ship.list.item";
 import Skill from "../shared/model.skill";
+import { dependsOn, exclude } from "../model.helpers";
 
 type ShipGroupDescriptionItem = [string, [ShipDescriptionAction, any]]
 
@@ -43,9 +43,9 @@ interface ShipAcquisitionDetails {
     }
 }
 
-@ShareCfgModel.dependsOn([ "ships", "shipBreakouts" ])
+@dependsOn([ "ships", "shipBreakouts" ])
 export default class Ship extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     base: ShipListItem;
 
     ammoCount: number;

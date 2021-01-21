@@ -5,12 +5,13 @@
  */
 import GameCfgResolver from "./resolver.gamecfg.base";
 import Repository from "lib/github/github.repository";
+import { ResolverRegion } from "./resolver.base";
 
 /**
  * A resolver that resolves from the `/story` directory
  */
 export default class StoryGameCfgResolver extends GameCfgResolver {
-    constructor(lang: string, repo: Repository) {
+    constructor(lang: ResolverRegion, repo: Repository) {
         super("/story", lang, repo);
     }
 }

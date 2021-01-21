@@ -4,8 +4,9 @@
  * See LICENSE for details.
  */
 import { IModel } from "lib/models/model.base";
+import { MODEL_DEPENDS_KEY } from "lib/constants";
 import Repository from "../github/github.repository";
-import Resolver from "./resolver.base";
+import Resolver, { ResolverRegion } from "./resolver.base";
 
 type Transformer = (o: unknown) => unknown;
 
@@ -20,7 +21,7 @@ export default class ShareCfgResolver extends Resolver {
      * @param lang the language
      * @param repo the repository to obtain data from
      */
-    constructor(lang: string, repo: Repository) {
+    constructor(lang: ResolverRegion, repo: Repository) {
         super("/sharecfg", lang, repo);
 
         this.dependencies = new Map<string, [string, Transformer]>();
@@ -87,18 +88,13 @@ export default class ShareCfgResolver extends Resolver {
      * @param file The file to be resolved
      * @param transform A function called to modify the resolved object before being passed
      */
-    add(type: string, file: string, transform = ShareCfgResolver.DEFAULT_TRANSFORMER) : void {
+    add(type: string, file: string, transform: Transformer = ShareCfgResolver.DEFAULT_TRANSFORMER) {
         this.dependencies.set(type, [file, transform]);
     }
 
     async resolve(model: IModel) : Promise<any[]> {
-        const dependencies : string[] = Reflect.getMetadata("dependencies", (<Object>model).constructor);
-
-        return await Promise.all(
-            (dependencies)
-                ? dependencies.map(async (k: string) => await this.get(k))
-                : []
-        );
+        const dependencies : string[] = Reflect.getOwnMetadata(MODEL_DEPENDS_KEY, (<Object>model).constructor);
+        return await Promise.all(dependencies?.map(async (k: string) => await this.get(k)) ?? []);
     }
 
     /**

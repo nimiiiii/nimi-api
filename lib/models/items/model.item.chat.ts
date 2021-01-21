@@ -5,8 +5,9 @@
  */
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "itemChatFrames" ])
+@dependsOn([ "itemChatFrames" ])
 export default class ChatBubble extends ShareCfgModel {
     id: number;
     name: string;

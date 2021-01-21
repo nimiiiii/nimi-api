@@ -18,14 +18,12 @@ export const SHIP_ATTR_TYPE = {
     11: "antiSub"
 };
 
-export const REGIONS = {
-    "en": "EN",
-    "jp": "JP",
-    "cn": "CN",
-    "tw": "TW",
-    "ko": "KR"
-};
-
 export const TAG_REGEX = /<[^>]*>/g;
 
 export const NAMECODE_REGEX = /{namecode:(\d+)}/;
+
+export const SCHEMA_POSITION_KEY = "nimi-schema:position";
+
+export const MODEL_EXCLUDE_KEY = "nimi-model:exclude";
+
+export const MODEL_DEPENDS_KEY = "nimi-model:depends";

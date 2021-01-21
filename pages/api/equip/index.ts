@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import EquipmentList from "lib/models/equipment/model.equip.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new EquipmentList().run())
-});
+export default createModel(EquipmentList);

@@ -21,43 +21,31 @@
  *  SOFTWARE.
  */
 
-import Joi from "@hapi/joi";
+import * as joiful from "joiful";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-type Locations = "body" | "query";
-
-interface ValidateOptions {
-  schema: Joi.Schema;
-  location?: Locations;
+export interface QueriedNextApiRequest<T extends {}> extends NextApiRequest {
+    body: T,
 }
 
-interface ValidatedNextApiRequestBody<TSchema> extends NextApiRequest {
-  body: TSchema;
+export type QueriedNextApiHandler<T> = (req: QueriedNextApiRequest<T>, res: NextApiResponse) => void | Promise<void>;
+
+export enum ValidationTarget {
+    Body = "body",
+    Query = "query"
 }
 
-interface ValidatedNextApiRequestQuery<TSchema extends {}> extends NextApiRequest {
-  query: TSchema;
-}
-
-type ValidatedNextApiRequest<TSchema, TLocation extends Locations> = TLocation extends "body"
-  ? ValidatedNextApiRequestBody<TSchema>
-  : ValidatedNextApiRequestQuery<TSchema>;
-
-type ValidatedNextApiHandler<TSchema, TLocation extends Locations> = (
-  req: ValidatedNextApiRequest<TSchema, TLocation>,
-  res: NextApiResponse
-) => void;
-
-function validate<TSchema, TLocation extends Locations = "body">(
-    { schema, location = "body" }: ValidateOptions,
-    handler: ValidatedNextApiHandler<TSchema, TLocation>
+function validate<T>(
+    schema: new(...args: any[]) => T,
+    handle: QueriedNextApiHandler<T>,
+    target = ValidationTarget.Query
 ) : NextApiHandler {
     return function (req, res) {
-        const { error, value } = schema.validate(req[location]);
+        const { error, value } = joiful.validateAsClass(req[target], schema);
         req.body = value;
 
         if (!error)
-            return handler(req as ValidatedNextApiRequest<TSchema, TLocation>, res);
+            return handle(req, res);
 
         res.status(400).json({ code: 400, message: error.message });
     };

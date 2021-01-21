@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import Post from "./model.post";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "social" ])
+@dependsOn([ "social" ])
 export default class PostList extends ShareCfgModelList<Post> {
     constructor() {
         super(Post);

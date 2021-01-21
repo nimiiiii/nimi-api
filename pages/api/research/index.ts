@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import ResearchList from "lib/models/research/model.research.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new ResearchList().run())
-});
+export default createModel(ResearchList);

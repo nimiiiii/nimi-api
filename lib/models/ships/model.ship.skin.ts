@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipSkinListItem from "./model.ship.skin.list.item";
+import { dependsOn, exclude } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "codes", "shipSkinsDialogue", "shipSkinsDialogueExtra" ])
+@dependsOn([ "codes", "shipSkinsDialogue", "shipSkinsDialogueExtra" ])
 export default class ShipSkin extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     base: ShipSkinListItem;
 
     id: number;

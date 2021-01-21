@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import Meowfficer from "./model.meowfficer";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "meowfficers" ])
+@dependsOn([ "meowfficers" ])
 export default class MeowfficerList extends ShareCfgModelList<Meowfficer> {
     constructor() {
         super(Meowfficer);

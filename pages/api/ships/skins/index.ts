@@ -4,9 +4,6 @@
  * See LICENSE for details.
  */
 import ShipSkinList from "lib/models/ships/model.ship.skin.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) =>
-        res.status(200).json(await new ShipSkinList().run())
-});
+export default createModel(ShipSkinList);

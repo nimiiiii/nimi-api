@@ -5,8 +5,9 @@
  */
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "skills" ])
+@dependsOn([ "skills" ])
 export default class Skill extends ShareCfgModel {
     id: number;
     name: string;

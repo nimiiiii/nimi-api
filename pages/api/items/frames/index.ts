@@ -4,8 +4,6 @@
  * See LICENSE for details.
  */
 import IconFrameList from "lib/models/items/model.item.icon.list";
-import methods from "lib/methods";
+import createModel from "lib/createModel";
 
-export default methods({
-    get: async (_, res) => res.status(200).json(await new IconFrameList().run())
-});
+export default createModel(IconFrameList);

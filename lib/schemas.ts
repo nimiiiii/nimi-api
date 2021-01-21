@@ -3,45 +3,43 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Joi from "@hapi/joi";
-import mongoose from "mongoose";
+import * as joiful from "joiful";
+import { SCHEMA_POSITION_KEY } from "./constants";
 
 /**
- * The valid schemas for Language strings. Note it only check ?lang= querysring so
- * if you're planning to check more than one argument, you will need a new Joi.object
- * to see what to expect in the request querystring.
+ * The valid schema for language strings. Note it only check `?region=` querystring.
+ * Use this schema when interacting with models.
  */
-export const LangQueryStringSchema = Joi.string().valid("en", "jp", "tw", "cn", "kr");
-
-export interface GetEntryByIdQuery {
-    id: number;
+export class GetEntryByRegionQuery {
+    @joiful.string().valid("en", "jp", "tw", "cn", "kr").optional().default("en")
+    @position(Number.MAX_VALUE)
+    region?: string;
 }
 
-export const GetEntryByIdSchema = Joi.object({
-    id: Joi.number()
-});
-
-
-export const FileSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    hash: {
-        type: String,
-        required: true
-    },
-    contents: {
-        type: Buffer,
-        required: true
-    }
-});
+/**
+ * The valid schema for models that require to be searched by its numeric id.
+ */
+export class GetEntryByIdQuery extends GetEntryByRegionQuery {
+    @joiful.number().required()
+    @position(Number.MIN_VALUE)
+    id!: number;
+}
 
 /**
- * Interface that describes the model of a file entry in MongoDB
+ * The valid schema for models that require to be searched by its file name.
  */
-export interface IFileSchema extends mongoose.Document {
-    name: string,
-    hash: string,
-    contents: Buffer
+export class GetFileByIdQuery extends GetEntryByRegionQuery {
+    @joiful.string().required()
+    @position(Number.MIN_VALUE)
+    id!: string;
+}
+
+/**
+ * Define what position this property wille be ordered in the schema.
+ * @param order The position of the property in the schema.
+ */
+export function position(order: number) {
+    return function(target: any, propertyKey: string) {
+        Reflect.defineMetadata(SCHEMA_POSITION_KEY, order, target, propertyKey);
+    };
 }

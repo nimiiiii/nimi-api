@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import IconFrame from "./model.item.chat";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "itemIconFrames" ])
+@dependsOn([ "itemIconFrames" ])
 export default class IconFrameList extends ShareCfgModelList<IconFrame> {
     constructor() {
         super(IconFrame);

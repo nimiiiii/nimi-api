@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import EquipmentSkin from "./model.equip.skin";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "equipSkins" ])
+@dependsOn([ "equipSkins" ])
 export default class EquipmentSkinList extends ShareCfgModelList<EquipmentSkin> {
     constructor() {
         super(EquipmentSkin);

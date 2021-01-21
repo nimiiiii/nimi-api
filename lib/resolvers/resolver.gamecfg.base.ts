@@ -4,13 +4,13 @@
  * See LICENSE for details.
  */
 import Repository from "lib/github/github.repository";
-import Resolver from "./resolver.base";
+import Resolver, { ResolverRegion } from "./resolver.base";
 
 /**
  * A resolver that reolves from the any folder however when resolving, it returns itself.
  */
 export default class GameCfgResolver extends Resolver {
-    constructor(path: string, lang: string, repo: Repository) {
+    constructor(path: string, lang: ResolverRegion, repo: Repository) {
         super(path, lang, repo);
     }
 

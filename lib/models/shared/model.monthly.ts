@@ -6,10 +6,11 @@
 import DropItem from "../items/model.item.drop";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn } from "../model.helpers";
 
 type MonthData = { [key: number]: { count: number, Item: DropItem } };
 
-@ShareCfgModel.dependsOn([ "monthlySignIn" ])
+@dependsOn([ "monthlySignIn" ])
 export default class MonthlySignIn extends ShareCfgModel {
     entries: MonthData[];
     month: number;

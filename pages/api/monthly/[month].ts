@@ -3,25 +3,15 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Joi from "@hapi/joi";
+import * as joiful from "joiful";
 import MonthlySignIn from "lib/models/shared/model.monthly";
-import methods from "lib/methods";
-import validate from "lib/validate";
+import createModel from "lib/createModel";
+import { GetEntryByRegionQuery, position } from "lib/schemas";
 
-interface GetMonthQuery {
+class GetMonthQuery extends GetEntryByRegionQuery {
+    @joiful.number().min(1).max(12).required()
+    @position(0)
     month: number
 }
 
-const GetMonthSchema= Joi.object({
-    month: Joi.number()
-});
-
-export default methods({
-    get: validate<GetMonthQuery, "query">(
-        { schema: GetMonthSchema, location: "query" },
-        async (req, res) =>
-            res.status(200).json(
-                await new MonthlySignIn(req.body.month).run()
-            )
-    )
-});
+export default createModel(MonthlySignIn, GetMonthQuery);

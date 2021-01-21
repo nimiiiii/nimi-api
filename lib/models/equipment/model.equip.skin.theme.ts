@@ -5,10 +5,10 @@
  */
 import EquipmentSkin from "./model.equip.skin";
 import RequestError from "lib/requestError";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "equipSkinThemes" ])
+@dependsOn([ "equipSkinThemes" ])
 export default class EquipmentSkinTheme extends ShareCfgModelList<EquipmentSkin> {
     id: number;
     name: string;

@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "../model.base";
 import ShareCfgModel from "../model.sharecfg.base";
 import ShipItem from "../items/model.item.ship";
+import { dependsOn, exclude } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "shipRetrofits", "shipBlueprints" ])
+@dependsOn([ "shipRetrofits", "shipBlueprints" ])
 export default class ShipListItem extends ShareCfgModel {
-    @Model.exclude()
+    @exclude()
     item: ShipItem;
 
     id: number;

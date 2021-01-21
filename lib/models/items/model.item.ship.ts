@@ -3,25 +3,22 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import Model from "../model.base";
 import RequestError from "lib/requestError";
 import ShareCfgModel from "../model.sharecfg.base";
+import { dependsOn, exclude } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "ships", "shipGroups", "shipStats", "shipSkins" ])
+@dependsOn([ "ships", "shipGroups", "shipStats", "shipSkins" ])
 export default class ShipItem extends ShareCfgModel {
-    @Model.exclude()
-    breakoutLevel: number;
-
-    @Model.exclude()
+    @exclude()
     ship: any;
 
-    @Model.exclude()
+    @exclude()
     stats: any;
 
-    @Model.exclude()
+    @exclude()
     skin: any;
 
-    @Model.exclude()
+    @exclude()
     group: any;
 
     id: number;
@@ -29,6 +26,7 @@ export default class ShipItem extends ShareCfgModel {
     name: string;
     rarity: number;
     assetName: string;
+    breakoutLevel: number;
 
     constructor(groupId: number, breakoutLevel = 1) {
         super();
@@ -37,6 +35,7 @@ export default class ShipItem extends ShareCfgModel {
             throw new RequestError(400, "Breakout level should only be between 1 and 4.");
 
         this.groupId = groupId;
+        this.breakoutLevel = breakoutLevel;
     }
 
     async load(ships: any[], groups: any[], stats: any[], skins: any[]) {

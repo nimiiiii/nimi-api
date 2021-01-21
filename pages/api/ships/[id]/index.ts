@@ -3,27 +3,15 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
-import { GetEntryByIdQuery } from "lib/schemas";
-import Joi from "@hapi/joi";
+import * as joiful from "joiful";
 import Ship from "lib/models/ships/model.ship";
-import methods from "lib/methods";
-import validate from "lib/validate";
+import createModel from "lib/createModel";
+import { GetEntryByIdQuery, position } from "lib/schemas";
 
-export interface GetShipQuery extends GetEntryByIdQuery {
-    breakoutLevel: number
+export class GetShipQuery extends GetEntryByIdQuery {
+    @joiful.number().optional().default(1).min(1).max(4)
+    @position(0)
+    breakoutLevel?: number
 }
 
-export const GetShipSchema = Joi.object({
-    id: Joi.number(),
-    breakoutLevel: Joi.number().default(1)
-});
-
-export default methods({
-    get: validate<GetShipQuery, "query">(
-        { schema: GetShipSchema, location: "query" },
-        async (req, res) =>
-            res.status(200).json(
-                await new Ship(req.body.id, req.body.breakoutLevel).run()
-            )
-    )
-});
+export default createModel(Ship, GetShipQuery);

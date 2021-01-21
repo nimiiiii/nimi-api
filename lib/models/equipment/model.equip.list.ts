@@ -4,10 +4,10 @@
  * See LICENSE for details.
  */
 import EquipmentItem from "../items/model.item.equip";
-import ShareCfgModel from "../model.sharecfg.base";
 import ShareCfgModelList from "../model.sharecfg.list.base";
+import { dependsOn } from "../model.helpers";
 
-@ShareCfgModel.dependsOn([ "equipStats" ])
+@dependsOn([ "equipStats" ])
 export default class EquipmentItemList extends ShareCfgModelList<EquipmentItem> {
     constructor() {
         super(EquipmentItem);
