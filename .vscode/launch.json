@@ -4,9 +4,25 @@
       {
         "type": "node",
         "request": "attach",
-        "name": "Launch Program",
+        "name": "Debugger",
         "skipFiles": ["<node_internals>/**"],
-        "port": 9229
+        "port": 9229,
+        "presentation": {
+          "hidden": true,
+        }
+      },
+      {
+        "name": "Start Server",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["run", "dev"]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Start Server with Debugging",
+        "configurations": [ "Start Server", "Debugger" ],
       }
     ]
 }
