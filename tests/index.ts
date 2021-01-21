@@ -1,6 +1,6 @@
 import Ship from "lib/models/ships/model.ship";
 import { is } from "uvu/assert";
-import { suite, uvu } from "uvu";
+import { suite } from "uvu";
 
 const $: uvu.Test<Record<string, any>> = suite("sample test");
 
