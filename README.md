@@ -32,7 +32,9 @@ Consider supporting our project as well so we can keep maintaining this project!
 
 We are very open to contributions such as feature suggestions and pull requests! There are things to take note before doing so however.
 
-Before you submit a pull request and to ensure you have a smooth time in  developing and improving the project, use [Visual Studio Code](https://code.visualstudio.com/) or any other editor that supports syntax highlighting and linting. Make sure to install the recommended extensions as well!
+Before you submit a pull request and to ensure you have a smooth time in  developing and improving the project, use [Visual Studio Code](https://code.visualstudio.com/) or any other editor that supports syntax highlighting and linting. Make sure to install the recommended extensions as well.
+
+Our Continuous Integration configuration is contributor-neutral so the flow we use in this repository will also work on your fork, so make sure your code passes before submitting it upstream.
 
 If you found something that isnt right, want to ask a question, or have a suggestion you'd like to be added, then please do make a new issue.
 
