@@ -28,7 +28,7 @@ export default abstract class Resolver {
     path: string;
     lang: string;
     repo: Repository;
-    files: Directory;
+    directory: Directory;
     cache: Map<string, any>;
 
     /**
@@ -40,19 +40,19 @@ export default abstract class Resolver {
         this.path = path;
         this.lang = lang.toUpperCase();
         this.repo = repo;
-        this.files = null;
+        this.directory = null;
         this.cache = new Map<string, any>();
     }
 
     get initialized() : boolean {
-        return this.files !== null;
+        return this.directory !== null;
     }
 
     /**
      * Initializes this repository by sloading the directory and retrieving its files
      */
     async init() : Promise<void> {
-        this.files = await this.repo.getDirectory(
+        this.directory = await this.repo.getDirectory(
             Path.join(this.lang, this.path).replace(/\\/g, "/")
         );
     }
@@ -66,13 +66,14 @@ export default abstract class Resolver {
     /**
      * Retrieves a file from cache or downloads the file from the repository if it doesn't exist.
      * @param file The file name to retrieve.
+     * @param directory The directory to lookup from.
      */
-    async get(file: string) : Promise<any> {
+    async getFile(file: string, directory = this.directory) : Promise<any> {
         if (!this.initialized)
             throw new Error("Remote has not been initialized");
 
         const path = Path.join(this.lang, this.path, file).replace(/\\/g, "/");
-        const remote = this.files.get(file);
+        const remote = directory.getFile(file);
 
         if (remote === null)
             throw new Error(`${path} is not a file or is not found.`);
@@ -96,7 +97,7 @@ export default abstract class Resolver {
         }
 
         // If we really don't have it or we have an outdated entry, obtain it from GitHub.
-        const download = await this.files.download(file);
+        const download = await directory.download(file);
         if (useMongoDB) {
             if (cached?.hash === undefined)
                 createFileEntry(file, remote.sha, await compress(download));

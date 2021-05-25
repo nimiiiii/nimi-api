@@ -42,17 +42,30 @@ export default class Directory {
      * Obtain a file's metadata from a directory
      * @param name The file to retrieve
      */
-    get(name: string) : TreeItem {
+    getFile(name: string) : TreeItem {
         const file = this.tree.find(f => f.path == name && f.type == "blob");
         return file ? file : null;
+    }
+
+    /**
+     * Get a subdirectory from a path.
+     * @param name The file to retrieve
+     */
+    async getDirectory(name: string) : Promise<Directory> {
+        const tree = this.tree.find(f => f.path == name && f.type == "tree");
+
+        if (!tree)
+            return null;
+
+        return await this.repo.getDirectory(this.path + "/" + tree.path);
     }
 
     /**
      * Download a file from the repository
      * @param name The file to download
      */
-    async download(name:string) : Promise<string> {
-        const file = this.get(name);
+    async download(name: string) : Promise<string> {
+        const file = this.getFile(name);
 
         const blob = await this.github.git.getBlob({
             repo: this.repo.name,

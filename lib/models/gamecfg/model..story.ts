@@ -31,7 +31,7 @@ export default class Story extends GameCfgModel<StoryGameCfgResolver> {
     }
 
     async load(resolver: StoryGameCfgResolver) {
-        const data = await resolver.get(this.id + ".json");
+        const data = await resolver.getFile(this.id + ".json");
 
         this.dialogue = data.scripts.map(s => ({
             actorId: s.actor,

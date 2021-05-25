@@ -37,7 +37,7 @@ function handleError(fn: NextApiHandler) : NextApiHandler {
             res.status(code).json({ code, message });
 
             if (process.env.NODE_ENV === "development" && isServerError)
-                console.error(error);
+                console.error(error.stack);
         }
     };
 }

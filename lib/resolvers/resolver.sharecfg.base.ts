@@ -3,9 +3,11 @@
  * Licensed under the GNU General Public License v3
  * See LICENSE for details.
  */
+import Directory from "lib/github/github.directory";
 import { IModel } from "lib/models/model.base";
 import { MODEL_DEPENDS_KEY } from "lib/constants";
 import Repository from "../github/github.repository";
+import path from "path";
 import Resolver, { ResolverRegion } from "./resolver.base";
 
 type Transformer = (o: unknown) => unknown;
@@ -14,7 +16,8 @@ type Transformer = (o: unknown) => unknown;
  * A resolver that resolves files from the `/sharecfg` directory
  */
 export default class ShareCfgResolver extends Resolver {
-    dependencies: Map<string, [string, Transformer]>;
+    dependencies: Map<string, [string, boolean, Transformer]>;
+    subDirectories: Map<string, Directory>;
 
     /**
      * 
@@ -24,7 +27,8 @@ export default class ShareCfgResolver extends Resolver {
     constructor(lang: ResolverRegion, repo: Repository) {
         super("/sharecfg", lang, repo);
 
-        this.dependencies = new Map<string, [string, Transformer]>();
+        this.dependencies = new Map<string, [string, boolean, Transformer]>();
+        this.subDirectories = new Map<string, Directory>();
     }
 
     static DEFAULT_TRANSFORMER(obj: { all: number[] }) : unknown {
@@ -41,7 +45,7 @@ export default class ShareCfgResolver extends Resolver {
     async init() : Promise<void> {
         this.add("ships", "ship_data_template.json");
         this.add("shipStats", "ship_data_statistics.json");
-        this.add("shipSkins", "ship_skin_template.json");
+        this.add("shipSkins", "ship_skin_template.json", true);
         this.add("shipSkinsDialogue", "ship_skin_words.json");
         this.add("shipSkinsDialogueExtra", "ship_skin_words_extra.json");
         this.add("shipGroups", "ship_data_group.json");
@@ -51,8 +55,8 @@ export default class ShareCfgResolver extends Resolver {
         this.add("shipBlueprints", "ship_data_blueprint.json");
         this.add("shipConstruction", "ship_data_create_material.json");
 
-        this.add("equip", "equip_data_template.json");
-        this.add("equipStats", "equip_data_statistics.json");
+        this.add("equip", "equip_data_template.json", true);
+        this.add("equipStats", "equip_data_statistics.json", true);
         this.add("equipSkins", "equip_skin_template.json");
         this.add("equipSkinThemes", "equip_skin_theme_template.json");
 
@@ -64,7 +68,7 @@ export default class ShareCfgResolver extends Resolver {
         this.add("itemPlayerResources", "player_resource.json");
         this.add("furniture", "furniture_data_template.json");
 
-        this.add("lang", "gameset_language_client.json", (o: unknown) => o);
+        this.add("lang", "gameset_language_client.json", false, (o: unknown) => o);
         this.add("tasks", "task_data_template.json");
         this.add("codes", "name_code.json");
         this.add("monthlySignIn", "activity_month_sign.json");
@@ -86,27 +90,52 @@ export default class ShareCfgResolver extends Resolver {
      * Map an argument type to a file for dependency resolving
      * @param type The argument type
      * @param file The file to be resolved
+     * @param hasSubList Whether the file references other files
      * @param transform A function called to modify the resolved object before being passed
      */
-    add(type: string, file: string, transform: Transformer = ShareCfgResolver.DEFAULT_TRANSFORMER) {
-        this.dependencies.set(type, [file, transform]);
+    add(type: string, file: string, hasSubList = false, transform: Transformer = ShareCfgResolver.DEFAULT_TRANSFORMER) {
+        this.dependencies.set(type, [file, hasSubList, transform]);
     }
 
     async resolve(model: IModel) : Promise<any[]> {
         const dependencies : string[] = Reflect.getOwnMetadata(MODEL_DEPENDS_KEY, (<Object>model).constructor);
-        return await Promise.all(dependencies?.map(async (k: string) => await this.get(k)) ?? []);
+        return await Promise.all(dependencies?.map(async (k: string) => await this.getFile(k)) ?? []);
     }
 
     /**
      * Resolve a dependency
      * @param type The dependency name
      */
-    async get(type: string) : Promise<any> {
-        const [ file, transform ] = this.dependencies.get(type) ?? [];
+    async getFile(type: string) : Promise<any> {
+        if (!this.dependencies.has(type))
+            throw new Error(`Dependency is not registered > ${this.constructor.name}:${type}`);
 
-        if (file === undefined)
-            throw new Error(`Cannot resolve dependency > ${this.constructor.name}:${type}`);
+        const [ file, hasSubList, transform ] = this.dependencies.get(type) ?? [];
 
-        return transform(await super.get(file));
+        if (!hasSubList)
+            return transform(await super.getFile(file));
+
+        const { subList } = await super.getFile(file);
+
+        let subDirectory : Directory;
+
+        if (this.subDirectories.has(file))
+        {
+            subDirectory = this.subDirectories.get(file);
+        }
+        else
+        {
+            const directoryName = path.parse(file).name + "_sublist";
+            subDirectory = await this.directory.getDirectory(directoryName);
+            this.subDirectories.set(file, subDirectory);
+        }
+
+        const data = await Promise.all(
+            subList.map(async (f: string) =>
+                super.getFile(f + ".json", subDirectory)
+            )
+        );
+
+        return transform(data.reduce((prev, curr) => Object.assign(prev, curr), {}));
     }
 }
